@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0b7a6e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>حساب البيت</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Design Tokens & Modern Mobile Theme
+   ============================================================ */
+:root {
+  --bg:        #f4f6f5;
+  --card:      #ffffff;
+  --ink:       #0f1715;
+  --sub:       #5a6e67;
+  --line:      #e2e8e5;
+  --acc:       #0b7a6e;
+  --acch:      #096359;
+  --accl:      #e4f6f2;
+  --neg:       #c0392b;
+  --negl:      #fdeeed;
+  --pos:       #157a45;
+  --posl:      #e3f7ed;
+  --warn:      #b25c00;
+  --warnl:     #fff3e0;
+  --purple:    #4f46e5;
+  --purplel:   #eef2ff;
+  --shadow-sm: 0 1px 3px rgba(11,122,110,.05);
+  --shadow:    0 4px 16px rgba(11,122,110,.08);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,.12);
+  --r:         18px;
+  --r-sm:      12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --bg:        #0c1412;
+    --card:      #15221d;
+    --ink:       #e8f2ef;
+    --sub:       #8ca39a;
+    --line:      #20312b;
+    --acc:       #2dc4b0;
+    --acch:      #22a897;
+    --accl:      #0e3630;
+    --neg:       #f47a6e;
+    --negl:      #3d1a16;
+    --pos:       #4ecc82;
+    --posl:      #103525;
+    --warn:      #fdb040;
+    --warnl:     #332200;
+    --purple:    #818cf8;
+    --purplel:   #1e1b4b;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
+    --shadow:    0 4px 16px rgba(0,0,0,.4);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,.5);
+  }
+}
+
+:root[data-theme=dark] {
+  --bg:        #0c1412;
+  --card:      #15221d;
+  --ink:       #e8f2ef;
+  --sub:       #8ca39a;
+  --line:      #20312b;
+  --acc:       #2dc4b0;
+  --acch:      #22a897;
+  --accl:      #0e3630;
+  --neg:       #f47a6e;
+  --negl:      #3d1a16;
+  --pos:       #4ecc82;
+  --posl:      #103525;
+  --warn:      #fdb040;
+  --warnl:     #332200;
+  --purple:    #818cf8;
+  --purplel:   #1e1b4b;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
+  --shadow:    0 4px 16px rgba(0,0,0,.4);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,.5);
+}
+
+/* ============================================================
+   App Shell & Reset
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 14px/1.5 'Cairo', -apple-system, BlinkMacSystemFont, Tahoma, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#app-container {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--bg);
+  box-shadow: 0 0 40px rgba(0,0,0,.04);
+}
+
+main#app {
+  flex: 1;
+  padding: 12px 14px calc(76px + env(safe-area-inset-bottom, 0px));
+}
+
+/* ============================================================
+   App Header (Sticky Top Bar)
+   ============================================================ */
+.header-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(244, 246, 245, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -12px -14px 12px;
+}
+
+:root[data-theme=dark] .header-bar,
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) .header-bar {
+    background: rgba(12, 20, 18, 0.92);
+  }
+}
+
+.header-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+.header-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -.2px;
+  color: var(--ink);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sync-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 20px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--sub);
+  cursor: pointer;
+  transition: all .2s;
+}
+.sync-badge.synced {
+  background: var(--posl);
+  border-color: rgba(21,122,69,.25);
+  color: var(--pos);
+}
+.sync-badge.syncing {
+  background: var(--accl);
+  border-color: rgba(11,122,110,.25);
+  color: var(--acc);
+}
+.sync-badge.offline {
+  background: var(--negl);
+  border-color: rgba(192,57,43,.25);
+  color: var(--neg);
+}
+.sync-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.sync-dot.spin {
+  animation: pulse 1s infinite alternate;
+}
+@keyframes pulse { from { opacity: .3; transform: scale(.8); } to { opacity: 1; transform: scale(1.2); } }
+
+.icon-btn {
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all .15s;
+}
+.icon-btn:active {
+  transform: scale(.92);
+  background: var(--accl);
+}
+
+/* ============================================================
+   Bottom Navigation Bar (Mobile App Style)
+   ============================================================ */
+nav#nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  z-index: 200;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  padding: 4px 4px calc(6px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -4px 20px rgba(0,0,0,.06);
+}
+
+:root[data-theme=dark] nav#nav,
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) nav#nav {
+    background: rgba(21, 34, 29, 0.94);
+  }
+}
+
+nav#nav button {
+  border: none;
+  background: none;
+  font: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 1px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: var(--sub);
+  transition: all .18s cubic-bezier(.16,1,.3,1);
+}
+
+nav#nav button .nav-icon {
+  font-size: 18px;
+  line-height: 1;
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1);
+}
+
+nav#nav button .nav-label {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+nav#nav button.on {
+  color: var(--acc);
+  background: var(--accl);
+}
+
+nav#nav button.on .nav-icon {
+  transform: scale(1.15) translateY(-1px);
+}
+
+nav#nav button:active {
+  transform: scale(.92);
+}
+
+/* ============================================================
+   Cards & Layout Components
+   ============================================================ */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .2s;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--sub);
+  margin-bottom: 10px;
+  letter-spacing: .1px;
+}
+
+/* Hero Cards */
+.hero {
+  border-radius: var(--r);
+  padding: 18px 18px 16px;
+  color: #fff;
+  background: linear-gradient(135deg, #0b7a6e 0%, #0d9488 100%);
+  margin-bottom: 12px;
+  box-shadow: 0 8px 24px rgba(11,122,110,.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -40%;
+  left: -20%;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(255,255,255,.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-label {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: .9;
+  margin-bottom: 4px;
+}
+
+.hero-amount {
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -.8px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.hero-amount small {
+  font-size: 16px;
+  font-weight: 700;
+  opacity: .85;
+}
+
+.hero-sub {
+  font-size: 11px;
+  opacity: .85;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Quick Forecast Banner on Home Screen */
+.forecast-banner-widget {
+  background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+  border: 1.5px solid #c7d2fe;
+  border-radius: var(--r);
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all .18s;
+}
+
+:root[data-theme=dark] .forecast-banner-widget,
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) .forecast-banner-widget {
+    background: linear-gradient(135deg, #1e1b4b 0%, #2e1065 100%);
+    border-color: #4338ca;
+  }
+}
+
+.forecast-banner-widget:active {
+  transform: scale(.98);
+}
+
+.fbw-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.fbw-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+.fbw-text {
+  display: flex;
+  flex-direction: column;
+}
+.fbw-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #4338ca;
+}
+:root[data-theme=dark] .fbw-title,
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) .fbw-title { color: #a5b4fc; }
+}
+.fbw-amt {
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1.2;
+  color: #1e1b4b;
+}
+:root[data-theme=dark] .fbw-amt,
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) .fbw-amt { color: #ffffff; }
+}
+.fbw-amt small {
+  font-size: 12px;
+  font-weight: 600;
+}
+.fbw-btn {
+  background: #4f46e5;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* Stat Grids */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.stat-item {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 11px 13px;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sub);
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+/* Rows & Lists */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+}
+.row:last-child {
+  border-bottom: none;
+}
+.row .n {
+  flex: 1;
+  min-width: 0;
+}
+.row .n b {
+  font-weight: 700;
+  font-size: 13.5px;
+  display: block;
+  overflow-wrap: anywhere;
+}
+.row .n span {
+  font-size: 11px;
+  color: var(--sub);
+  display: block;
+  margin-top: 1px;
+}
+.amt {
+  font-weight: 800;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.amt small {
+  font-size: 11px;
+  font-weight: 600;
+  margin-inline-start: 2px;
+}
+.neg { color: var(--neg); }
+.pos { color: var(--pos); }
+
+.tot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 900;
+  font-size: 14.5px;
+  padding: 10px 0 2px;
+  border-top: 2px solid var(--ink);
+  margin-top: 6px;
+}
+
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5px 6px;
+  border-radius: 6px;
+  color: var(--sub);
+  transition: all .15s;
+}
+.action-btn:active {
+  transform: scale(.88);
+  background: var(--accl);
+  color: var(--acc);
+}
+.action-btn.del-btn:active {
+  background: var(--negl);
+  color: var(--neg);
+}
+
+/* Forecast Tab Sections */
+.forecast-hero {
+  background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, #0891b2 100%);
+  border-radius: var(--r);
+  padding: 18px 18px 16px;
+  color: #fff;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 24px rgba(67, 56, 202, .28);
+}
+.forecast-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-top: 8px;
+  background: rgba(255, 255, 255, .18);
+  backdrop-filter: blur(6px);
+}
+
+.fsect-card {
+  border-radius: var(--r);
+  background: var(--card);
+  border: 1px solid var(--line);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+}
+.fsect-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.fsect-head-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 800;
+}
+.fsect-head-total {
+  font-size: 15px;
+  font-weight: 900;
+}
+
+/* Forms & Inputs */
+label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--sub);
+  display: block;
+  margin-bottom: 4px;
+}
+input {
+  width: 100%;
+  font: inherit;
+  font-size: 13.5px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-appearance: none;
+  transition: border-color .15s;
+}
+input:focus {
+  outline: none;
+  border-color: var(--acc);
+  background: var(--card);
+}
+.f {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+.f .w {
+  grid-column: 1 / -1;
+}
+.add-form {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1.5px dashed var(--line);
+}
+.add-form-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--sub);
+  margin-bottom: 8px;
+}
+
+/* Buttons */
+.btn {
+  font: inherit;
+  font-weight: 800;
+  font-size: 13.5px;
+  border: none;
+  border-radius: 11px;
+  padding: 10px 16px;
+  background: var(--acc);
+  color: #fff;
+  width: 100%;
+  cursor: pointer;
+  -webkit-appearance: none;
+  transition: all .15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn:active {
+  opacity: .88;
+  transform: scale(.97);
+}
+.btn-sec {
+  background: var(--accl);
+  color: var(--acc);
+}
+.btn-sec:active {
+  background: var(--acc);
+  color: #fff;
+}
+.btn-danger {
+  background: var(--neg);
+  color: #fff;
+}
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+  width: auto;
+}
+.btn-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+.btn-group .btn {
+  flex: 1;
+}
+
+.btn-danger-subtle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--negl);
+  color: var(--neg);
+  border: 1px solid rgba(192,57,43,.15);
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-danger-subtle:active {
+  transform: scale(.95);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+.badge-neg { background: var(--negl); color: var(--neg); }
+.badge-pos { background: var(--posl); color: var(--pos); }
+.badge-warn { background: var(--warnl); color: var(--warn); }
+.badge-info { background: var(--accl); color: var(--acc); }
+
+/* Logs Card */
+.log-card {
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+.log-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.log-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 12px;
+}
+.log-time {
+  font-size: 11px;
+  color: var(--sub);
+}
+.log-title {
+  font-size: 13.5px;
+  margin-bottom: 4px;
+}
+.log-title b {
+  font-weight: 800;
+}
+.log-sec {
+  display: inline-block;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  color: var(--sub);
+  margin-inline-end: 6px;
+}
+.log-values {
+  font-size: 12px;
+  color: var(--sub);
+  margin-bottom: 6px;
+}
+.log-desc {
+  font-size: 11.5px;
+  color: var(--sub);
+  margin-bottom: 8px;
+  background: var(--bg);
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+.log-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Explanatory Banner */
+.info-box {
+  background: var(--accl);
+  border: 1px solid rgba(11,122,110,.2);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.info-box b {
+  color: var(--acc);
+}
+
+.hint {
+  font-size: 11.5px;
+  color: var(--sub);
+  margin: 6px 2px;
+  line-height: 1.5;
+}
+
+.zero-alert {
+  background: var(--warnl);
+  border: 1.5px dashed var(--warn);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+.zero-alert b {
+  color: var(--warn);
+  display: block;
+  margin-bottom: 6px;
+}
+.zero-alert p {
+  font-size: 12.5px;
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+
+/* Toast */
+#toast {
+  position: fixed;
+  bottom: 78px;
+  left: 50%;
+  transform: translateX(-50%) translateY(14px);
+  background: rgba(15,23,21,.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 24px;
+  font-size: 12.5px;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(0,0,0,.22);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s, transform .22s;
+  z-index: 9000;
+  white-space: nowrap;
+  max-width: 90vw;
+  text-align: center;
+}
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Modals (Bottom Sheet) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 8000;
+}
+.modal {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px 22px 0 0;
+  padding: 0 20px 24px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: 0 -8px 40px rgba(0,0,0,.2);
+  animation: slideUp .22s cubic-bezier(.16,1,.3,1);
+}
+.modal::before {
+  content: '';
+  display: block;
+  width: 38px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--line);
+  margin: 10px auto 16px;
+}
+@keyframes slideUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.modal-head h2 {
+  font-size: 16px;
+  font-weight: 900;
+}
+.modal-close {
+  background: var(--bg);
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 15px;
+  color: var(--sub);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sheet-setup-box {
+  background: var(--accl);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 14px;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+.sheet-setup-box b { color: var(--acc); }
+</style>
+</head>
+<body>
+
+<div id="app-container">
+  <main id="app"></main>
+  <nav id="nav"></nav>
+</div>
+
+<div id="toast"></div>
+<div id="modal-root"></div>
+
+<script>
+var K = 'bayt2';
+var SHEET_KEY = 'bayt_sheet_url';
+var LAST_SYNC_KEY = 'bayt_last_sync';
+var tab = 'home';
+
+var syncState = {
+  status: 'idle',
+  lastSync: localStorage.getItem(LAST_SYNC_KEY) || ''
+};
+
+var sheetUrl = localStorage.getItem(SHEET_KEY) || '';
+
+function ser(n) {
+  return new Date((n - 25569) * 86400 * 1000).toISOString().split('T')[0];
+}
+
+function formatDT(d) {
+  var dt = d ? (d instanceof Date ? d : new Date(d)) : new Date();
+  var yr = dt.getFullYear();
+  var mo = ('0' + (dt.getMonth() + 1)).slice(-2);
+  var da = ('0' + dt.getDate()).slice(-2);
+  var hr = dt.getHours();
+  var mi = ('0' + dt.getMinutes()).slice(-2);
+  var sc = ('0' + dt.getSeconds()).slice(-2);
+  var ampm = hr >= 12 ? 'م' : 'ص';
+  hr = hr % 12;
+  hr = hr ? hr : 12;
+  var hrStr = ('0' + hr).slice(-2);
+  return yr + '-' + mo + '-' + da + ' ' + hrStr + ':' + mi + ':' + sc + ' ' + ampm;
+}
+
+function seed() {
+  var e = [
+    ['مصاريف ترم اول احمد', 45916, 38400],
+    ['تليفون امل', 45945, 6250],
+    ['تقديم حجز الاراضي', 45970, 3150],
+    ['تصليح الموتسيكل', 46040, 1800],
+    ['مصاريف ترم ثاني احمد', 46063, 38400],
+    ['زكاة عيد الفطر 2026', 46099, 500],
+    ['دهب', 46107, 137930],
+    ['الأضحية', 46165, 6650],
+    ['تحويل لاسلام', 46200, 33000],
+    ['تحويل محمد درويش', 46166, 500],
+    ['تحويل لمحمد درويش', 46268, 1200],
+    ['تقديم حجز الاراضي', 46269, 153000],
+    ['تحويل لمحامي تبع اسلام', 46290, 40245],
+    ['تحويل لمحامي تبع اسلام', 46295, 1000]
+  ];
+  return {
+    bank: 510000,
+    fund: 962900,
+    sister: 0,
+    exp: e.map(function(x, i) { return { id: i + 1, n: x[0], d: ser(x[1]), a: x[2] }; }),
+    inc: [],
+    badrE: [
+      ['باب مصفح', 10500], ['حديد منشر', 6500], ['طلبات السباكة', 12000],
+      ['مصنعية السباك', 6000], ['سيراميك + نقل + تنزيل ردش', 5400], ['رمل + اسمنت', 1150],
+      ['مصنعية السيراميك', 1300], ['نقل الاوضة والتلاجة', 1100], ['التلاجة', 4500],
+      ['رسوم باقي العقد + عداد المياه', 6500], ['انبوبة بالخرطوم والمنظم', 2800],
+      ['اداوات نظافة', 300], ['دولاب', 3300]
+    ].map(function(x, i) { return { id: 100 + i, n: x[0], a: x[1] }; }),
+    badrI: [
+      ['ايجار شهر 8', 2000], ['تأمين', 1000], ['ايجار شهر 8', 2000]
+    ].map(function(x, i) { return { id: 200 + i, n: x[0], a: x[1] }; }),
+    g21: { g: 280, p: 6100 },
+    g24: { g: 72.5, p: 7100 },
+    expected: [],
+    expectedExp: [],
+    logs: []
+  };
+}
+
+var S;
+try { S = JSON.parse(localStorage.getItem(K)); } catch (e) {}
+if (!S) S = seed();
+if (!S.logs) S.logs = [];
+if (!S.expected) S.expected = [];
+if (!S.expectedExp) S.expectedExp = [];
+
+function saveLocal() {
+  try { localStorage.setItem(K, JSON.stringify(S)); } catch (e) {}
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.innerText = msg;
+  t.className = 'show';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function() { t.className = ''; }, 2800);
+}
+
+function recordLocalLog(type, sec, name, oldV, newV, desc, id) {
+  if (!S.logs) S.logs = [];
+  var logItem = {
+    id: id || Date.now(),
+    dt: formatDT(),
+    type: type,
+    sec: sec,
+    n: name,
+    oldV: oldV !== undefined ? oldV : '',
+    newV: newV !== undefined ? newV : '',
+    desc: desc || ''
+  };
+  S.logs.unshift(logItem);
+  if (S.logs.length > 200) S.logs.pop();
+  saveLocal();
+}
+
+function sum(a) {
+  return (a || []).reduce(function(s, x) { return s + (parseFloat(x.a) || 0); }, 0);
+}
+function m(n) {
+  return Math.round(n || 0).toLocaleString('en-US');
+}
+function esc(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function C() {
+  var bE = sum(S.badrE), bI = sum(S.badrI);
+  var houseExp = sum(S.exp);
+  var totalExp = houseExp + bE;
+  var cash = S.fund - totalExp;
+  var gold = (S.g21.g || 0) * (S.g21.p || 0) + (S.g24.g || 0) * (S.g24.p || 0);
+  var mine = S.bank - bI - cash - S.sister;
+  var expctTotal = sum(S.expected);
+  var expctExpTotal = sum(S.expectedExp);
+  var projectedNextMonth = mine + expctTotal - expctExpTotal;
+
+  return {
+    bE: bE,
+    bI: bI,
+    houseExp: houseExp,
+    totalExp: totalExp,
+    cash: cash,
+    gold: gold,
+    mine: mine,
+    expctTotal: expctTotal,
+    expctExpTotal: expctExpTotal,
+    projectedNextMonth: projectedNextMonth
+  };
+}
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function timeNow() {
+  var d = new Date();
+  var hr = d.getHours(), mi = d.getMinutes();
+  var ampm = hr >= 12 ? 'م' : 'ص';
+  hr = hr % 12; hr = hr ? hr : 12;
+  return hr + ':' + ('0' + mi).slice(-2) + ' ' + ampm;
+}
+
+function go(t) {
+  tab = t;
+  render();
+  window.scrollTo(0, 0);
+}
+
+/* ========================================================
+   جوجل شيت API - الاتصال والمزامنة
+   ======================================================== */
+
+function postToSheet(payload, cb) {
+  if (!sheetUrl) {
+    if (cb) cb({ success: false, error: 'لم يتم ربط رابط Google Apps Script بعد' });
+    return;
+  }
+  syncState.status = 'syncing';
+  updateHeaderSyncBadge();
+
+  fetch(sheetUrl, {
+    method: 'POST',
+    mode: 'cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    if (data.success) {
+      syncState.status = 'synced';
+      syncState.lastSync = timeNow();
+      localStorage.setItem(LAST_SYNC_KEY, syncState.lastSync);
+      updateHeaderSyncBadge();
+      if (cb) cb(data);
+    } else {
+      throw new Error(data.error || 'فشلت العملية');
+    }
+  })
+  .catch(function(err) {
+    console.error('Sheet API Error:', err);
+    syncState.status = 'error';
+    updateHeaderSyncBadge();
+    showToast('⚠️ لم يتم الحفظ بالشيت (محفوظ محلياً): ' + err.message);
+    if (cb) cb({ success: false, error: err.message });
+  });
+}
+
+function restoreSeedAndUpload() {
+  S = seed();
+  saveLocal();
+  render();
+  if (sheetUrl) {
+    showToast('جاري رفع البيانات الأصلية وإنشاء الجداول في Google Sheet...');
+    postToSheet({ action: 'uploadAll', data: S }, function(res) {
+      if (res.success) {
+        showToast('🎉 تم استرجاع كل بياناتك بنجاح وملء جدول Google Sheet!');
+        closeModal();
+      }
+    });
+  } else {
+    showToast('🎉 تم استرجاع كافة بياناتك الأصلية بنجاح!');
+  }
+}
+
+function fetchFromSheet(manual) {
+  if (!sheetUrl) return;
+  syncState.status = 'syncing';
+  updateHeaderSyncBadge();
+
+  var url = sheetUrl + (sheetUrl.indexOf('?') === -1 ? '?action=get' : '&action=get') + '&_t=' + Date.now();
+  fetch(url)
+  .then(function(res) { return res.json(); })
+  .then(function(resp) {
+    if (resp.success && resp.data) {
+      var d = resp.data;
+      var isIncomingEmpty = (!d.bank && !d.fund && (!d.exp || d.exp.length === 0));
+      
+      if (isIncomingEmpty) {
+        if (S.bank > 0 || S.fund > 0 || (S.exp && S.exp.length > 0)) {
+          syncState.status = 'synced';
+          updateHeaderSyncBadge();
+          if (confirm('جدول Google Sheet المربوط جديد وفارغ حالياً.\n\nهل ترغب في رفع بياناتك الحالية (رصيد 510,000 ج وجميع المصاريف) إلى الشيت لتهيئته وملء الجداول؟')) {
+            uploadAllToSheet();
+          }
+          return;
+        }
+      }
+
+      if (typeof d.bank === 'number') S.bank = d.bank;
+      if (typeof d.fund === 'number') S.fund = d.fund;
+      if (typeof d.sister === 'number') S.sister = d.sister;
+      if (d.g21) S.g21 = d.g21;
+      if (d.g24) S.g24 = d.g24;
+      if (Array.isArray(d.exp)) S.exp = d.exp;
+      if (Array.isArray(d.inc)) S.inc = d.inc;
+      if (Array.isArray(d.badrE)) S.badrE = d.badrE;
+      if (Array.isArray(d.badrI)) S.badrI = d.badrI;
+      if (Array.isArray(d.expected)) S.expected = d.expected;
+      if (Array.isArray(d.expectedExp)) S.expectedExp = d.expectedExp;
+      if (Array.isArray(d.logs)) S.logs = d.logs;
+
+      saveLocal();
+      syncState.status = 'synced';
+      syncState.lastSync = timeNow();
+      localStorage.setItem(LAST_SYNC_KEY, syncState.lastSync);
+      render();
+      if (manual) showToast('✅ تم تحديث كافة البيانات وسجل التعديلات من الشيت بنجاح!');
+    } else {
+      throw new Error(resp.error || 'تعذر قراءة البيانات');
+    }
+  })
+  .catch(function(err) {
+    console.warn('Sync read error:', err);
+    syncState.status = 'error';
+    updateHeaderSyncBadge();
+    if (manual) showToast('❌ تعذر الاتصال بالشيت: ' + err.message);
+  });
+}
+
+function uploadAllToSheet() {
+  if (!sheetUrl) {
+    alert('يرجى إدخال رابط تطبيق الويب الخاص بـ Google Apps Script أولاً.');
+    return;
+  }
+  if (S.bank === 0 && S.fund === 0 && (!S.exp || S.exp.length === 0)) {
+    S = seed();
+    saveLocal();
+    render();
+  }
+
+  showToast('جاري رفع كافة البيانات وإنشاء الصفحات في الشيت...');
+  postToSheet({ action: 'uploadAll', data: S }, function(res) {
+    if (res.success) {
+      showToast('🎉 تم رفع كافة البيانات وتنسيق جداول الشيت بنجاح!');
+      closeModal();
+    }
+  });
+}
+
+function syncSettings(oldSettings) {
+  if (!sheetUrl) return;
+  postToSheet({
+    action: 'updateSettings',
+    settings: {
+      bank: S.bank,
+      fund: S.fund,
+      sister: S.sister,
+      g21_g: S.g21.g,
+      g21_p: S.g21.p,
+      g24_g: S.g24.g,
+      g24_p: S.g24.p
+    },
+    oldSettings: oldSettings
+  }, function(res) {
+    if (res.success) showToast('✅ تم حفظ التعديل في الشيت وتوثيقه في السجل');
+  });
+}
+
+function setN(k, v) {
+  var oldVal = S[k];
+  var newVal = parseFloat(v) || 0;
+  if (oldVal === newVal) return;
+  var oldSettings = { bank: S.bank, fund: S.fund, sister: S.sister, g21: Object.assign({}, S.g21), g24: Object.assign({}, S.g24) };
+  S[k] = newVal;
+  var label = k === 'bank' ? 'الحساب البنكي' : (k === 'fund' ? 'فلوس البيت الإجمالية' : 'فلوس أختي');
+  recordLocalLog('✏️ تعديل رصيد', 'الأرصدة الأساسية', label, oldVal, newVal, 'تعديل ' + label + ' من ' + m(oldVal) + ' إلى ' + m(newVal), Date.now());
+  saveLocal();
+  render();
+  syncSettings(oldSettings);
+}
+
+function setG(k, f, v) {
+  var oldVal = S[k][f];
+  var newVal = parseFloat(v) || 0;
+  if (oldVal === newVal) return;
+  var oldSettings = { bank: S.bank, fund: S.fund, sister: S.sister, g21: Object.assign({}, S.g21), g24: Object.assign({}, S.g24) };
+  S[k][f] = newVal;
+  var label = (k === 'g21' ? 'عيار 21' : 'عيار 24') + ' (' + (f === 'p' ? 'السعر' : 'الجرامات') + ')';
+  recordLocalLog('✏️ تعديل الدهب', 'الدهب', label, oldVal, newVal, 'تعديل ' + label + ' من ' + m(oldVal) + ' إلى ' + m(newVal), Date.now());
+  saveLocal();
+  render();
+  syncSettings(oldSettings);
+}
+
+function getSecName(list) {
+  if (list === 'exp') return 'مصاريف البيت';
+  if (list === 'badrE') return 'مصاريف بدر';
+  if (list === 'badrI') return 'إيرادات بدر';
+  if (list === 'expected') return 'إيرادات متوقعة للشهر القادم';
+  if (list === 'expectedExp') return 'مصاريف متوقعة للشهر القادم';
+  return 'أخرى';
+}
+
+function add(list, hasDate) {
+  var nEl = document.getElementById('n_' + list);
+  var aEl = document.getElementById('a_' + list);
+  var n = nEl ? nEl.value.trim() : '';
+  var a = aEl ? parseFloat(aEl.value) : NaN;
+
+  if (!n || !(a >= 0)) {
+    alert('من فضلك اكتب اسم البند والمبلغ بشكل صحيح.');
+    return;
+  }
+
+  var nowStr = formatDT();
+  var o = { id: Date.now(), n: n, a: a, updatedAt: nowStr };
+  if (hasDate) {
+    var dEl = document.getElementById('d_' + list);
+    o.d = dEl && dEl.value ? dEl.value : today();
+  }
+
+  S[list].push(o);
+  var secName = getSecName(list);
+  recordLocalLog('➕ إضافة بند', secName, n, 0, a, 'إضافة "' + n + '" بمبلغ ' + m(a) + ' ج', o.id);
+
+  saveLocal();
+  render();
+  showToast('تمت الإضافة وتسجيلها...');
+
+  if (sheetUrl) {
+    postToSheet({ action: 'add', list: list, item: o }, function(res) {
+      if (res.success) showToast('✅ تم إضافة البند إلى صفحة الشيت وسجل التعديلات!');
+    });
+  }
+}
+
+function openEditModal(list, id, hasDate) {
+  var item = S[list].find(function(x) { return x.id === id; });
+  if (!item) return;
+
+  var html = '<div class="modal-overlay" onclick="if(event.target===this)closeModal()">' +
+    '<div class="modal">' +
+      '<div class="modal-head">' +
+        '<h2>✏️ تعديل البند ومزامنته</h2>' +
+        '<button class="modal-close" onclick="closeModal()">✕</button>' +
+      '</div>' +
+      '<div>' +
+        '<label>اسم البند</label>' +
+        '<input id="edit_n" value="' + esc(item.n) + '" placeholder="اسم البند">' +
+      '</div>' +
+      '<div style="margin-top:10px">' +
+        '<label>المبلغ (جنيه)</label>' +
+        '<input id="edit_a" type="number" inputmode="decimal" value="' + item.a + '" placeholder="المبلغ">' +
+      '</div>' +
+      (hasDate ? 
+        '<div style="margin-top:10px">' +
+          '<label>التاريخ</label>' +
+          '<input id="edit_d" type="date" value="' + (item.d || today()) + '">' +
+        '</div>' : '') +
+      '<div class="btn-group">' +
+        '<button class="btn" onclick="saveEdit(\'' + list + '\',' + id + ',' + hasDate + ')">حفظ التعديل في الشيت 💾</button>' +
+        '<button class="btn btn-sec" onclick="closeModal()">إلغاء</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+
+  document.getElementById('modal-root').innerHTML = html;
+  setTimeout(function() {
+    var inp = document.getElementById('edit_n');
+    if (inp) inp.focus();
+  }, 50);
+}
+
+function saveEdit(list, id, hasDate) {
+  var n = document.getElementById('edit_n').value.trim();
+  var a = parseFloat(document.getElementById('edit_a').value);
+  if (!n || !(a >= 0)) {
+    alert('اكتب الاسم والمبلغ بشكل صحيح');
+    return;
+  }
+
+  var item = S[list].find(function(x) { return x.id === id; });
+  if (!item) return;
+
+  var oldItem = { n: item.n, a: item.a, d: item.d };
+  var nowStr = formatDT();
+
+  item.n = n;
+  item.a = a;
+  item.updatedAt = nowStr;
+  if (hasDate) {
+    var dVal = document.getElementById('edit_d').value;
+    item.d = dVal || today();
+  }
+
+  var secName = getSecName(list);
+  var details = 'تعديل البند من "' + oldItem.n + ' (' + m(oldItem.a) + ' ج)" إلى "' + item.n + ' (' + m(item.a) + ' ج)"';
+  recordLocalLog('✏️ تعديل بند', secName, item.n, oldItem.a, item.a, details, Date.now());
+
+  saveLocal();
+  closeModal();
+  render();
+  showToast('تم حفظ التعديل وتسجيله في الشيت...');
+
+  if (sheetUrl) {
+    postToSheet({ action: 'update', list: list, item: item, oldItem: oldItem }, function(res) {
+      if (res.success) showToast('✅ تم تعديل البند وتسجيله في سجل الشيت!');
+    });
+  }
+}
+
+function del(list, id) {
+  if (!confirm('هل تريد مسح هذا البند نهائياً؟ سيتم حذفه من الشيت أيضاً وتسجيل الحذف.')) return;
+  var item = S[list].find(function(x) { return x.id === id; });
+  var oldItem = item ? { n: item.n, a: item.a } : null;
+
+  S[list] = S[list].filter(function(x) { return x.id !== id; });
+  
+  if (oldItem) {
+    var secName = getSecName(list);
+    recordLocalLog('🗑️ حذف بند', secName, oldItem.n, oldItem.a, 0, 'حذف بند "' + oldItem.n + '" نهائياً');
+  }
+
+  saveLocal();
+  render();
+  showToast('تم الحذف وتسجيله في الشيت...');
+
+  if (sheetUrl) {
+    postToSheet({ action: 'delete', list: list, id: id, oldItem: oldItem }, function(res) {
+      if (res.success) showToast('✅ تم حذف البند وتسجيله في الشيت');
+    });
+  }
+}
+
+function deleteLogItem(id) {
+  if (!confirm('هل تريد مسح هذا التعديل من الشيت والسجل؟')) return;
+  S.logs = (S.logs || []).filter(function(x) { return String(x.id) !== String(id); });
+  saveLocal();
+  render();
+  showToast('جاري مسح التعديل من الشيت...');
+  if (sheetUrl) {
+    postToSheet({ action: 'deleteLog', id: id }, function(res) {
+      if (res.success) showToast('✅ تم مسح التعديل من الشيت بنجاح!');
+    });
+  }
+}
+
+function clearAllLogsFromSheet() {
+  if (!confirm('هل تريد مسح سجل التعديلات بالكامل من الشيت؟')) return;
+  S.logs = [];
+  saveLocal();
+  render();
+  showToast('جاري مسح السجل بالكامل من الشيت...');
+  if (sheetUrl) {
+    postToSheet({ action: 'clearLogs' }, function(res) {
+      if (res.success) showToast('✅ تم مسح السجل بالكامل من الشيت!');
+    });
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-root').innerHTML = '';
+}
+
+/* نافذة تعديل الأرصدة الأساسية (Modal سريع وأنيق) */
+function openBalanceModal() {
+  var html = '<div class="modal-overlay" onclick="if(event.target===this)closeModal()">' +
+    '<div class="modal">' +
+      '<div class="modal-head">' +
+        '<h2>✏️ تعديل الأرصدة الأساسية</h2>' +
+        '<button class="modal-close" onclick="closeModal()">✕</button>' +
+      '</div>' +
+      '<div>' +
+        '<label>الرصيد في الحساب البنكي (جنيه)</label>' +
+        '<input id="modal_bank" type="number" inputmode="decimal" value="' + S.bank + '">' +
+      '</div>' +
+      '<div style="margin-top:10px">' +
+        '<label>فلوس البيت الإجمالية (المبلغ المخصص للبيت بالكامل)</label>' +
+        '<input id="modal_fund" type="number" inputmode="decimal" value="' + S.fund + '">' +
+      '</div>' +
+      '<div style="margin-top:10px">' +
+        '<label>فلوس أختي معايا (أمانة)</label>' +
+        '<input id="modal_sister" type="number" inputmode="decimal" value="' + S.sister + '">' +
+      '</div>' +
+      '<div class="btn-group">' +
+        '<button class="btn" onclick="saveBalanceModal()">حفظ ومزامنة 💾</button>' +
+        '<button class="btn btn-sec" onclick="closeModal()">إلغاء</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+
+  document.getElementById('modal-root').innerHTML = html;
+}
+
+function saveBalanceModal() {
+  var b = parseFloat(document.getElementById('modal_bank').value) || 0;
+  var f = parseFloat(document.getElementById('modal_fund').value) || 0;
+  var s = parseFloat(document.getElementById('modal_sister').value) || 0;
+
+  var oldSettings = { bank: S.bank, fund: S.fund, sister: S.sister, g21: Object.assign({}, S.g21), g24: Object.assign({}, S.g24) };
+
+  if (S.bank !== b) {
+    recordLocalLog('✏️ تعديل رصيد', 'الأرصدة الأساسية', 'الحساب البنكي', S.bank, b, 'تعديل الحساب البنكي من ' + m(S.bank) + ' إلى ' + m(b), Date.now());
+    S.bank = b;
+  }
+  if (S.fund !== f) {
+    recordLocalLog('✏️ تعديل رصيد', 'الأرصدة الأساسية', 'فلوس البيت الإجمالية', S.fund, f, 'تعديل فلوس البيت من ' + m(S.fund) + ' إلى ' + m(f), Date.now() + 1);
+    S.fund = f;
+  }
+  if (S.sister !== s) {
+    recordLocalLog('✏️ تعديل رصيد', 'الأرصدة الأساسية', 'فلوس أختي', S.sister, s, 'تعديل فلوس أختي من ' + m(S.sister) + ' إلى ' + m(s), Date.now() + 2);
+    S.sister = s;
+  }
+
+  saveLocal();
+  closeModal();
+  render();
+  showToast('تم تحديث الأرصدة بنجاح...');
+  syncSettings(oldSettings);
+}
+
+/* نافذة إعدادات Google Sheet */
+function openSettingsModal() {
+  var isLinked = !!sheetUrl;
+  var html = '<div class="modal-overlay" onclick="if(event.target===this)closeModal()">' +
+    '<div class="modal">' +
+      '<div class="modal-head">' +
+        '<h2>⚙️ ربط Google Sheets</h2>' +
+        '<button class="modal-close" onclick="closeModal()">✕</button>' +
+      '</div>' +
+      '<div class="sheet-setup-box">' +
+        '<b>خطوات الربط والمزامنة السحابية:</b>' +
+        '<ol style="margin:6px 0 0 0;padding-inline-start:18px">' +
+          '<li>افتح جدول Google Sheet الخاص بك.</li>' +
+          '<li>من قائمة <b>التوسيعات (Extensions)</b> اختر <b>Apps Script</b>.</li>' +
+          '<li>الصق الكود من ملف <code>GoogleAppsScript.js</code> واحفظه.</li>' +
+          '<li>اضغط <b>Deploy -> Manage deployments -> Edit -> New version -> Deploy</b> واجعل الوصول لـ <b>Anyone</b>.</li>' +
+          '<li>انسخ رابط الويب والصقه أدناه.</li>' +
+        '</ol>' +
+      '</div>' +
+      '<div>' +
+        '<label>رابط تطبيق الويب (Google Web App URL):</label>' +
+        '<input id="cfg_url" placeholder="https://script.google.com/macros/s/.../exec" value="' + esc(sheetUrl) + '" style="font-size:12px;direction:ltr;text-align:left">' +
+      '</div>' +
+      '<div class="btn-group">' +
+        '<button class="btn" onclick="saveSheetConfig()">حفظ واختبار الربط 🔗</button>' +
+        '<button class="btn btn-sec" onclick="closeModal()">إلغاء</button>' +
+      '</div>' +
+      (isLinked ? 
+        '<div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--line)">' +
+          '<label style="margin-bottom:8px">أدوات الشيت والمزامنة:</label>' +
+          '<div style="display:flex;flex-direction:column;gap:8px">' +
+            '<button class="btn btn-sm" style="background:#0f766e;width:100%;color:#fff;font-weight:700" onclick="restoreSeedAndUpload()">🚀 استرجاع بياناتي الأصلية ورفعها للشيت فوراً</button>' +
+            '<button class="btn btn-sec btn-sm" style="width:100%" onclick="fetchFromSheet(true)">🔄 جلب وتحديث كل البيانات من الشيت الآن</button>' +
+            '<button class="btn btn-sec btn-sm" style="width:100%" onclick="uploadAllToSheet()">⬆️ رفع البيانات الحالية إلى الشيت</button>' +
+            '<button class="btn btn-danger btn-sm" style="width:100%" onclick="disconnectSheet()">قطع الربط بالشيت ✕</button>' +
+          '</div>' +
+        '</div>' : '') +
+    '</div>' +
+  '</div>';
+
+  document.getElementById('modal-root').innerHTML = html;
+}
+
+function saveSheetConfig() {
+  var url = document.getElementById('cfg_url').value.trim();
+  if (!url) {
+    alert('الرجاء إدخال رابط Google Apps Script صحيح');
+    return;
+  }
+  sheetUrl = url;
+  localStorage.setItem(SHEET_KEY, sheetUrl);
+  showToast('تم حفظ الرابط، جاري التحقق من الاتصال...');
+  closeModal();
+  fetchFromSheet(true);
+}
+
+function disconnectSheet() {
+  if (!confirm('هل تريد قطع الربط مع Google Sheet؟ ستبقى بياناتك محفوظة محلياً.')) return;
+  sheetUrl = '';
+  localStorage.removeItem(SHEET_KEY);
+  syncState.status = 'idle';
+  closeModal();
+  render();
+  showToast('تم قطع الربط.');
+}
+
+function updateHeaderSyncBadge() {
+  var el = document.getElementById('sync-badge-btn');
+  if (!el) return;
+  if (!sheetUrl) {
+    el.className = 'sync-badge';
+    el.innerHTML = '<span class="sync-dot"></span> غير مربوط';
+    return;
+  }
+  if (syncState.status === 'syncing') {
+    el.className = 'sync-badge syncing';
+    el.innerHTML = '<span class="sync-dot spin"></span> جاري المزامنة...';
+  } else if (syncState.status === 'error') {
+    el.className = 'sync-badge offline';
+    el.innerHTML = '<span class="sync-dot"></span> خطأ اتصال';
+  } else {
+    el.className = 'sync-badge synced';
+    el.innerHTML = '<span class="sync-dot"></span> متصل ' + (syncState.lastSync ? '(' + syncState.lastSync + ')' : '');
+  }
+}
+
+/* ========================================================
+   عناصر الإدخال والقوائم المشتركة
+   ======================================================== */
+
+function form(list, hasDate, btn) {
+  var pl = list === 'expected' ? 'مثلاً: المرتب أو شغل إضافي' :
+           (list === 'expectedExp' ? 'مثلاً: أكل وشرب أو مواصلات' :
+           (list === 'badrI' ? 'مثلاً: إيجار شهر ...' : 'مثلاً: كهرباء أو تموين'));
+  return '<div class="f">' +
+    '<div class="w"><label>اسم البند</label><input id="n_' + list + '" placeholder="' + pl + '"></div>' +
+    '<div><label>المبلغ (جنيه)</label><input id="a_' + list + '" type="number" inputmode="decimal" placeholder="0"></div>' +
+    (hasDate ? '<div><label>التاريخ</label><input id="d_' + list + '" type="date" value="' + today() + '"></div>' : '') +
+    '<div class="w"><button class="btn" onclick="add(\'' + list + '\',' + hasDate + ')">' + btn + '</button></div>' +
+  '</div>';
+}
+
+function rows(list, cls, hasDate) {
+  var a = S[list].slice();
+  if (hasDate) {
+    a.sort(function(x, y) { return (y.d || '') < (x.d || '') ? -1 : 1; });
+  }
+  if (!a.length) return '<p class="hint">لا توجد بنود مسجلة بعد. أضف أول بند بالأسفل.</p>';
+  return a.map(function(x) {
+    var meta = [];
+    if (x.d) meta.push(x.d);
+    if (x.updatedAt) meta.push('🕒 ' + x.updatedAt);
+    return '<div class="row">' +
+      '<div class="n"><b>' + esc(x.n) + '</b>' + (meta.length ? '<span>' + meta.join(' · ') + '</span>' : '') + '</div>' +
+      '<span class="amt ' + cls + '">' + m(x.a) + '<small>ج</small></span>' +
+      '<div class="row-actions">' +
+        '<button class="action-btn" title="تعديل" aria-label="تعديل" onclick="openEditModal(\'' + list + '\',' + x.id + ',' + hasDate + ')">✏️</button>' +
+        '<button class="action-btn del-btn" title="مسح" aria-label="مسح" onclick="del(\'' + list + '\',' + x.id + ')">🗑️</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+/* ========================================================
+   عرض الصفحات (View Engine)
+   ======================================================== */
+
+function view() {
+  var c = C(), h = '';
+  var isZeroed = (S.bank === 0 && S.fund === 0 && (!S.exp || S.exp.length === 0));
+
+  /* ─── Header (Sticky Top Bar) ─── */
+  var pageInfo = {
+    home:     { title: 'الرئيسية', icon: '🏠' },
+    forecast: { title: 'توقعات الشهر القادم', icon: '🔮' },
+    exp:      { title: 'المصاريف', icon: '💸' },
+    badr:     { title: 'شقة بدر', icon: '🏢' },
+    gold:     { title: 'الدهب', icon: '🪙' },
+    logs:     { title: 'سجل التعديلات', icon: '📋' }
+  }[tab] || { title: 'حساب البيت', icon: '🏠' };
+
+  var header = '<div class="header-bar">' +
+    '<div class="header-title-wrap">' +
+      '<span class="header-icon">' + pageInfo.icon + '</span>' +
+      '<span class="header-title">' + pageInfo.title + '</span>' +
+    '</div>' +
+    '<div class="header-actions">' +
+      '<span id="sync-badge-btn" class="sync-badge" onclick="openSettingsModal()">' +
+        '<span class="sync-dot"></span> ' + (sheetUrl ? 'متصل' : 'ربط شيت') +
+      '</span>' +
+      (sheetUrl ? '<button class="icon-btn" title="تحديث" onclick="fetchFromSheet(true)">🔄</button>' : '') +
+      '<button class="icon-btn" title="إعدادات" onclick="openSettingsModal()">⚙️</button>' +
+    '</div>' +
+  '</div>';
+
+  /* ─── 1. HOME TAB (الرئيسية) ─── */
+  if (tab == 'home') {
+    var zeroBanner = isZeroed ?
+      '<div class="zero-alert">' +
+        '<b>⚠️ الأرقام ظاهرة صفر؟</b>' +
+        '<p>لأن جدول Google Sheet المربوط لسه جديد وفارغ. اضغط ده عشان يرجعلك كل بياناتك الأصلية ويرفعها فوراً للشيت:</p>' +
+        '<button class="btn" onclick="restoreSeedAndUpload()">🚀 استرجاع بياناتي الأصلية</button>' +
+      '</div>' : '';
+
+    /* Hero: فلوسك الحالية الصافية */
+    var heroColor = c.mine < 0 ? 'style="background:linear-gradient(135deg,#b52a1c,#d9534f)"' : '';
+    var heroHtml =
+      '<div class="hero" ' + heroColor + '>' +
+        '<div class="hero-label">فلوسك إنت بالظبط (الرصيد الصافي لك)</div>' +
+        '<div class="hero-amount' + (c.mine < 0 ? ' neg' : '') + '">' + m(c.mine) + '<small>جنيه</small></div>' +
+        '<div class="hero-sub">💡 بعد خصم إيجار بدر وسيولة البيت وأمانة أختك من حسابك البنكي</div>' +
+      '</div>';
+
+    /* Forecast Quick Widget */
+    var forecastWidgetHtml =
+      '<div class="forecast-banner-widget" onclick="go(\'forecast\')">' +
+        '<div class="fbw-right">' +
+          '<span class="fbw-icon">🔮</span>' +
+          '<div class="fbw-text">' +
+            '<span class="fbw-title">توقع رصيدك الشهر القادم</span>' +
+            '<span class="fbw-amt">' + m(c.projectedNextMonth) + ' <small>جنيه</small></span>' +
+          '</div>' +
+        '</div>' +
+        '<span class="fbw-btn">التفاصيل ←</span>' +
+      '</div>';
+
+    /* Quick Stat Grid */
+    var statHtml =
+      '<div class="stat-grid">' +
+        '<div class="stat-item">' +
+          '<div class="stat-label">🏦 الحساب البنكي</div>' +
+          '<div class="stat-value">' + m(S.bank) + '<small style="font-size:11px;font-weight:600"> ج</small></div>' +
+        '</div>' +
+        '<div class="stat-item">' +
+          '<div class="stat-label">💵 سيولة البيت المتاحة</div>' +
+          '<div class="stat-value ' + (c.cash < 0 ? 'neg' : '') + '">' + m(c.cash) + '<small style="font-size:11px;font-weight:600"> ج</small></div>' +
+        '</div>' +
+        '<div class="stat-item">' +
+          '<div class="stat-label">🏡 فلوس البيت (إجمالي)</div>' +
+          '<div class="stat-value">' + m(S.fund) + '<small style="font-size:11px;font-weight:600"> ج</small></div>' +
+        '</div>' +
+        '<div class="stat-item">' +
+          '<div class="stat-label">🪙 الدهب (21 + 24)</div>' +
+          '<div class="stat-value">' + m(c.gold) + '<small style="font-size:11px;font-weight:600"> ج</small></div>' +
+        '</div>' +
+      '</div>';
+
+    /* Breakdown Card: كيف تم حساب فلوسك */
+    var breakdownHtml =
+      '<div class="card">' +
+        '<div class="card-title">تفصيل حساب فلوسك الصافية</div>' +
+        '<div class="row"><span>الحساب البنكي الحالي</span><span class="amt">' + m(S.bank) + ' ج</span></div>' +
+        '<div class="row"><span class="neg">− إيجار بدر (مخصوم لصالح البيت)</span><span class="amt neg">−' + m(c.bI) + ' ج</span></div>' +
+        '<div class="row"><span class="neg">− سيولة البيت المتبقية</span><span class="amt neg">−' + m(c.cash) + ' ج</span></div>' +
+        (S.sister ? '<div class="row"><span class="neg">− فلوس أختي (أمانة)</span><span class="amt neg">−' + m(S.sister) + ' ج</span></div>' : '') +
+        '<div class="tot"><span>صافي فلوسك إنت الحالية</span><span class="' + (c.mine < 0 ? 'neg' : 'pos') + '">' + m(c.mine) + ' ج</span></div>' +
+      '</div>';
+
+    /* Balance Edit Trigger Card */
+    var editTriggerHtml =
+      '<div class="card" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="openBalanceModal()">' +
+        '<div>' +
+          '<div style="font-weight:800;font-size:13.5px">✏️ تعديل الأرصدة الأساسية</div>' +
+          '<div style="font-size:11px;color:var(--sub);margin-top:2px">تحديث رصيد البنك · فلوس البيت · فلوس أختك</div>' +
+        '</div>' +
+        '<button class="btn btn-sm btn-sec" onclick="event.stopPropagation();openBalanceModal()">تعديل</button>' +
+      '</div>';
+
+    /* House Summary Mini Card */
+    var houseHtml =
+      '<div class="card">' +
+        '<div class="card-title">ملخص البيت والسيولة</div>' +
+        '<div class="row"><span>فلوس البيت المخصصة</span><span class="amt">' + m(S.fund) + ' ج</span></div>' +
+        '<div class="row"><span class="neg">− مصاريف البيت (15 بند)</span><span class="amt neg">−' + m(c.houseExp) + ' ج</span></div>' +
+        '<div class="row"><span class="neg">− مصاريف شقة بدر</span><span class="amt neg">−' + m(c.bE) + ' ج</span></div>' +
+        '<div class="tot"><span>سيولة البيت المتاحة الآن</span><span class="' + (c.cash < 0 ? 'neg' : '') + '">' + m(c.cash) + ' ج</span></div>' +
+        '<div class="row" style="padding-top:8px"><span>🪙 إجمالي قيمة الدهب</span><span class="amt">' + m(c.gold) + ' ج</span></div>' +
+        '<div class="tot"><span>إجمالي ثروة البيت (دهب + سيولة)</span><span>' + m(c.gold + c.cash) + ' ج</span></div>' +
+      '</div>';
+
+    var sheetNote = sheetUrl ?
+      '<p class="hint" style="text-align:center">☁️ متصل بـ Google Sheet · كافة العمليات مسجلة تلقائياً بالتاريخ والساعة</p>' :
+      '<div class="card" style="cursor:pointer;background:var(--accl);border-color:rgba(11,122,110,.2)" onclick="openSettingsModal()">' +
+        '<div class="row" style="border:0;padding:0">' +
+          '<div class="n"><b style="color:var(--acc)">🔗 اربط بـ Google Sheets الآن</b><span>لحفظ بياناتك سحابياً وتفعيل المزامنة التلقائية</span></div>' +
+          '<span class="amt" style="color:var(--acc)">←</span>' +
+        '</div>' +
+      '</div>';
+
+    h = header + zeroBanner + heroHtml + forecastWidgetHtml + statHtml + breakdownHtml + editTriggerHtml + houseHtml + sheetNote;
+  }
+
+  /* ─── 2. FORECAST TAB (🔮 توقعات الشهر القادم) ─── */
+  if (tab == 'forecast') {
+    var diff = c.projectedNextMonth - c.mine;
+    var chipText = diff > 0 ? ('🟢 زيادة متوقعة: +' + m(diff) + ' ج عن رصيدك الحالي') :
+                   (diff < 0 ? ('🔴 نقص متوقع: −' + m(Math.abs(diff)) + ' ج عن رصيدك الحالي') : '⚪️ مساوٍ لرصيدك الحالي تماماً');
+
+    var fHeroHtml =
+      '<div class="forecast-hero">' +
+        '<div class="hero-label">احتمال الشهر القادم يكون معاك:</div>' +
+        '<div class="hero-amount">' + m(c.projectedNextMonth) + '<small>جنيه</small></div>' +
+        '<div class="forecast-chip">' + chipText + '</div>' +
+      '</div>';
+
+    /* Forecast Equation Breakdown */
+    var eqHtml =
+      '<div class="card">' +
+        '<div class="card-title">معادلة حساب الشهر القادم</div>' +
+        '<div class="row">' +
+          '<span>💰 فلوسك الحالية الصافية</span>' +
+          '<b class="amt">' + m(c.mine) + ' ج</b>' +
+        '</div>' +
+        '<div class="row">' +
+          '<span class="pos">➕ إجمالي الإيرادات المتوقعة</span>' +
+          '<b class="amt pos">+' + m(c.expctTotal) + ' ج</b>' +
+        '</div>' +
+        '<div class="row">' +
+          '<span class="neg">➖ إجمالي المصاريف المتوقعة</span>' +
+          '<b class="amt neg">−' + m(c.expctExpTotal) + ' ج</b>' +
+        '</div>' +
+        '<div class="tot">' +
+          '<span>🔮 صافي المتوقع يكون معاك</span>' +
+          '<span class="' + (c.projectedNextMonth < 0 ? 'neg' : 'pos') + '">' + m(c.projectedNextMonth) + ' ج</span>' +
+        '</div>' +
+      '</div>';
+
+    /* Expected Revenues Card */
+    var incCardHtml =
+      '<div class="fsect-card" style="border-right: 4px solid var(--pos)">' +
+        '<div class="fsect-head">' +
+          '<div class="fsect-head-title"><span class="pos">📥</span> إيرادات متوقعة للشهر القادم</div>' +
+          '<div class="fsect-head-total pos">+' + m(c.expctTotal) + ' ج</div>' +
+        '</div>' +
+        rows('expected', 'pos', false) +
+        '<div class="add-form">' +
+          '<div class="add-form-title">➕ إضافة إيراد متوقع (مرتب، شغل إضافي، جمعية...)</div>' +
+          form('expected', false, 'إضافة الإيراد المتوقع 📥') +
+        '</div>' +
+      '</div>';
+
+    /* Expected Expenses Card */
+    var expCardHtml =
+      '<div class="fsect-card" style="border-right: 4px solid var(--neg)">' +
+        '<div class="fsect-head">' +
+          '<div class="fsect-head-title"><span class="neg">📤</span> مصاريف متوقعة للشهر القادم</div>' +
+          '<div class="fsect-head-total neg">−' + m(c.expctExpTotal) + ' ج</div>' +
+        '</div>' +
+        rows('expectedExp', 'neg', false) +
+        '<div class="add-form">' +
+          '<div class="add-form-title">➕ إضافة مصروف متوقع (أكل، مواصلات، فواتير...)</div>' +
+          form('expectedExp', false, 'إضافة المصروف المتوقع 📤') +
+        '</div>' +
+      '</div>';
+
+    var fNote = '<p class="hint" style="text-align:center">📌 كل بند تضيفه أو تعدله هنا يُحفظ محلياً ويُرفع لصفحتي التوقعات في Google Sheet تلقائياً.</p>';
+
+    h = header + fHeroHtml + eqHtml + incCardHtml + expCardHtml + fNote;
+  }
+
+  /* ─── 3. EXPENSES TAB (💸 المصاريف) ─── */
+  if (tab == 'exp') {
+    var expInfoBox =
+      '<div class="info-box">' +
+        '💡 <b>توضيح هام لحساب المصاريف:</b><br>' +
+        '• مصاريف البيت الحالية (15 بند): <b>' + m(c.houseExp) + ' ج</b><br>' +
+        '• مصاريف شقة بدر (13 بند): <b>' + m(c.bE) + ' ج</b><br>' +
+        '• <b>إجمالي كل المصاريف معاً = ' + m(c.totalExp) + ' ج</b>' +
+      '</div>';
+
+    h = header +
+      '<div class="hero" style="background:linear-gradient(135deg,#b52a1c,#d9534f)">' +
+        '<div class="hero-label">إجمالي كل المصاريف (شامل بدر)</div>' +
+        '<div class="hero-amount neg">' + m(c.totalExp) + '<small>جنيه</small></div>' +
+      '</div>' +
+      expInfoBox +
+      '<div class="stat-grid">' +
+        '<div class="stat-item"><div class="stat-label">مصاريف البيت (15 بند)</div><div class="stat-value neg">' + m(c.houseExp) + ' ج</div></div>' +
+        '<div class="stat-item"><div class="stat-label">مصاريف بدر (13 بند)</div><div class="stat-value neg">' + m(c.bE) + ' ج</div></div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="card-title">' +
+          '<span>بنود مصاريف البيت</span>' +
+          '<span class="badge badge-info">' + S.exp.length + ' بند</span>' +
+        '</div>' +
+        rows('exp', 'neg', true) +
+        '<div class="tot"><span>مجموع مصاريف البيت</span><span class="neg">' + m(c.houseExp) + ' ج</span></div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="card-title">➕ إضافة مصروف جديد للبيت</div>' +
+        form('exp', true, 'إضافة المصروف 💸') +
+      '</div>';
+  }
+
+  /* ─── 4. BADR TAB (🏢 شقة بدر) ─── */
+  if (tab == 'badr') {
+    var netBadr = c.bI - c.bE;
+    var badrHeroColor = netBadr >= 0 ? '#157a45,#1aad60' : '#b52a1c,#d9534f';
+    var badrNote =
+      '<div class="info-box">' +
+        '🏢 <b>نظام شقة بدر:</b><br>' +
+        '• إيرادات الإيجار (<b>' + m(c.bI) + ' ج</b>) تُخصم تلقائياً من رصيد حسابك البنكي لصالح البيت ليصبح رصيدك الصافي دقيقاً 100%.<br>' +
+        '• مصاريف تجهيز الشقة (<b>' + m(c.bE) + ' ج</b>) محسوبة ضمن مصاريف البيت.' +
+      '</div>';
+
+    h = header +
+      '<div class="hero" style="background:linear-gradient(135deg,' + badrHeroColor + ')">' +
+        '<div class="hero-label">صافي شقة بدر (الإيرادات − المصروفات)</div>' +
+        '<div class="hero-amount">' + m(netBadr) + '<small>جنيه</small></div>' +
+      '</div>' +
+      badrNote +
+      '<div class="stat-grid">' +
+        '<div class="stat-item"><div class="stat-label">📥 إيرادات الإيجار</div><div class="stat-value pos">+' + m(c.bI) + ' ج</div></div>' +
+        '<div class="stat-item"><div class="stat-label">📤 مصروفات التجهيز</div><div class="stat-value neg">−' + m(c.bE) + ' ج</div></div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="card-title"><span class="pos">📥 إيرادات إيجار بدر (تُخصم من البنك)</span></div>' +
+        rows('badrI', 'pos', false) +
+        '<div class="tot"><span>إجمالي إيراد الإيجار</span><span class="pos">+' + m(c.bI) + ' ج</span></div>' +
+        '<div class="add-form">' +
+          '<div class="add-form-title">➕ إضافة دفعة إيجار</div>' +
+          form('badrI', false, 'إضافة الإيراد 📥') +
+        '</div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="card-title"><span class="neg">📤 مصاريف تجهيز شقة بدر</span></div>' +
+        rows('badrE', 'neg', false) +
+        '<div class="tot"><span>إجمالي مصاريف بدر</span><span class="neg">−' + m(c.bE) + ' ج</span></div>' +
+        '<div class="add-form">' +
+          '<div class="add-form-title">➕ إضافة مصروف لشقة بدر</div>' +
+          form('badrE', false, 'إضافة المصروف 📤') +
+        '</div>' +
+      '</div>';
+  }
+
+  /* ─── 5. GOLD TAB (🪙 الدهب) ─── */
+  if (tab == 'gold') {
+    function gCard(k, name) {
+      var item = S[k];
+      var total = (item.g || 0) * (item.p || 0);
+      return '<div class="card">' +
+        '<div class="card-title"><span>' + name + '</span><b class="amt">' + m(total) + ' ج</b></div>' +
+        '<div class="f">' +
+          '<div><label>الوزن (جرام)</label><input type="number" inputmode="decimal" value="' + item.g + '" onchange="setG(\'' + k + '\',\'g\',this.value)"></div>' +
+          '<div><label>سعر الجرام (جنيه)</label><input type="number" inputmode="decimal" value="' + item.p + '" onchange="setG(\'' + k + '\',\'p\',this.value)"></div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    h = header +
+      '<div class="hero" style="background:linear-gradient(135deg,#c47a0b,#f59e0b)">' +
+        '<div class="hero-label">إجمالي قيمة الدهب الحالي</div>' +
+        '<div class="hero-amount">' + m(c.gold) + '<small>جنيه</small></div>' +
+      '</div>' +
+      gCard('g21', '✨ عيار 21') +
+      gCard('g24', '✨ عيار 24') +
+      '<div class="card">' +
+        '<div class="card-title">ملخص ثروة البيت</div>' +
+        '<div class="row"><span>🪙 إجمالي قيمة الدهب</span><span class="amt">' + m(c.gold) + ' ج</span></div>' +
+        '<div class="row"><span>💵 سيولة البيت المتاحة</span><span class="amt">' + m(c.cash) + ' ج</span></div>' +
+        '<div class="tot"><span>إجمالي البيت (دهب + سيولة)</span><span>' + m(c.gold + c.cash) + ' ج</span></div>' +
+      '</div>' +
+      '<p class="hint" style="text-align:center">📌 عند تعديل سعر الجرام أو الوزن يتم الحفظ وتحديث الشيت تلقائياً.</p>';
+  }
+
+  /* ─── 6. LOGS TAB (📋 سجل التعديلات) ─── */
+  if (tab == 'logs') {
+    var logsList = S.logs || [];
+    var logCards = '';
+    if (!logsList.length) {
+      logCards = '<div class="card" style="text-align:center;padding:28px 16px">' +
+        '<div style="font-size:40px;margin-bottom:8px">📋</div>' +
+        '<p class="hint">لا توجد أي تعديلات مسجلة بعد.<br>أي تعديل أو إضافة أو حذف سيتم توثيقه هنا تلقائياً.</p>' +
+      '</div>';
+    } else {
+      logCards = logsList.map(function(log) {
+        var badgeCls = (log.type && log.type.indexOf('حذف') !== -1) ? 'badge-neg' :
+                       ((log.type && log.type.indexOf('إضافة') !== -1) ? 'badge-pos' :
+                       ((log.type && log.type.indexOf('تعديل') !== -1) ? 'badge-warn' : 'badge-info'));
+        return '<div class="card log-card">' +
+          '<div class="log-top">' +
+            '<span class="log-badge ' + badgeCls + '">' + esc(log.type) + '</span>' +
+            '<span class="log-time">' + esc(log.dt) + '</span>' +
+          '</div>' +
+          '<div class="log-title">' + (log.sec ? '<span class="log-sec">' + esc(log.sec) + '</span>' : '') + '<b>' + esc(log.n || log.desc) + '</b></div>' +
+          (log.oldV !== undefined && log.oldV !== '' && log.newV !== undefined && log.newV !== '' ?
+            '<div class="log-values"><s>' + m(log.oldV) + ' ج</s> → <b class="pos">' + m(log.newV) + ' ج</b></div>' : '') +
+          (log.desc ? '<div class="log-desc">' + esc(log.desc) + '</div>' : '') +
+          '<div class="log-actions">' +
+            '<button class="btn-danger-subtle" data-id="' + esc(log.id) + '" onclick="deleteLogItem(this.getAttribute(\'data-id\'))">🗑️ حذف من الشيت</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    h = header +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin:4px 0 12px">' +
+        '<div>' +
+          '<div style="font-weight:900;font-size:15px">📋 سجل العمليات والمزامنة</div>' +
+          '<div style="font-size:11px;color:var(--sub)">' + logsList.length + ' حركة موثقة</div>' +
+        '</div>' +
+        (logsList.length ? '<button class="btn btn-sm btn-sec" onclick="clearAllLogsFromSheet()">🧹 تصفير السجل</button>' : '') +
+      '</div>' +
+      logCards;
+  }
+
+  return h;
+}
+
+function render() {
+  document.getElementById('app').innerHTML = view();
+  updateHeaderSyncBadge();
+
+  var T = [
+    ['home',     '🏠', 'الرئيسية'],
+    ['forecast', '🔮', 'التوقعات'],
+    ['exp',      '💸', 'المصاريف'],
+    ['badr',     '🏢', 'شقة بدر'],
+    ['gold',     '🪙', 'الدهب'],
+    ['logs',     '📋', 'السجل']
+  ];
+
+  document.getElementById('nav').innerHTML = T.map(function(t) {
+    return '<button class="' + (tab == t[0] ? 'on' : '') + '" onclick="go(\'' + t[0] + '\')">' +
+      '<span class="nav-icon">' + t[1] + '</span>' +
+      '<span class="nav-label">' + t[2] + '</span>' +
+    '</button>';
+  }).join('');
+}
+
+render();
+if (sheetUrl) {
+  fetchFromSheet(false);
+}
+
+// مزامنة فورية عند العودة لنافذة الموقع من الشيت
+window.addEventListener('focus', function() {
+  if (sheetUrl && syncState.status !== 'syncing') {
+    fetchFromSheet(false);
+  }
+});
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden && sheetUrl && syncState.status !== 'syncing') {
+    fetchFromSheet(false);
+  }
+});
+
+// فحص دوري كل 10 ثوانٍ
+setInterval(function() {
+  if (sheetUrl && syncState.status !== 'syncing') {
+    fetchFromSheet(false);
+  }
+}, 10000);
+</script>
+</body>
+</html>
