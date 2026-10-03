@@ -3,2020 +3,925 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#0b7a6e">
+<meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>حساب البيت</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="تطبيق حساب البيت - متابعة أموالك بسهولة">
+<title>حساب البيت 💰</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   Design Tokens & Modern Mobile Theme
-   ============================================================ */
+/* ── Tokens ── */
 :root {
-  --bg:        #f4f6f5;
-  --card:      #ffffff;
-  --ink:       #0f1715;
-  --sub:       #5a6e67;
-  --line:      #e2e8e5;
-  --acc:       #0b7a6e;
-  --acch:      #096359;
-  --accl:      #e4f6f2;
-  --neg:       #c0392b;
-  --negl:      #fdeeed;
-  --pos:       #157a45;
-  --posl:      #e3f7ed;
-  --warn:      #b25c00;
-  --warnl:     #fff3e0;
-  --purple:    #4f46e5;
-  --purplel:   #eef2ff;
-  --shadow-sm: 0 1px 3px rgba(11,122,110,.05);
-  --shadow:    0 4px 16px rgba(11,122,110,.08);
-  --shadow-lg: 0 8px 30px rgba(0,0,0,.12);
-  --r:         18px;
-  --r-sm:      12px;
+  --bg: #f0f4f8;
+  --surface: #ffffff;
+  --surface2: #f7f9fb;
+  --border: #e2e8f0;
+  --ink: #1a202c;
+  --muted: #718096;
+  --acc: #6c63ff;
+  --acc2: #8b5cf6;
+  --pos: #10b981;
+  --neg: #ef4444;
+  --warn: #f59e0b;
+  --gold: #d97706;
+  --r: 20px;
+  --r-sm: 12px;
+  --nav-h: 72px;
+  --hdr-h: 60px;
 }
-
+[data-theme=dark] {
+  --bg: #0f0f1a; --surface: #1a1a2e; --surface2: #16213e;
+  --border: #2d3748; --ink: #f7fafc; --muted: #a0aec0;
+  --acc: #7c70ff; --acc2: #a78bfa;
+  --pos: #34d399; --neg: #f87171; --warn: #fbbf24; --gold: #fcd34d;
+}
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme=light]) {
-    --bg:        #0c1412;
-    --card:      #15221d;
-    --ink:       #e8f2ef;
-    --sub:       #8ca39a;
-    --line:      #20312b;
-    --acc:       #2dc4b0;
-    --acch:      #22a897;
-    --accl:      #0e3630;
-    --neg:       #f47a6e;
-    --negl:      #3d1a16;
-    --pos:       #4ecc82;
-    --posl:      #103525;
-    --warn:      #fdb040;
-    --warnl:     #332200;
-    --purple:    #818cf8;
-    --purplel:   #1e1b4b;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
-    --shadow:    0 4px 16px rgba(0,0,0,.4);
-    --shadow-lg: 0 8px 30px rgba(0,0,0,.5);
+    --bg: #0f0f1a; --surface: #1a1a2e; --surface2: #16213e;
+    --border: #2d3748; --ink: #f7fafc; --muted: #a0aec0;
+    --acc: #7c70ff; --acc2: #a78bfa;
+    --pos: #34d399; --neg: #f87171; --warn: #fbbf24; --gold: #fcd34d;
   }
 }
-
-:root[data-theme=dark] {
-  --bg:        #0c1412;
-  --card:      #15221d;
-  --ink:       #e8f2ef;
-  --sub:       #8ca39a;
-  --line:      #20312b;
-  --acc:       #2dc4b0;
-  --acch:      #22a897;
-  --accl:      #0e3630;
-  --neg:       #f47a6e;
-  --negl:      #3d1a16;
-  --pos:       #4ecc82;
-  --posl:      #103525;
-  --warn:      #fdb040;
-  --warnl:     #332200;
-  --purple:    #818cf8;
-  --purplel:   #1e1b4b;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
-  --shadow:    0 4px 16px rgba(0,0,0,.4);
-  --shadow-lg: 0 8px 30px rgba(0,0,0,.5);
-}
-
-/* ============================================================
-   App Shell & Reset
-   ============================================================ */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
-
-html {
-  -webkit-text-size-adjust: 100%;
-  background: var(--bg);
-}
-
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { background: var(--bg); -webkit-text-size-adjust: 100%; }
 body {
-  background: var(--bg);
-  color: var(--ink);
-  font: 400 14px/1.5 'Cairo', -apple-system, BlinkMacSystemFont, Tahoma, sans-serif;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-#app-container {
-  width: 100%;
-  max-width: 480px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  background: var(--bg);
-  box-shadow: 0 0 40px rgba(0,0,0,.04);
-}
-
-main#app {
-  flex: 1;
-  padding: 12px 14px calc(76px + env(safe-area-inset-bottom, 0px));
-}
-
-/* ============================================================
-   App Header (Sticky Top Bar)
-   ============================================================ */
-.header-bar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(244, 246, 245, 0.92);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line);
-  padding: 10px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: -12px -14px 12px;
-}
-
-:root[data-theme=dark] .header-bar,
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme=light]) .header-bar {
-    background: rgba(12, 20, 18, 0.92);
-  }
-}
-
-.header-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.header-icon {
-  font-size: 20px;
-  line-height: 1;
-}
-.header-title {
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: -.2px;
-  color: var(--ink);
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.sync-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 9px;
-  border-radius: 20px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  color: var(--sub);
-  cursor: pointer;
-  transition: all .2s;
-}
-.sync-badge.synced {
-  background: var(--posl);
-  border-color: rgba(21,122,69,.25);
-  color: var(--pos);
-}
-.sync-badge.syncing {
-  background: var(--accl);
-  border-color: rgba(11,122,110,.25);
-  color: var(--acc);
-}
-.sync-badge.offline {
-  background: var(--negl);
-  border-color: rgba(192,57,43,.25);
-  color: var(--neg);
-}
-.sync-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: currentColor;
-}
-.sync-dot.spin {
-  animation: pulse 1s infinite alternate;
-}
-@keyframes pulse { from { opacity: .3; transform: scale(.8); } to { opacity: 1; transform: scale(1.2); } }
-
-.icon-btn {
-  background: var(--card);
-  border: 1px solid var(--line);
-  color: var(--ink);
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all .15s;
-}
-.icon-btn:active {
-  transform: scale(.92);
-  background: var(--accl);
-}
-
-/* ============================================================
-   Bottom Navigation Bar (Mobile App Style)
-   ============================================================ */
-nav#nav {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 480px;
-  z-index: 200;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid var(--line);
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  padding: 4px 4px calc(6px + env(safe-area-inset-bottom, 0px));
-  box-shadow: 0 -4px 20px rgba(0,0,0,.06);
-}
-
-:root[data-theme=dark] nav#nav,
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme=light]) nav#nav {
-    background: rgba(21, 34, 29, 0.94);
-  }
-}
-
-nav#nav button {
-  border: none;
-  background: none;
-  font: inherit;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  padding: 6px 1px;
-  border-radius: 12px;
-  cursor: pointer;
-  color: var(--sub);
-  transition: all .18s cubic-bezier(.16,1,.3,1);
-}
-
-nav#nav button .nav-icon {
-  font-size: 18px;
-  line-height: 1;
-  transition: transform .2s cubic-bezier(.34,1.56,.64,1);
-}
-
-nav#nav button .nav-label {
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-nav#nav button.on {
-  color: var(--acc);
-  background: var(--accl);
-}
-
-nav#nav button.on .nav-icon {
-  transform: scale(1.15) translateY(-1px);
-}
-
-nav#nav button:active {
-  transform: scale(.92);
-}
-
-/* ============================================================
-   Cards & Layout Components
-   ============================================================ */
-.card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--r);
-  padding: 14px 16px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow .2s;
-}
-
-.card-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--sub);
-  margin-bottom: 10px;
-  letter-spacing: .1px;
-}
-
-/* Hero Cards */
-.hero {
-  border-radius: var(--r);
-  padding: 18px 18px 16px;
-  color: #fff;
-  background: linear-gradient(135deg, #0b7a6e 0%, #0d9488 100%);
-  margin-bottom: 12px;
-  box-shadow: 0 8px 24px rgba(11,122,110,.25);
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::after {
-  content: '';
-  position: absolute;
-  top: -40%;
-  left: -20%;
-  width: 140px;
-  height: 140px;
-  background: radial-gradient(circle, rgba(255,255,255,.2) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.hero-label {
-  font-size: 12px;
-  font-weight: 700;
-  opacity: .9;
-  margin-bottom: 4px;
-}
-
-.hero-amount {
-  font-size: 38px;
-  font-weight: 900;
-  line-height: 1.1;
-  letter-spacing: -.8px;
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-}
-
-.hero-amount small {
-  font-size: 16px;
-  font-weight: 700;
-  opacity: .85;
-}
-
-.hero-sub {
-  font-size: 11px;
-  opacity: .85;
-  margin-top: 6px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* Quick Forecast Banner on Home Screen */
-.forecast-banner-widget {
-  background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
-  border: 1.5px solid #c7d2fe;
-  border-radius: var(--r);
-  padding: 12px 14px;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  transition: all .18s;
-}
-
-:root[data-theme=dark] .forecast-banner-widget,
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme=light]) .forecast-banner-widget {
-    background: linear-gradient(135deg, #1e1b4b 0%, #2e1065 100%);
-    border-color: #4338ca;
-  }
-}
-
-.forecast-banner-widget:active {
-  transform: scale(.98);
-}
-
-.fbw-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.fbw-icon {
-  font-size: 26px;
-  line-height: 1;
-}
-.fbw-text {
-  display: flex;
-  flex-direction: column;
-}
-.fbw-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: #4338ca;
-}
-:root[data-theme=dark] .fbw-title,
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme=light]) .fbw-title { color: #a5b4fc; }
-}
-.fbw-amt {
-  font-size: 20px;
-  font-weight: 900;
-  line-height: 1.2;
-  color: #1e1b4b;
-}
-:root[data-theme=dark] .fbw-amt,
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme=light]) .fbw-amt { color: #ffffff; }
-}
-.fbw-amt small {
-  font-size: 12px;
-  font-weight: 600;
-}
-.fbw-btn {
-  background: #4f46e5;
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 6px 12px;
-  border-radius: 20px;
-  white-space: nowrap;
-}
-
-/* Stat Grids */
-.stat-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.stat-item {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--r-sm);
-  padding: 11px 13px;
-  box-shadow: var(--shadow-sm);
-}
-
-.stat-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--sub);
-  margin-bottom: 4px;
-}
-
-.stat-value {
-  font-size: 17px;
-  font-weight: 900;
-  line-height: 1.2;
-  color: var(--ink);
-}
-
-/* Rows & Lists */
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 9px 0;
-  border-bottom: 1px solid var(--line);
-}
-.row:last-child {
-  border-bottom: none;
-}
-.row .n {
-  flex: 1;
-  min-width: 0;
-}
-.row .n b {
-  font-weight: 700;
-  font-size: 13.5px;
-  display: block;
-  overflow-wrap: anywhere;
-}
-.row .n span {
-  font-size: 11px;
-  color: var(--sub);
-  display: block;
-  margin-top: 1px;
-}
-.amt {
-  font-weight: 800;
-  font-size: 14px;
-  white-space: nowrap;
-}
-.amt small {
-  font-size: 11px;
-  font-weight: 600;
-  margin-inline-start: 2px;
-}
-.neg { color: var(--neg); }
-.pos { color: var(--pos); }
-
-.tot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 900;
-  font-size: 14.5px;
-  padding: 10px 0 2px;
-  border-top: 2px solid var(--ink);
-  margin-top: 6px;
-}
-
-.row-actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.action-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 5px 6px;
-  border-radius: 6px;
-  color: var(--sub);
-  transition: all .15s;
-}
-.action-btn:active {
-  transform: scale(.88);
-  background: var(--accl);
-  color: var(--acc);
-}
-.action-btn.del-btn:active {
-  background: var(--negl);
-  color: var(--neg);
-}
-
-/* Forecast Tab Sections */
-.forecast-hero {
-  background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, #0891b2 100%);
-  border-radius: var(--r);
-  padding: 18px 18px 16px;
-  color: #fff;
-  margin-bottom: 12px;
-  box-shadow: 0 8px 24px rgba(67, 56, 202, .28);
-}
-.forecast-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 4px 10px;
-  border-radius: 20px;
-  margin-top: 8px;
-  background: rgba(255, 255, 255, .18);
-  backdrop-filter: blur(6px);
-}
-
-.fsect-card {
-  border-radius: var(--r);
-  background: var(--card);
-  border: 1px solid var(--line);
-  padding: 14px 16px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow-sm);
-}
-.fsect-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.fsect-head-title {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  font-weight: 800;
-}
-.fsect-head-total {
-  font-size: 15px;
-  font-weight: 900;
-}
-
-/* Forms & Inputs */
-label {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--sub);
-  display: block;
-  margin-bottom: 4px;
-}
-input {
-  width: 100%;
-  font: inherit;
-  font-size: 13.5px;
-  padding: 9px 12px;
-  border: 1.5px solid var(--line);
-  border-radius: 10px;
-  background: var(--bg);
-  color: var(--ink);
-  -webkit-appearance: none;
-  transition: border-color .15s;
-}
-input:focus {
-  outline: none;
-  border-color: var(--acc);
-  background: var(--card);
-}
-.f {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 8px;
-}
-.f .w {
-  grid-column: 1 / -1;
-}
-.add-form {
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1.5px dashed var(--line);
-}
-.add-form-title {
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--sub);
-  margin-bottom: 8px;
-}
-
-/* Buttons */
-.btn {
-  font: inherit;
-  font-weight: 800;
-  font-size: 13.5px;
-  border: none;
-  border-radius: 11px;
-  padding: 10px 16px;
-  background: var(--acc);
-  color: #fff;
-  width: 100%;
-  cursor: pointer;
-  -webkit-appearance: none;
-  transition: all .15s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-.btn:active {
-  opacity: .88;
-  transform: scale(.97);
-}
-.btn-sec {
-  background: var(--accl);
-  color: var(--acc);
-}
-.btn-sec:active {
-  background: var(--acc);
-  color: #fff;
-}
-.btn-danger {
-  background: var(--neg);
-  color: #fff;
-}
-.btn-sm {
-  padding: 6px 12px;
-  font-size: 12px;
-  border-radius: 8px;
-  width: auto;
-}
-.btn-group {
-  display: flex;
-  gap: 8px;
-  margin-top: 14px;
-}
-.btn-group .btn {
-  flex: 1;
-}
-
-.btn-danger-subtle {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: var(--negl);
-  color: var(--neg);
-  border: 1px solid rgba(192,57,43,.15);
-  padding: 5px 10px;
-  font-size: 11px;
-  font-weight: 700;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.btn-danger-subtle:active {
-  transform: scale(.95);
-}
-
-/* Badges */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 2px 7px;
-  border-radius: 20px;
-}
-.badge-neg { background: var(--negl); color: var(--neg); }
-.badge-pos { background: var(--posl); color: var(--pos); }
-.badge-warn { background: var(--warnl); color: var(--warn); }
-.badge-info { background: var(--accl); color: var(--acc); }
-
-/* Logs Card */
-.log-card {
-  padding: 12px 14px;
-  margin-bottom: 8px;
-}
-.log-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-}
-.log-badge {
-  font-size: 10px;
-  font-weight: 800;
-  padding: 2px 7px;
-  border-radius: 12px;
-}
-.log-time {
-  font-size: 11px;
-  color: var(--sub);
-}
-.log-title {
-  font-size: 13.5px;
-  margin-bottom: 4px;
-}
-.log-title b {
-  font-weight: 800;
-}
-.log-sec {
-  display: inline-block;
-  background: var(--bg);
-  border: 1px solid var(--line);
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-size: 10px;
-  color: var(--sub);
-  margin-inline-end: 6px;
-}
-.log-values {
-  font-size: 12px;
-  color: var(--sub);
-  margin-bottom: 6px;
-}
-.log-desc {
-  font-size: 11.5px;
-  color: var(--sub);
-  margin-bottom: 8px;
-  background: var(--bg);
-  padding: 6px 8px;
-  border-radius: 6px;
-}
-.log-actions {
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* Explanatory Banner */
-.info-box {
-  background: var(--accl);
-  border: 1px solid rgba(11,122,110,.2);
-  border-radius: var(--r-sm);
-  padding: 10px 12px;
-  margin-bottom: 12px;
-  font-size: 12px;
-  line-height: 1.55;
-  color: var(--ink);
-}
-.info-box b {
-  color: var(--acc);
-}
-
-.hint {
-  font-size: 11.5px;
-  color: var(--sub);
-  margin: 6px 2px;
-  line-height: 1.5;
-}
-
-.zero-alert {
-  background: var(--warnl);
-  border: 1.5px dashed var(--warn);
-  border-radius: var(--r);
-  padding: 14px 16px;
-  margin-bottom: 14px;
-}
-.zero-alert b {
-  color: var(--warn);
-  display: block;
-  margin-bottom: 6px;
-}
-.zero-alert p {
-  font-size: 12.5px;
-  line-height: 1.55;
-  margin-bottom: 10px;
-}
-
-/* Toast */
-#toast {
-  position: fixed;
-  bottom: 78px;
-  left: 50%;
-  transform: translateX(-50%) translateY(14px);
-  background: rgba(15,23,21,.92);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: #fff;
-  padding: 8px 18px;
-  border-radius: 24px;
-  font-size: 12.5px;
-  font-weight: 700;
-  box-shadow: 0 8px 24px rgba(0,0,0,.22);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .22s, transform .22s;
-  z-index: 9000;
-  white-space: nowrap;
-  max-width: 90vw;
-  text-align: center;
-}
-#toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-/* Modals (Bottom Sheet) */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.45);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  z-index: 8000;
-}
-.modal {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 22px 22px 0 0;
-  padding: 0 20px 24px;
-  width: 100%;
-  max-width: 480px;
-  max-height: 88vh;
+  background: var(--bg); color: var(--ink);
+  font: 400 15px/1.6 'Cairo', -apple-system, sans-serif;
+  min-height: 100dvh; display: flex; justify-content: center;
+  overscroll-behavior: none;
+}
+#shell {
+  width: 100%; max-width: 430px; min-height: 100dvh;
+  display: flex; flex-direction: column; background: var(--bg); position: relative;
+}
+#hdr {
+  position: sticky; top: 0; z-index: 50; height: var(--hdr-h);
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 18px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+}
+.hdr-title { font-size: 18px; font-weight: 900; letter-spacing: -.3px; }
+.hdr-sub { font-size: 11px; color: var(--muted); font-weight: 600; }
+.hdr-actions { display: flex; gap: 6px; align-items: center; }
+.hdr-btn {
+  width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--surface2); color: var(--ink); font-size: 16px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .15s;
+}
+.hdr-btn:active { transform: scale(.9); background: var(--acc); color: #fff; border-color: var(--acc); }
+.sync-pill {
+  display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700;
+  padding: 4px 10px; border-radius: 20px; border: 1.5px solid var(--border);
+  background: var(--surface2); color: var(--muted); cursor: pointer; white-space: nowrap;
+}
+.sync-pill.ok { background: #d1fae5; border-color: #6ee7b7; color: #059669; }
+.sync-pill.going { background: #ede9fe; border-color: #c4b5fd; color: var(--acc); }
+.sync-pill.err { background: #fee2e2; border-color: #fca5a5; color: var(--neg); }
+[data-theme=dark] .sync-pill.ok { background: #064e3b; border-color: #065f46; color: #34d399; }
+[data-theme=dark] .sync-pill.going { background: #2d1b69; border-color: #4c1d95; color: var(--acc2); }
+[data-theme=dark] .sync-pill.err { background: #450a0a; border-color: #7f1d1d; color: var(--neg); }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.sync-dot.pulse { animation: blink 1s ease infinite alternate; }
+@keyframes blink { from { opacity:.3; transform: scale(.7); } to { opacity:1; transform: scale(1.2); } }
+#app {
+  flex: 1; padding: 16px 16px calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 16px);
   overflow-y: auto;
-  box-shadow: 0 -8px 40px rgba(0,0,0,.2);
-  animation: slideUp .22s cubic-bezier(.16,1,.3,1);
 }
-.modal::before {
-  content: '';
-  display: block;
-  width: 38px;
-  height: 4px;
-  border-radius: 4px;
-  background: var(--line);
-  margin: 10px auto 16px;
+#nav {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 430px; z-index: 100; background: var(--surface);
+  border-top: 1px solid var(--border);
+  height: calc(var(--nav-h) + env(safe-area-inset-bottom,0px));
+  padding-bottom: env(safe-area-inset-bottom,0px);
+  display: flex; align-items: stretch;
+  box-shadow: 0 -8px 30px rgba(0,0,0,.08);
 }
-@keyframes slideUp { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
-
-.modal-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
+.nav-btn {
+  flex: 1; border: none; background: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; color: var(--muted); cursor: pointer; transition: color .15s;
+  padding: 8px 4px 4px; position: relative;
 }
-.modal-head h2 {
-  font-size: 16px;
-  font-weight: 900;
+.nav-btn.on { color: var(--acc); }
+.nav-btn .ni { font-size: 22px; line-height: 1; transition: transform .2s cubic-bezier(.34,1.56,.64,1); }
+.nav-btn.on .ni { transform: scale(1.12) translateY(-1px); }
+.nav-btn .nl { font-size: 10px; font-weight: 700; white-space: nowrap; }
+.nav-btn.on::after {
+  content: ''; position: absolute; top: 0; left: 20%; right: 20%;
+  height: 3px; border-radius: 0 0 4px 4px; background: var(--acc);
 }
-.modal-close {
-  background: var(--bg);
-  border: none;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  font-size: 15px;
-  color: var(--sub);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.nav-btn:active { opacity: .7; }
+#fab {
+  position: fixed; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 16px);
+  right: calc(50% - 215px + 16px);
+  width: 54px; height: 54px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--acc), var(--acc2));
+  color: #fff; font-size: 26px; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 25px rgba(108,99,255,.4); border: none; cursor: pointer; z-index: 90;
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s, opacity .2s;
 }
-.sheet-setup-box {
-  background: var(--accl);
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 14px;
-  font-size: 12.5px;
-  line-height: 1.6;
+#fab:active { transform: scale(.9); box-shadow: 0 4px 15px rgba(108,99,255,.3); }
+#fab.hidden { opacity: 0; pointer-events: none; transform: scale(0); }
+@media (max-width: 430px) { #fab { right: 16px; } }
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 16px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,.04);
 }
-.sheet-setup-box b { color: var(--acc); }
+.card-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.card-hd-title { font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing:.3px; }
+.card-hd-val { font-size: 15px; font-weight: 900; }
+.balance-card {
+  background: linear-gradient(135deg, #6c63ff 0%, #8b5cf6 60%, #06b6d4 100%);
+  border-radius: 24px; padding: 22px 20px; margin-bottom: 14px; color: #fff;
+  position: relative; overflow: hidden;
+  box-shadow: 0 12px 35px rgba(108,99,255,.35);
+}
+.balance-card::before {
+  content: ''; position: absolute; top: -30px; right: -30px;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, rgba(255,255,255,.15) 0%, transparent 70%); pointer-events: none;
+}
+.balance-card::after {
+  content: ''; position: absolute; bottom: -20px; left: -20px;
+  width: 90px; height: 90px;
+  background: radial-gradient(circle, rgba(255,255,255,.1) 0%, transparent 70%); pointer-events: none;
+}
+.bal-label { font-size: 12px; font-weight: 700; opacity: .85; margin-bottom: 4px; }
+.bal-amount { font-size: 40px; font-weight: 900; letter-spacing: -1px; line-height: 1; margin-bottom: 4px; }
+.bal-amount small { font-size: 17px; font-weight: 700; opacity: .8; }
+.bal-meta { font-size: 11.5px; opacity: .8; margin-top: 8px; }
+.bal-edit-btn {
+  position: absolute; top: 14px; left: 14px;
+  background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.3);
+  border-radius: 10px; color: #fff; font-size: 12px; font-weight: 700;
+  padding: 5px 10px; cursor: pointer; backdrop-filter: blur(8px); font-family: inherit;
+}
+.bal-edit-btn:active { background: rgba(255,255,255,.35); transform: scale(.95); }
+.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.stat-box {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm);
+  padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+.stat-box .sb-label { font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 5px; }
+.stat-box .sb-val { font-size: 18px; font-weight: 900; color: var(--ink); }
+.stat-box .sb-val small { font-size: 11px; font-weight: 600; color: var(--muted); }
+.fc-banner {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  border-radius: var(--r); padding: 14px 16px; margin-bottom: 14px;
+  display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(99,91,255,.2); transition: transform .15s;
+}
+.fc-banner:active { transform: scale(.98); }
+.fc-banner .fc-left { display: flex; align-items: center; gap: 10px; }
+.fc-banner .fc-icon { font-size: 28px; }
+.fc-banner .fc-label { font-size: 10.5px; font-weight: 700; color: #a5b4fc; margin-bottom: 2px; }
+.fc-banner .fc-amt { font-size: 22px; font-weight: 900; color: #fff; }
+.fc-banner .fc-amt small { font-size: 12px; }
+.fc-arrow { background: rgba(255,255,255,.15); color: #fff; font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 20px; white-space: nowrap; }
+.list-row { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+.list-row:last-child { border-bottom: none; }
+.list-row .lr-info { flex: 1; min-width: 0; }
+.list-row .lr-name { font-size: 13.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.list-row .lr-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.list-row .lr-amt { font-size: 14px; font-weight: 900; white-space: nowrap; }
+.list-row .lr-amt small { font-size: 11px; font-weight: 600; }
+.lr-actions { display: flex; gap: 4px; }
+.lr-btn {
+  width: 30px; height: 30px; border-radius: 8px; border: none;
+  background: var(--surface2); font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all .13s; color: var(--muted);
+}
+.lr-btn:active { transform: scale(.88); }
+.lr-btn.del:active { background: #fee2e2; color: var(--neg); }
+.lr-btn.edit:active { background: #ede9fe; color: var(--acc); }
+.total-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0 2px; border-top: 2px solid var(--border);
+  margin-top: 4px; font-weight: 900; font-size: 14.5px;
+}
+.field { margin-bottom: 10px; }
+.field label { font-size: 11px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 4px; }
+.field input {
+  width: 100%; font: inherit; font-size: 14px; padding: 11px 14px;
+  border: 1.5px solid var(--border); border-radius: var(--r-sm);
+  background: var(--surface2); color: var(--ink); -webkit-appearance: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.field input:focus {
+  outline: none; border-color: var(--acc);
+  box-shadow: 0 0 0 3px rgba(108,99,255,.15); background: var(--surface);
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.form-grid .span2 { grid-column: 1/-1; }
+.btn {
+  font: inherit; font-size: 14px; font-weight: 800; padding: 12px 20px;
+  border-radius: var(--r-sm); border: none; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  transition: all .15s; -webkit-appearance: none; width: 100%;
+}
+.btn-primary { background: linear-gradient(135deg, var(--acc), var(--acc2)); color: #fff; box-shadow: 0 4px 15px rgba(108,99,255,.3); }
+.btn-primary:active { opacity: .88; transform: scale(.97); }
+.btn-ghost { background: var(--surface2); color: var(--ink); border: 1.5px solid var(--border); }
+.btn-ghost:active { background: var(--border); }
+.btn-sm { padding: 8px 14px; font-size: 12.5px; width: auto; border-radius: 10px; }
+.btn-row { display: flex; gap: 8px; margin-top: 12px; }
+.btn-row .btn { flex: 1; }
+.collapse-toggle {
+  background: none; border: none; width: 100%; display: flex; align-items: center;
+  justify-content: space-between; padding: 6px 0; cursor: pointer; color: var(--muted);
+  font: inherit; font-size: 12px; font-weight: 700;
+}
+.collapse-toggle .ct-arrow { transition: transform .2s; }
+.collapse-toggle.open .ct-arrow { transform: rotate(180deg); }
+.collapse-body { overflow: hidden; transition: max-height .3s ease; }
+.collapse-body.closed { max-height: 0 !important; }
+.accent-bar-pos { border-right: 4px solid var(--pos); }
+.accent-bar-neg { border-right: 4px solid var(--neg); }
+.accent-bar-gold { border-right: 4px solid var(--gold); }
+.fc-hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 60%, #0284c7 100%);
+  border-radius: 24px; padding: 22px 20px; color: #fff; margin-bottom: 14px;
+  box-shadow: 0 10px 30px rgba(67,56,202,.3); position: relative; overflow: hidden;
+}
+.fc-hero::before {
+  content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px;
+  background: radial-gradient(circle, rgba(255,255,255,.12) 0%, transparent 70%);
+}
+.fc-chip {
+  display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 800;
+  padding: 5px 12px; border-radius: 20px; background: rgba(255,255,255,.18); margin-top: 8px;
+}
+.gold-hero {
+  background: linear-gradient(135deg, #92400e 0%, #d97706 60%, #fbbf24 100%);
+  border-radius: 24px; padding: 22px 20px; color: #fff; margin-bottom: 14px;
+  box-shadow: 0 10px 30px rgba(217,119,6,.3);
+}
+.log-item {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm);
+  padding: 12px 14px; margin-bottom: 8px;
+}
+.log-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.log-badge { font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 20px; }
+.badge-add { background: #d1fae5; color: #059669; }
+.badge-edit { background: #fef3c7; color: #d97706; }
+.badge-del { background: #fee2e2; color: var(--neg); }
+[data-theme=dark] .badge-add { background: #064e3b; color: #34d399; }
+[data-theme=dark] .badge-edit { background: #451a03; color: #fbbf24; }
+[data-theme=dark] .badge-del { background: #450a0a; color: #f87171; }
+.log-time { font-size: 10.5px; color: var(--muted); }
+.log-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.log-desc { font-size: 11.5px; color: var(--muted); }
+.log-vals { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.log-footer { display: flex; justify-content: flex-end; margin-top: 8px; }
+.del-log-btn {
+  background: none; border: 1px solid var(--border); border-radius: 8px;
+  font: inherit; font-size: 11px; color: var(--neg); padding: 4px 10px; cursor: pointer;
+}
+.del-log-btn:active { background: #fee2e2; }
+#toast {
+  position: fixed; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 12px);
+  left: 50%; transform: translateX(-50%) translateY(10px);
+  background: rgba(15,15,30,.9); backdrop-filter: blur(10px);
+  color: #fff; padding: 9px 20px; border-radius: 24px;
+  font-size: 13px; font-weight: 700; box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  opacity: 0; pointer-events: none; transition: all .22s; z-index: 9000;
+  max-width: 90vw; text-align: center; white-space: nowrap;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(6px);
+  display: flex; align-items: flex-end; justify-content: center; z-index: 8000;
+}
+.sheet {
+  background: var(--surface); border-radius: 28px 28px 0 0;
+  padding: 0 20px 28px; width: 100%; max-width: 430px;
+  max-height: 90dvh; overflow-y: auto;
+  box-shadow: 0 -10px 50px rgba(0,0,0,.25);
+  animation: su .25s cubic-bezier(.16,1,.3,1);
+}
+.sheet::before {
+  content: ''; display: block; width: 40px; height: 4px; border-radius: 4px;
+  background: var(--border); margin: 12px auto 18px;
+}
+@keyframes su { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.sheet-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.sheet-head h2 { font-size: 17px; font-weight: 900; }
+.sheet-close {
+  width: 32px; height: 32px; border-radius: 50%; background: var(--surface2);
+  border: 1px solid var(--border); font-size: 16px; color: var(--muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.sheet-close:active { background: var(--border); }
+.hint { font-size: 12px; color: var(--muted); line-height: 1.55; padding: 4px 0; }
+.info-box {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-sm);
+  padding: 12px 14px; margin-bottom: 14px; font-size: 12.5px; line-height: 1.6;
+}
+.info-box b { color: var(--acc); }
+.pos { color: var(--pos); } .neg { color: var(--neg); } .acc { color: var(--acc); }
+.empty-state { text-align: center; padding: 30px 10px; color: var(--muted); }
+.empty-state .ei { font-size: 42px; margin-bottom: 8px; }
+.empty-state p { font-size: 13px; }
+.bk-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+.bk-row:last-child { border-bottom: none; }
+.bk-row.total { border-top: 2px solid var(--ink); border-bottom: none; margin-top: 4px; padding-top: 10px; font-weight: 900; font-size: 14px; }
+.sheet-steps { background: var(--surface2); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 12.5px; line-height: 1.8; }
+.sheet-steps b { color: var(--acc); }
+.sheet-steps ol { padding-inline-start: 16px; }
+.connect-banner {
+  background: linear-gradient(135deg, #ede9fe 0%, #dbeafe 100%);
+  border: 1.5px dashed #a5b4fc; border-radius: var(--r); padding: 14px 16px;
+  margin-bottom: 14px; cursor: pointer; transition: all .15s;
+}
+[data-theme=dark] .connect-banner { background: linear-gradient(135deg, #1e1b4b 0%, #1e3a5f 100%); border-color: #4338ca; }
+.connect-banner:active { transform: scale(.98); }
+.cb-title { font-size: 14px; font-weight: 800; color: var(--acc); margin-bottom: 2px; }
+.cb-sub { font-size: 12px; color: var(--muted); }
 </style>
 </head>
 <body>
-
-<div id="app-container">
+<div id="shell">
+  <header id="hdr"></header>
   <main id="app"></main>
   <nav id="nav"></nav>
 </div>
-
+<button id="fab" onclick="openAddSheet()">＋</button>
 <div id="toast"></div>
 <div id="modal-root"></div>
-
 <script>
-var K = 'bayt2';
-var SHEET_KEY = 'bayt_sheet_url';
-var LAST_SYNC_KEY = 'bayt_last_sync';
-var tab = 'home';
-
-var syncState = {
-  status: 'idle',
-  lastSync: localStorage.getItem(LAST_SYNC_KEY) || ''
-};
-
-var sheetUrl = localStorage.getItem(SHEET_KEY) || '';
-
-function ser(n) {
-  return new Date((n - 25569) * 86400 * 1000).toISOString().split('T')[0];
+var K='bayt2',SHEET_KEY='bayt_sheet_url',SYNC_KEY='bayt_last_sync';
+var tab='home';
+var syncSt={status:'idle',last:localStorage.getItem(SYNC_KEY)||''};
+var sheetUrl=localStorage.getItem(SHEET_KEY)||'';
+function m(n){return Math.round(n||0).toLocaleString('en-US');}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function today(){return new Date().toISOString().split('T')[0];}
+function sum(a){return (a||[]).reduce(function(t,x){return t+(parseFloat(x.a)||0);},0);}
+function ser(n){return new Date((n-25569)*86400*1000).toISOString().split('T')[0];}
+function fmtDT(d){
+  var dt=d?(d instanceof Date?d:new Date(d)):new Date();
+  var hr=dt.getHours(),mi=('0'+dt.getMinutes()).slice(-2);
+  var ampm=hr>=12?'م':'ص';hr=hr%12;hr=hr?hr:12;
+  var yr=dt.getFullYear(),mo=('0'+(dt.getMonth()+1)).slice(-2),da=('0'+dt.getDate()).slice(-2);
+  return yr+'-'+mo+'-'+da+' '+hr+':'+mi+' '+ampm;
 }
-
-function formatDT(d) {
-  var dt = d ? (d instanceof Date ? d : new Date(d)) : new Date();
-  var yr = dt.getFullYear();
-  var mo = ('0' + (dt.getMonth() + 1)).slice(-2);
-  var da = ('0' + dt.getDate()).slice(-2);
-  var hr = dt.getHours();
-  var mi = ('0' + dt.getMinutes()).slice(-2);
-  var sc = ('0' + dt.getSeconds()).slice(-2);
-  var ampm = hr >= 12 ? 'م' : 'ص';
-  hr = hr % 12;
-  hr = hr ? hr : 12;
-  var hrStr = ('0' + hr).slice(-2);
-  return yr + '-' + mo + '-' + da + ' ' + hrStr + ':' + mi + ':' + sc + ' ' + ampm;
+function timeNow(){
+  var d=new Date(),hr=d.getHours(),mi=('0'+d.getMinutes()).slice(-2);
+  var ampm=hr>=12?'م':'ص';hr=hr%12;hr=hr?hr:12;return hr+':'+mi+' '+ampm;
 }
-
-function seed() {
-  var e = [
-    ['مصاريف ترم اول احمد', 45916, 38400],
-    ['تليفون امل', 45945, 6250],
-    ['تقديم حجز الاراضي', 45970, 3150],
-    ['تصليح الموتسيكل', 46040, 1800],
-    ['مصاريف ترم ثاني احمد', 46063, 38400],
-    ['زكاة عيد الفطر 2026', 46099, 500],
-    ['دهب', 46107, 137930],
-    ['الأضحية', 46165, 6650],
-    ['تحويل لاسلام', 46200, 33000],
-    ['تحويل محمد درويش', 46166, 500],
-    ['تحويل لمحمد درويش', 46268, 1200],
-    ['تقديم حجز الاراضي', 46269, 153000],
-    ['تحويل لمحامي تبع اسلام', 46290, 40245],
-    ['تحويل لمحامي تبع اسلام', 46295, 1000]
-  ];
+function seed(){
   return {
-    bank: 510000,
-    fund: 962900,
-    sister: 0,
-    exp: e.map(function(x, i) { return { id: i + 1, n: x[0], d: ser(x[1]), a: x[2] }; }),
-    inc: [],
-    badrE: [
-      ['باب مصفح', 10500], ['حديد منشر', 6500], ['طلبات السباكة', 12000],
-      ['مصنعية السباك', 6000], ['سيراميك + نقل + تنزيل ردش', 5400], ['رمل + اسمنت', 1150],
-      ['مصنعية السيراميك', 1300], ['نقل الاوضة والتلاجة', 1100], ['التلاجة', 4500],
-      ['رسوم باقي العقد + عداد المياه', 6500], ['انبوبة بالخرطوم والمنظم', 2800],
-      ['اداوات نظافة', 300], ['دولاب', 3300]
-    ].map(function(x, i) { return { id: 100 + i, n: x[0], a: x[1] }; }),
-    badrI: [
-      ['ايجار شهر 8', 2000], ['تأمين', 1000], ['ايجار شهر 8', 2000]
-    ].map(function(x, i) { return { id: 200 + i, n: x[0], a: x[1] }; }),
-    g21: { g: 280, p: 6100 },
-    g24: { g: 72.5, p: 7100 },
-    expected: [],
-    expectedExp: [],
-    logs: []
+    bank:510000,fund:962900,sister:0,
+    exp:[
+      ['مصاريف ترم اول احمد',45916,38400],['تليفون امل',45945,6250],
+      ['تقديم حجز الاراضي',45970,3150],['تصليح الموتسيكل',46040,1800],
+      ['مصاريف ترم ثاني احمد',46063,38400],['زكاة عيد الفطر 2026',46099,500],
+      ['دهب',46107,137930],['الأضحية',46165,6650],
+      ['تحويل لاسلام',46200,33000],['تحويل محمد درويش',46166,500],
+      ['تحويل لمحمد درويش',46268,1200],['تقديم حجز الاراضي',46269,153000],
+      ['تحويل لمحامي تبع اسلام',46290,40245],['تحويل لمحامي تبع اسلام',46295,1000]
+    ].map(function(x,i){return {id:i+1,n:x[0],d:ser(x[1]),a:x[2]};}),
+    inc:[],
+    badrE:[
+      ['باب مصفح',10500],['حديد منشر',6500],['طلبات السباكة',12000],
+      ['مصنعية السباك',6000],['سيراميك + نقل + تنزيل ردش',5400],['رمل + اسمنت',1150],
+      ['مصنعية السيراميك',1300],['نقل الاوضة والتلاجة',1100],['التلاجة',4500],
+      ['رسوم باقي العقد + عداد المياه',6500],['انبوبة بالخرطوم والمنظم',2800],
+      ['اداوات نظافة',300],['دولاب',3300]
+    ].map(function(x,i){return {id:100+i,n:x[0],a:x[1]};}),
+    badrI:[
+      ['ايجار شهر 8',2000],['تأمين',1000],['ايجار شهر 8',2000]
+    ].map(function(x,i){return {id:200+i,n:x[0],a:x[1]};}),
+    g21:{g:280,p:6100},g24:{g:72.5,p:7100},
+    expected:[],expectedExp:[],logs:[]
   };
 }
-
 var S;
-try { S = JSON.parse(localStorage.getItem(K)); } catch (e) {}
-if (!S) S = seed();
-if (!S.logs) S.logs = [];
-if (!S.expected) S.expected = [];
-if (!S.expectedExp) S.expectedExp = [];
-
-function saveLocal() {
-  try { localStorage.setItem(K, JSON.stringify(S)); } catch (e) {}
+try{S=JSON.parse(localStorage.getItem(K));}catch(e){}
+if(!S)S=seed();
+['logs','expected','expectedExp','inc'].forEach(function(k){if(!S[k])S[k]=[];});
+function save(){try{localStorage.setItem(K,JSON.stringify(S));}catch(e){}}
+function toast(msg){
+  var t=document.getElementById('toast');if(!t)return;
+  t.innerText=msg;t.className='show';
+  clearTimeout(t._t);t._t=setTimeout(function(){t.className='';},3000);
 }
-
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  if (!t) return;
-  t.innerText = msg;
-  t.className = 'show';
-  clearTimeout(t._timer);
-  t._timer = setTimeout(function() { t.className = ''; }, 2800);
+function logEntry(type,sec,name,oldV,newV,desc,id){
+  if(!S.logs)S.logs=[];
+  S.logs.unshift({id:id||Date.now(),dt:fmtDT(),type:type,sec:sec,n:name,
+    oldV:oldV!==undefined?oldV:'',newV:newV!==undefined?newV:'',desc:desc||''});
+  if(S.logs.length>200)S.logs.pop();save();
 }
-
-function recordLocalLog(type, sec, name, oldV, newV, desc, id) {
-  if (!S.logs) S.logs = [];
-  var logItem = {
-    id: id || Date.now(),
-    dt: formatDT(),
-    type: type,
-    sec: sec,
-    n: name,
-    oldV: oldV !== undefined ? oldV : '',
-    newV: newV !== undefined ? newV : '',
-    desc: desc || ''
-  };
-  S.logs.unshift(logItem);
-  if (S.logs.length > 200) S.logs.pop();
-  saveLocal();
+function C(){
+  var bE=sum(S.badrE),bI=sum(S.badrI),hE=sum(S.exp);
+  var totalExp=hE+bE,cash=S.fund-totalExp;
+  var gold=(S.g21.g||0)*(S.g21.p||0)+(S.g24.g||0)*(S.g24.p||0);
+  var mine=S.bank-bI-cash-S.sister;
+  var expI=sum(S.expected),expE=sum(S.expectedExp);
+  return {bE:bE,bI:bI,hE:hE,totalExp:totalExp,cash:cash,gold:gold,mine:mine,expI:expI,expE:expE,proj:mine+expI-expE};
 }
-
-function sum(a) {
-  return (a || []).reduce(function(s, x) { return s + (parseFloat(x.a) || 0); }, 0);
+function go(t){tab=t;render();window.scrollTo(0,0);}
+function postSheet(payload,cb){
+  if(!sheetUrl){if(cb)cb({success:false});return;}
+  syncSt.status='syncing';updateSync();
+  fetch(sheetUrl,{method:'POST',mode:'cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.success){syncSt.status='synced';syncSt.last=timeNow();localStorage.setItem(SYNC_KEY,syncSt.last);updateSync();if(cb)cb(d);}
+      else{throw new Error(d.error||'خطأ');}
+    })
+    .catch(function(e){syncSt.status='error';updateSync();toast('⚠️ محفوظ محلياً — '+e.message);if(cb)cb({success:false});});
 }
-function m(n) {
-  return Math.round(n || 0).toLocaleString('en-US');
-}
-function esc(s) {
-  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-function C() {
-  var bE = sum(S.badrE), bI = sum(S.badrI);
-  var houseExp = sum(S.exp);
-  var totalExp = houseExp + bE;
-  var cash = S.fund - totalExp;
-  var gold = (S.g21.g || 0) * (S.g21.p || 0) + (S.g24.g || 0) * (S.g24.p || 0);
-  var mine = S.bank - bI - cash - S.sister;
-  var expctTotal = sum(S.expected);
-  var expctExpTotal = sum(S.expectedExp);
-  var projectedNextMonth = mine + expctTotal - expctExpTotal;
-
-  return {
-    bE: bE,
-    bI: bI,
-    houseExp: houseExp,
-    totalExp: totalExp,
-    cash: cash,
-    gold: gold,
-    mine: mine,
-    expctTotal: expctTotal,
-    expctExpTotal: expctExpTotal,
-    projectedNextMonth: projectedNextMonth
-  };
-}
-
-function today() {
-  return new Date().toISOString().split('T')[0];
-}
-
-function timeNow() {
-  var d = new Date();
-  var hr = d.getHours(), mi = d.getMinutes();
-  var ampm = hr >= 12 ? 'م' : 'ص';
-  hr = hr % 12; hr = hr ? hr : 12;
-  return hr + ':' + ('0' + mi).slice(-2) + ' ' + ampm;
-}
-
-function go(t) {
-  tab = t;
-  render();
-  window.scrollTo(0, 0);
-}
-
-/* ========================================================
-   جوجل شيت API - الاتصال والمزامنة
-   ======================================================== */
-
-function postToSheet(payload, cb) {
-  if (!sheetUrl) {
-    if (cb) cb({ success: false, error: 'لم يتم ربط رابط Google Apps Script بعد' });
-    return;
-  }
-  syncState.status = 'syncing';
-  updateHeaderSyncBadge();
-
-  fetch(sheetUrl, {
-    method: 'POST',
-    mode: 'cors',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(payload)
-  })
-  .then(function(res) { return res.json(); })
-  .then(function(data) {
-    if (data.success) {
-      syncState.status = 'synced';
-      syncState.lastSync = timeNow();
-      localStorage.setItem(LAST_SYNC_KEY, syncState.lastSync);
-      updateHeaderSyncBadge();
-      if (cb) cb(data);
-    } else {
-      throw new Error(data.error || 'فشلت العملية');
-    }
-  })
-  .catch(function(err) {
-    console.error('Sheet API Error:', err);
-    syncState.status = 'error';
-    updateHeaderSyncBadge();
-    showToast('⚠️ لم يتم الحفظ بالشيت (محفوظ محلياً): ' + err.message);
-    if (cb) cb({ success: false, error: err.message });
-  });
-}
-
-function restoreSeedAndUpload() {
-  S = seed();
-  saveLocal();
-  render();
-  if (sheetUrl) {
-    showToast('جاري رفع البيانات الأصلية وإنشاء الجداول في Google Sheet...');
-    postToSheet({ action: 'uploadAll', data: S }, function(res) {
-      if (res.success) {
-        showToast('🎉 تم استرجاع كل بياناتك بنجاح وملء جدول Google Sheet!');
-        closeModal();
-      }
-    });
-  } else {
-    showToast('🎉 تم استرجاع كافة بياناتك الأصلية بنجاح!');
-  }
-}
-
-function fetchFromSheet(manual) {
-  if (!sheetUrl) return;
-  syncState.status = 'syncing';
-  updateHeaderSyncBadge();
-
-  var url = sheetUrl + (sheetUrl.indexOf('?') === -1 ? '?action=get' : '&action=get') + '&_t=' + Date.now();
+function fetchSheet(manual){
+  if(!sheetUrl)return;
+  syncSt.status='syncing';updateSync();
+  var url=sheetUrl+(sheetUrl.indexOf('?')===-1?'?action=get':'&action=get')+'&_t='+Date.now();
   fetch(url)
-  .then(function(res) { return res.json(); })
-  .then(function(resp) {
-    if (resp.success && resp.data) {
-      var d = resp.data;
-      var isIncomingEmpty = (!d.bank && !d.fund && (!d.exp || d.exp.length === 0));
-      
-      if (isIncomingEmpty) {
-        if (S.bank > 0 || S.fund > 0 || (S.exp && S.exp.length > 0)) {
-          syncState.status = 'synced';
-          updateHeaderSyncBadge();
-          if (confirm('جدول Google Sheet المربوط جديد وفارغ حالياً.\n\nهل ترغب في رفع بياناتك الحالية (رصيد 510,000 ج وجميع المصاريف) إلى الشيت لتهيئته وملء الجداول؟')) {
-            uploadAllToSheet();
-          }
-          return;
+    .then(function(r){return r.json();})
+    .then(function(resp){
+      if(resp.success&&resp.data){
+        var d=resp.data;
+        var empty=(!d.bank&&!d.fund&&(!d.exp||d.exp.length===0));
+        if(empty&&(S.bank>0||S.fund>0||(S.exp&&S.exp.length>0))){
+          syncSt.status='synced';updateSync();
+          if(confirm('الشيت فارغ — هل ترفع بياناتك الحالية؟'))uploadAll();return;
         }
-      }
-
-      if (typeof d.bank === 'number') S.bank = d.bank;
-      if (typeof d.fund === 'number') S.fund = d.fund;
-      if (typeof d.sister === 'number') S.sister = d.sister;
-      if (d.g21) S.g21 = d.g21;
-      if (d.g24) S.g24 = d.g24;
-      if (Array.isArray(d.exp)) S.exp = d.exp;
-      if (Array.isArray(d.inc)) S.inc = d.inc;
-      if (Array.isArray(d.badrE)) S.badrE = d.badrE;
-      if (Array.isArray(d.badrI)) S.badrI = d.badrI;
-      if (Array.isArray(d.expected)) S.expected = d.expected;
-      if (Array.isArray(d.expectedExp)) S.expectedExp = d.expectedExp;
-      if (Array.isArray(d.logs)) S.logs = d.logs;
-
-      saveLocal();
-      syncState.status = 'synced';
-      syncState.lastSync = timeNow();
-      localStorage.setItem(LAST_SYNC_KEY, syncState.lastSync);
-      render();
-      if (manual) showToast('✅ تم تحديث كافة البيانات وسجل التعديلات من الشيت بنجاح!');
-    } else {
-      throw new Error(resp.error || 'تعذر قراءة البيانات');
-    }
-  })
-  .catch(function(err) {
-    console.warn('Sync read error:', err);
-    syncState.status = 'error';
-    updateHeaderSyncBadge();
-    if (manual) showToast('❌ تعذر الاتصال بالشيت: ' + err.message);
-  });
+        if(typeof d.bank==='number')S.bank=d.bank;
+        if(typeof d.fund==='number')S.fund=d.fund;
+        if(typeof d.sister==='number')S.sister=d.sister;
+        if(d.g21)S.g21=d.g21;if(d.g24)S.g24=d.g24;
+        ['exp','inc','badrE','badrI','expected','expectedExp','logs'].forEach(function(k){if(Array.isArray(d[k]))S[k]=d[k];});
+        save();syncSt.status='synced';syncSt.last=timeNow();localStorage.setItem(SYNC_KEY,syncSt.last);
+        render();if(manual)toast('✅ تم التحديث!');
+      }else{throw new Error(resp.error||'خطأ');}
+    })
+    .catch(function(e){syncSt.status='error';updateSync();if(manual)toast('❌ تعذر الاتصال: '+e.message);});
 }
-
-function uploadAllToSheet() {
-  if (!sheetUrl) {
-    alert('يرجى إدخال رابط تطبيق الويب الخاص بـ Google Apps Script أولاً.');
-    return;
-  }
-  if (S.bank === 0 && S.fund === 0 && (!S.exp || S.exp.length === 0)) {
-    S = seed();
-    saveLocal();
-    render();
-  }
-
-  showToast('جاري رفع كافة البيانات وإنشاء الصفحات في الشيت...');
-  postToSheet({ action: 'uploadAll', data: S }, function(res) {
-    if (res.success) {
-      showToast('🎉 تم رفع كافة البيانات وتنسيق جداول الشيت بنجاح!');
-      closeModal();
-    }
-  });
+function uploadAll(){
+  if(!sheetUrl){alert('ربط الشيت أولاً');return;}
+  if(S.bank===0&&S.fund===0&&(!S.exp||S.exp.length===0)){S=seed();save();render();}
+  toast('جاري الرفع...');
+  postSheet({action:'uploadAll',data:S},function(r){if(r.success)toast('🎉 تم رفع البيانات!');});
 }
-
-function syncSettings(oldSettings) {
-  if (!sheetUrl) return;
-  postToSheet({
-    action: 'updateSettings',
-    settings: {
-      bank: S.bank,
-      fund: S.fund,
-      sister: S.sister,
-      g21_g: S.g21.g,
-      g21_p: S.g21.p,
-      g24_g: S.g24.g,
-      g24_p: S.g24.p
-    },
-    oldSettings: oldSettings
-  }, function(res) {
-    if (res.success) showToast('✅ تم حفظ التعديل في الشيت وتوثيقه في السجل');
-  });
+function restoreSeed(){
+  S=seed();save();render();
+  if(sheetUrl){toast('جاري الاسترجاع...');postSheet({action:'uploadAll',data:S},function(r){if(r.success){toast('🎉 تم الاسترجاع!');closeModal();}});}
+  else{toast('✅ تم الاسترجاع!');closeModal();}
 }
-
-function setN(k, v) {
-  var oldVal = S[k];
-  var newVal = parseFloat(v) || 0;
-  if (oldVal === newVal) return;
-  var oldSettings = { bank: S.bank, fund: S.fund, sister: S.sister, g21: Object.assign({}, S.g21), g24: Object.assign({}, S.g24) };
-  S[k] = newVal;
-  var label = k === 'bank' ? 'الحساب البنكي' : (k === 'fund' ? 'فلوس البيت الإجمالية' : 'فلوس أختي');
-  recordLocalLog('✏️ تعديل رصيد', 'الأرصدة الأساسية', label, oldVal, newVal, 'تعديل ' + label + ' من ' + m(oldVal) + ' إلى ' + m(newVal), Date.now());
-  saveLocal();
-  render();
-  syncSettings(oldSettings);
+function syncSettings(old){
+  if(!sheetUrl)return;
+  postSheet({action:'updateSettings',settings:{bank:S.bank,fund:S.fund,sister:S.sister,g21_g:S.g21.g,g21_p:S.g21.p,g24_g:S.g24.g,g24_p:S.g24.p},oldSettings:old},function(r){if(r.success)toast('✅ تم الحفظ');});
 }
-
-function setG(k, f, v) {
-  var oldVal = S[k][f];
-  var newVal = parseFloat(v) || 0;
-  if (oldVal === newVal) return;
-  var oldSettings = { bank: S.bank, fund: S.fund, sister: S.sister, g21: Object.assign({}, S.g21), g24: Object.assign({}, S.g24) };
-  S[k][f] = newVal;
-  var label = (k === 'g21' ? 'عيار 21' : 'عيار 24') + ' (' + (f === 'p' ? 'السعر' : 'الجرامات') + ')';
-  recordLocalLog('✏️ تعديل الدهب', 'الدهب', label, oldVal, newVal, 'تعديل ' + label + ' من ' + m(oldVal) + ' إلى ' + m(newVal), Date.now());
-  saveLocal();
-  render();
-  syncSettings(oldSettings);
+function setN(k,v){
+  var ov=S[k],nv=parseFloat(v)||0;if(ov===nv)return;
+  var old={bank:S.bank,fund:S.fund,sister:S.sister,g21:Object.assign({},S.g21),g24:Object.assign({},S.g24)};
+  S[k]=nv;
+  logEntry('تعديل رصيد','الأرصدة',k==='bank'?'الحساب البنكي':(k==='fund'?'فلوس البيت':'فلوس أختي'),ov,nv,'',Date.now());
+  save();render();syncSettings(old);
 }
-
-function getSecName(list) {
-  if (list === 'exp') return 'مصاريف البيت';
-  if (list === 'badrE') return 'مصاريف بدر';
-  if (list === 'badrI') return 'إيرادات بدر';
-  if (list === 'expected') return 'إيرادات متوقعة للشهر القادم';
-  if (list === 'expectedExp') return 'مصاريف متوقعة للشهر القادم';
-  return 'أخرى';
+function setG(k,f,v){
+  var ov=S[k][f],nv=parseFloat(v)||0;if(ov===nv)return;
+  var old={bank:S.bank,fund:S.fund,sister:S.sister,g21:Object.assign({},S.g21),g24:Object.assign({},S.g24)};
+  S[k][f]=nv;
+  logEntry('تعديل دهب','الدهب',(k==='g21'?'عيار 21':'عيار 24')+(f==='p'?' (سعر)':' (جرام)'),ov,nv,'',Date.now());
+  save();render();syncSettings(old);
 }
-
-function add(list, hasDate) {
-  var nEl = document.getElementById('n_' + list);
-  var aEl = document.getElementById('a_' + list);
-  var n = nEl ? nEl.value.trim() : '';
-  var a = aEl ? parseFloat(aEl.value) : NaN;
-
-  if (!n || !(a >= 0)) {
-    alert('من فضلك اكتب اسم البند والمبلغ بشكل صحيح.');
-    return;
-  }
-
-  var nowStr = formatDT();
-  var o = { id: Date.now(), n: n, a: a, updatedAt: nowStr };
-  if (hasDate) {
-    var dEl = document.getElementById('d_' + list);
-    o.d = dEl && dEl.value ? dEl.value : today();
-  }
-
+function getSecName(list){
+  var mp={exp:'مصاريف البيت',badrE:'مصاريف بدر',badrI:'إيرادات بدر',expected:'إيرادات متوقعة',expectedExp:'مصاريف متوقعة'};
+  return mp[list]||list;
+}
+function addItem(list,hasDate){
+  var n=(document.getElementById('n_'+list)||{}).value||'';
+  var a=parseFloat((document.getElementById('a_'+list)||{}).value);
+  n=n.trim();
+  if(!n||!(a>=0)){alert('اكتب الاسم والمبلغ');return;}
+  var o={id:Date.now(),n:n,a:a,updatedAt:fmtDT()};
+  if(hasDate){var dEl=document.getElementById('d_'+list);o.d=dEl&&dEl.value?dEl.value:today();}
   S[list].push(o);
-  var secName = getSecName(list);
-  recordLocalLog('➕ إضافة بند', secName, n, 0, a, 'إضافة "' + n + '" بمبلغ ' + m(a) + ' ج', o.id);
-
-  saveLocal();
-  render();
-  showToast('تمت الإضافة وتسجيلها...');
-
-  if (sheetUrl) {
-    postToSheet({ action: 'add', list: list, item: o }, function(res) {
-      if (res.success) showToast('✅ تم إضافة البند إلى صفحة الشيت وسجل التعديلات!');
-    });
-  }
+  logEntry('إضافة',getSecName(list),n,0,a,'إضافة "'+n+'" بمبلغ '+m(a)+' ج',o.id);
+  save();closeModal();render();toast('✅ تمت الإضافة!');
+  if(sheetUrl)postSheet({action:'add',list:list,item:o},function(r){if(r.success)toast('☁️ تم الحفظ!');});
 }
-
-function openEditModal(list, id, hasDate) {
-  var item = S[list].find(function(x) { return x.id === id; });
-  if (!item) return;
-
-  var html = '<div class="modal-overlay" onclick="if(event.target===this)closeModal()">' +
-    '<div class="modal">' +
-      '<div class="modal-head">' +
-        '<h2>✏️ تعديل البند ومزامنته</h2>' +
-        '<button class="modal-close" onclick="closeModal()">✕</button>' +
-      '</div>' +
-      '<div>' +
-        '<label>اسم البند</label>' +
-        '<input id="edit_n" value="' + esc(item.n) + '" placeholder="اسم البند">' +
-      '</div>' +
-      '<div style="margin-top:10px">' +
-        '<label>المبلغ (جنيه)</label>' +
-        '<input id="edit_a" type="number" inputmode="decimal" value="' + item.a + '" placeholder="المبلغ">' +
-      '</div>' +
-      (hasDate ? 
-        '<div style="margin-top:10px">' +
-          '<label>التاريخ</label>' +
-          '<input id="edit_d" type="date" value="' + (item.d || today()) + '">' +
-        '</div>' : '') +
-      '<div class="btn-group">' +
-        '<button class="btn" onclick="saveEdit(\'' + list + '\',' + id + ',' + hasDate + ')">حفظ التعديل في الشيت 💾</button>' +
-        '<button class="btn btn-sec" onclick="closeModal()">إلغاء</button>' +
-      '</div>' +
-    '</div>' +
-  '</div>';
-
-  document.getElementById('modal-root').innerHTML = html;
-  setTimeout(function() {
-    var inp = document.getElementById('edit_n');
-    if (inp) inp.focus();
-  }, 50);
+function delItem(list,id){
+  if(!confirm('هل تحذف هذا البند نهائياً؟'))return;
+  var item=S[list].find(function(x){return x.id===id;});
+  if(item)logEntry('حذف',getSecName(list),item.n,item.a,0,'حذف "'+item.n+'"',Date.now());
+  S[list]=S[list].filter(function(x){return x.id!==id;});
+  save();render();toast('تم الحذف');
+  if(sheetUrl)postSheet({action:'delete',list:list,id:id,oldItem:item?{n:item.n,a:item.a}:null});
 }
-
-function saveEdit(list, id, hasDate) {
-  var n = document.getElementById('edit_n').value.trim();
-  var a = parseFloat(document.getElementById('edit_a').value);
-  if (!n || !(a >= 0)) {
-    alert('اكتب الاسم والمبلغ بشكل صحيح');
-    return;
-  }
-
-  var item = S[list].find(function(x) { return x.id === id; });
-  if (!item) return;
-
-  var oldItem = { n: item.n, a: item.a, d: item.d };
-  var nowStr = formatDT();
-
-  item.n = n;
-  item.a = a;
-  item.updatedAt = nowStr;
-  if (hasDate) {
-    var dVal = document.getElementById('edit_d').value;
-    item.d = dVal || today();
-  }
-
-  var secName = getSecName(list);
-  var details = 'تعديل البند من "' + oldItem.n + ' (' + m(oldItem.a) + ' ج)" إلى "' + item.n + ' (' + m(item.a) + ' ج)"';
-  recordLocalLog('✏️ تعديل بند', secName, item.n, oldItem.a, item.a, details, Date.now());
-
-  saveLocal();
-  closeModal();
-  render();
-  showToast('تم حفظ التعديل وتسجيله في الشيت...');
-
-  if (sheetUrl) {
-    postToSheet({ action: 'update', list: list, item: item, oldItem: oldItem }, function(res) {
-      if (res.success) showToast('✅ تم تعديل البند وتسجيله في سجل الشيت!');
-    });
-  }
+function openEdit(list,id,hasDate){
+  var item=S[list].find(function(x){return x.id===id;});if(!item)return;
+  var html='<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="sheet">'+
+    '<div class="sheet-head"><h2>✏️ تعديل البند</h2><button class="sheet-close" onclick="closeModal()">✕</button></div>'+
+    '<div class="field"><label>اسم البند</label><input id="edit_n" value="'+esc(item.n)+'"></div>'+
+    '<div class="field"><label>المبلغ (جنيه)</label><input id="edit_a" type="number" inputmode="decimal" value="'+item.a+'"></div>'+
+    (hasDate?'<div class="field"><label>التاريخ</label><input id="edit_d" type="date" value="'+(item.d||today())+'"></div>':'')+
+    '<div class="btn-row">'+
+      '<button class="btn btn-primary" onclick="saveEdit(''+list+'','+id+','+hasDate+')">حفظ 💾</button>'+
+      '<button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>'+
+    '</div></div></div>';
+  document.getElementById('modal-root').innerHTML=html;
+  setTimeout(function(){var i=document.getElementById('edit_n');if(i)i.focus();},50);
 }
-
-function del(list, id) {
-  if (!confirm('هل تريد مسح هذا البند نهائياً؟ سيتم حذفه من الشيت أيضاً وتسجيل الحذف.')) return;
-  var item = S[list].find(function(x) { return x.id === id; });
-  var oldItem = item ? { n: item.n, a: item.a } : null;
-
-  S[list] = S[list].filter(function(x) { return x.id !== id; });
-  
-  if (oldItem) {
-    var secName = getSecName(list);
-    recordLocalLog('🗑️ حذف بند', secName, oldItem.n, oldItem.a, 0, 'حذف بند "' + oldItem.n + '" نهائياً');
-  }
-
-  saveLocal();
-  render();
-  showToast('تم الحذف وتسجيله في الشيت...');
-
-  if (sheetUrl) {
-    postToSheet({ action: 'delete', list: list, id: id, oldItem: oldItem }, function(res) {
-      if (res.success) showToast('✅ تم حذف البند وتسجيله في الشيت');
-    });
-  }
+function saveEdit(list,id,hasDate){
+  var n=(document.getElementById('edit_n').value||'').trim();
+  var a=parseFloat(document.getElementById('edit_a').value);
+  if(!n||!(a>=0)){alert('اكتب الاسم والمبلغ');return;}
+  var item=S[list].find(function(x){return x.id===id;});if(!item)return;
+  var oi={n:item.n,a:item.a,d:item.d};
+  item.n=n;item.a=a;item.updatedAt=fmtDT();
+  if(hasDate){var dv=document.getElementById('edit_d').value;item.d=dv||today();}
+  logEntry('تعديل',getSecName(list),item.n,oi.a,item.a,'من "'+oi.n+' ('+m(oi.a)+' ج)" إلى "'+item.n+' ('+m(item.a)+' ج)"',Date.now());
+  save();closeModal();render();toast('تم التعديل!');
+  if(sheetUrl)postSheet({action:'update',list:list,item:item,oldItem:oi},function(r){if(r.success)toast('☁️ تم!');});
 }
-
-function deleteLogItem(id) {
-  if (!confirm('هل تريد مسح هذا التعديل من الشيت والسجل؟')) return;
-  S.logs = (S.logs || []).filter(function(x) { return String(x.id) !== String(id); });
-  saveLocal();
-  render();
-  showToast('جاري مسح التعديل من الشيت...');
-  if (sheetUrl) {
-    postToSheet({ action: 'deleteLog', id: id }, function(res) {
-      if (res.success) showToast('✅ تم مسح التعديل من الشيت بنجاح!');
-    });
+function closeModal(){document.getElementById('modal-root').innerHTML='';}
+var _fabOpts=[];
+function openAddSheet(){
+  var lists={
+    home:[{list:'exp',label:'مصروف للبيت',hasDate:true},{list:'badrE',label:'مصروف بدر',hasDate:false},{list:'badrI',label:'إيجار بدر',hasDate:false}],
+    forecast:[{list:'expected',label:'إيراد متوقع',hasDate:false},{list:'expectedExp',label:'مصروف متوقع',hasDate:false}],
+    exp:[{list:'exp',label:'مصروف للبيت',hasDate:true}],
+    badr:[{list:'badrE',label:'مصروف بدر',hasDate:false},{list:'badrI',label:'إيجار بدر',hasDate:false}]
+  };
+  _fabOpts=lists[tab]||lists.home;
+  var optHtml=_fabOpts.length>1?_fabOpts.map(function(o,i){
+    return '<label style="display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer">'+
+      '<input type="radio" name="add_type" value="'+i+'" '+(i===0?'checked':'')+' style="width:18px;height:18px;accent-color:var(--acc)">'+
+      '<span style="font-size:14px;font-weight:700">'+o.label+'</span></label>';
+  }).join(''):'';
+  var html='<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="sheet">'+
+    '<div class="sheet-head"><h2>➕ بند جديد</h2><button class="sheet-close" onclick="closeModal()">✕</button></div>'+
+    (optHtml?'<div style="margin-bottom:12px">'+optHtml+'</div>':'')+
+    '<div class="field"><label>الاسم</label><input id="fab_n" placeholder="مثلاً: كهرباء"></div>'+
+    '<div class="field"><label>المبلغ (جنيه)</label><input id="fab_a" type="number" inputmode="decimal" placeholder="0"></div>'+
+    '<div id="fab_date_wrap"></div>'+
+    '<div class="btn-row">'+
+      '<button class="btn btn-primary" onclick="doFabAdd()">إضافة ✅</button>'+
+      '<button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>'+
+    '</div></div></div>';
+  document.getElementById('modal-root').innerHTML=html;
+  function updateDate(){
+    var sel=document.querySelector('[name=add_type]:checked');
+    var idx=sel?parseInt(sel.value):0;
+    var o=_fabOpts[idx];
+    document.getElementById('fab_date_wrap').innerHTML=o.hasDate?
+      '<div class="field"><label>التاريخ</label><input id="fab_d" type="date" value="'+today()+'"></div>':'';
   }
+  document.querySelectorAll('[name=add_type]').forEach(function(r){r.addEventListener('change',updateDate);});
+  updateDate();
+  setTimeout(function(){var i=document.getElementById('fab_n');if(i)i.focus();},50);
 }
-
-function clearAllLogsFromSheet() {
-  if (!confirm('هل تريد مسح سجل التعديلات بالكامل من الشيت؟')) return;
-  S.logs = [];
-  saveLocal();
-  render();
-  showToast('جاري مسح السجل بالكامل من الشيت...');
-  if (sheetUrl) {
-    postToSheet({ action: 'clearLogs' }, function(res) {
-      if (res.success) showToast('✅ تم مسح السجل بالكامل من الشيت!');
-    });
-  }
+function doFabAdd(){
+  var n=(document.getElementById('fab_n').value||'').trim();
+  var a=parseFloat(document.getElementById('fab_a').value);
+  if(!n||!(a>=0)){alert('اكتب الاسم والمبلغ');return;}
+  var sel=document.querySelector('[name=add_type]:checked');
+  var idx=sel?parseInt(sel.value):0;
+  var opt=_fabOpts[idx];
+  var o={id:Date.now(),n:n,a:a,updatedAt:fmtDT()};
+  var dEl=document.getElementById('fab_d');
+  if(opt.hasDate)o.d=dEl&&dEl.value?dEl.value:today();
+  S[opt.list].push(o);
+  logEntry('إضافة',getSecName(opt.list),n,0,a,'إضافة "'+n+'" بمبلغ '+m(a)+' ج',o.id);
+  save();closeModal();render();toast('✅ تمت الإضافة!');
+  if(sheetUrl)postSheet({action:'add',list:opt.list,item:o},function(r){if(r.success)toast('☁️ تم!');});
 }
-
-function closeModal() {
-  document.getElementById('modal-root').innerHTML = '';
+function openBalanceModal(){
+  var html='<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="sheet">'+
+    '<div class="sheet-head"><h2>✏️ تعديل الأرصدة</h2><button class="sheet-close" onclick="closeModal()">✕</button></div>'+
+    '<div class="field"><label>الحساب البنكي (ج)</label><input id="mb" type="number" inputmode="decimal" value="'+S.bank+'"></div>'+
+    '<div class="field"><label>فلوس البيت الإجمالية</label><input id="mf" type="number" inputmode="decimal" value="'+S.fund+'"></div>'+
+    '<div class="field"><label>فلوس أختي (أمانة)</label><input id="ms" type="number" inputmode="decimal" value="'+S.sister+'"></div>'+
+    '<div class="btn-row">'+
+      '<button class="btn btn-primary" onclick="saveBalanceMod()">حفظ 💾</button>'+
+      '<button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>'+
+    '</div></div></div>';
+  document.getElementById('modal-root').innerHTML=html;
 }
-
-/* نافذة تعديل الأرصدة الأساسية (Modal سريع وأنيق) */
-function openBalanceModal() {
-  var html = '<div class="modal-overlay" onclick="if(event.target===this)closeModal()">' +
-    '<div class="modal">' +
-      '<div class="modal-head">' +
-        '<h2>✏️ تعديل الأرصدة الأساسية</h2>' +
-        '<button class="modal-close" onclick="closeModal()">✕</button>' +
-      '</div>' +
-      '<div>' +
-        '<label>الرصيد في الحساب البنكي (جنيه)</label>' +
-        '<input id="modal_bank" type="number" inputmode="decimal" value="' + S.bank + '">' +
-      '</div>' +
-      '<div style="margin-top:10px">' +
-        '<label>فلوس البيت الإجمالية (المبلغ المخصص للبيت بالكامل)</label>' +
-        '<input id="modal_fund" type="number" inputmode="decimal" value="' + S.fund + '">' +
-      '</div>' +
-      '<div style="margin-top:10px">' +
-        '<label>فلوس أختي معايا (أمانة)</label>' +
-        '<input id="modal_sister" type="number" inputmode="decimal" value="' + S.sister + '">' +
-      '</div>' +
-      '<div class="btn-group">' +
-        '<button class="btn" onclick="saveBalanceModal()">حفظ ومزامنة 💾</button>' +
-        '<button class="btn btn-sec" onclick="closeModal()">إلغاء</button>' +
-      '</div>' +
-    '</div>' +
-  '</div>';
-
-  document.getElementById('modal-root').innerHTML = html;
+function saveBalanceMod(){
+  var b=parseFloat(document.getElementById('mb').value)||0;
+  var f=parseFloat(document.getElementById('mf').value)||0;
+  var s=parseFloat(document.getElementById('ms').value)||0;
+  var old={bank:S.bank,fund:S.fund,sister:S.sister,g21:Object.assign({},S.g21),g24:Object.assign({},S.g24)};
+  if(S.bank!==b){logEntry('تعديل رصيد','الأرصدة','الحساب البنكي',S.bank,b,'',Date.now());S.bank=b;}
+  if(S.fund!==f){logEntry('تعديل رصيد','الأرصدة','فلوس البيت',S.fund,f,'',Date.now()+1);S.fund=f;}
+  if(S.sister!==s){logEntry('تعديل رصيد','الأرصدة','فلوس أختي',S.sister,s,'',Date.now()+2);S.sister=s;}
+  save();closeModal();render();toast('✅ تم!');syncSettings(old);
 }
-
-function saveBalanceModal() {
-  var b = parseFloat(document.getElementById('modal_bank').value) || 0;
-  var f = parseFloat(document.getElementById('modal_fund').value) || 0;
-  var s = parseFloat(document.getElementById('modal_sister').value) || 0;
-
-  var oldSettings = { bank: S.bank, fund: S.fund, sister: S.sister, g21: Object.assign({}, S.g21), g24: Object.assign({}, S.g24) };
-
-  if (S.bank !== b) {
-    recordLocalLog('✏️ تعديل رصيد', 'الأرصدة الأساسية', 'الحساب البنكي', S.bank, b, 'تعديل الحساب البنكي من ' + m(S.bank) + ' إلى ' + m(b), Date.now());
-    S.bank = b;
-  }
-  if (S.fund !== f) {
-    recordLocalLog('✏️ تعديل رصيد', 'الأرصدة الأساسية', 'فلوس البيت الإجمالية', S.fund, f, 'تعديل فلوس البيت من ' + m(S.fund) + ' إلى ' + m(f), Date.now() + 1);
-    S.fund = f;
-  }
-  if (S.sister !== s) {
-    recordLocalLog('✏️ تعديل رصيد', 'الأرصدة الأساسية', 'فلوس أختي', S.sister, s, 'تعديل فلوس أختي من ' + m(S.sister) + ' إلى ' + m(s), Date.now() + 2);
-    S.sister = s;
-  }
-
-  saveLocal();
-  closeModal();
-  render();
-  showToast('تم تحديث الأرصدة بنجاح...');
-  syncSettings(oldSettings);
+function openSettings(){
+  var linked=!!sheetUrl;
+  var html='<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="sheet">'+
+    '<div class="sheet-head"><h2>⚙️ الإعدادات</h2><button class="sheet-close" onclick="closeModal()">✕</button></div>'+
+    '<div style="display:flex;gap:8px;margin-bottom:16px">'+
+      '<button class="btn btn-ghost btn-sm" style="flex:1" onclick="toggleTheme()">🌙 الوضع الليلي</button>'+
+      (linked?'<button class="btn btn-ghost btn-sm" style="flex:1" onclick="fetchSheet(true);closeModal()">🔄 تحديث</button>':'')+
+    '</div>'+
+    '<div class="sheet-steps"><b>ربط Google Sheets:</b><br><ol>'+
+      '<li>افتح جدول Google Sheet الخاص بك.</li>'+
+      '<li>من Extensions اختر Apps Script.</li>'+
+      '<li>الصق الكود من ملف GoogleAppsScript.js واحفظه.</li>'+
+      '<li>اضغط Deploy → New version → Anyone.</li>'+
+      '<li>انسخ الرابط والصقه بالأسفل.</li>'+
+    '</ol></div>'+
+    '<div class="field"><label>رابط Google Web App</label>'+
+      '<input id="cfg_url" placeholder="https://script.google.com/macros/s/.../exec" value="'+esc(sheetUrl)+'" style="direction:ltr;text-align:left;font-size:12px"></div>'+
+    '<div class="btn-row">'+
+      '<button class="btn btn-primary" onclick="saveSheetCfg()">حفظ الرابط 🔗</button>'+
+      '<button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>'+
+    '</div>'+
+    (linked?
+      '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px">'+
+        '<button class="btn btn-ghost" onclick="uploadAll();closeModal()">⬆️ رفع بياناتي للشيت</button>'+
+        '<button class="btn btn-ghost" onclick="restoreSeed()">🚀 استرجاع البيانات الأصلية</button>'+
+        '<button class="btn btn-ghost" style="color:var(--neg);border-color:var(--neg)" onclick="disconnectSheet()">قطع الربط بالشيت</button>'+
+      '</div>':'')+
+  '</div></div>';
+  document.getElementById('modal-root').innerHTML=html;
 }
-
-/* نافذة إعدادات Google Sheet */
-function openSettingsModal() {
-  var isLinked = !!sheetUrl;
-  var html = '<div class="modal-overlay" onclick="if(event.target===this)closeModal()">' +
-    '<div class="modal">' +
-      '<div class="modal-head">' +
-        '<h2>⚙️ ربط Google Sheets</h2>' +
-        '<button class="modal-close" onclick="closeModal()">✕</button>' +
-      '</div>' +
-      '<div class="sheet-setup-box">' +
-        '<b>خطوات الربط والمزامنة السحابية:</b>' +
-        '<ol style="margin:6px 0 0 0;padding-inline-start:18px">' +
-          '<li>افتح جدول Google Sheet الخاص بك.</li>' +
-          '<li>من قائمة <b>التوسيعات (Extensions)</b> اختر <b>Apps Script</b>.</li>' +
-          '<li>الصق الكود من ملف <code>GoogleAppsScript.js</code> واحفظه.</li>' +
-          '<li>اضغط <b>Deploy -> Manage deployments -> Edit -> New version -> Deploy</b> واجعل الوصول لـ <b>Anyone</b>.</li>' +
-          '<li>انسخ رابط الويب والصقه أدناه.</li>' +
-        '</ol>' +
-      '</div>' +
-      '<div>' +
-        '<label>رابط تطبيق الويب (Google Web App URL):</label>' +
-        '<input id="cfg_url" placeholder="https://script.google.com/macros/s/.../exec" value="' + esc(sheetUrl) + '" style="font-size:12px;direction:ltr;text-align:left">' +
-      '</div>' +
-      '<div class="btn-group">' +
-        '<button class="btn" onclick="saveSheetConfig()">حفظ واختبار الربط 🔗</button>' +
-        '<button class="btn btn-sec" onclick="closeModal()">إلغاء</button>' +
-      '</div>' +
-      (isLinked ? 
-        '<div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--line)">' +
-          '<label style="margin-bottom:8px">أدوات الشيت والمزامنة:</label>' +
-          '<div style="display:flex;flex-direction:column;gap:8px">' +
-            '<button class="btn btn-sm" style="background:#0f766e;width:100%;color:#fff;font-weight:700" onclick="restoreSeedAndUpload()">🚀 استرجاع بياناتي الأصلية ورفعها للشيت فوراً</button>' +
-            '<button class="btn btn-sec btn-sm" style="width:100%" onclick="fetchFromSheet(true)">🔄 جلب وتحديث كل البيانات من الشيت الآن</button>' +
-            '<button class="btn btn-sec btn-sm" style="width:100%" onclick="uploadAllToSheet()">⬆️ رفع البيانات الحالية إلى الشيت</button>' +
-            '<button class="btn btn-danger btn-sm" style="width:100%" onclick="disconnectSheet()">قطع الربط بالشيت ✕</button>' +
-          '</div>' +
-        '</div>' : '') +
-    '</div>' +
-  '</div>';
-
-  document.getElementById('modal-root').innerHTML = html;
+function saveSheetCfg(){
+  var url=(document.getElementById('cfg_url').value||'').trim();
+  if(!url){alert('الرجاء إدخال رابط صحيح');return;}
+  sheetUrl=url;localStorage.setItem(SHEET_KEY,url);
+  closeModal();toast('جاري التحقق...');fetchSheet(true);
 }
-
-function saveSheetConfig() {
-  var url = document.getElementById('cfg_url').value.trim();
-  if (!url) {
-    alert('الرجاء إدخال رابط Google Apps Script صحيح');
-    return;
-  }
-  sheetUrl = url;
-  localStorage.setItem(SHEET_KEY, sheetUrl);
-  showToast('تم حفظ الرابط، جاري التحقق من الاتصال...');
-  closeModal();
-  fetchFromSheet(true);
+function disconnectSheet(){
+  if(!confirm('قطع الربط؟'))return;
+  sheetUrl='';localStorage.removeItem(SHEET_KEY);syncSt.status='idle';
+  closeModal();render();toast('تم قطع الربط');
 }
-
-function disconnectSheet() {
-  if (!confirm('هل تريد قطع الربط مع Google Sheet؟ ستبقى بياناتك محفوظة محلياً.')) return;
-  sheetUrl = '';
-  localStorage.removeItem(SHEET_KEY);
-  syncState.status = 'idle';
-  closeModal();
-  render();
-  showToast('تم قطع الربط.');
+function toggleTheme(){
+  var cur=document.documentElement.getAttribute('data-theme');
+  document.documentElement.setAttribute('data-theme',cur==='dark'?'light':'dark');
+  localStorage.setItem('bayt_theme',document.documentElement.getAttribute('data-theme'));
 }
-
-function updateHeaderSyncBadge() {
-  var el = document.getElementById('sync-badge-btn');
-  if (!el) return;
-  if (!sheetUrl) {
-    el.className = 'sync-badge';
-    el.innerHTML = '<span class="sync-dot"></span> غير مربوط';
-    return;
-  }
-  if (syncState.status === 'syncing') {
-    el.className = 'sync-badge syncing';
-    el.innerHTML = '<span class="sync-dot spin"></span> جاري المزامنة...';
-  } else if (syncState.status === 'error') {
-    el.className = 'sync-badge offline';
-    el.innerHTML = '<span class="sync-dot"></span> خطأ اتصال';
-  } else {
-    el.className = 'sync-badge synced';
-    el.innerHTML = '<span class="sync-dot"></span> متصل ' + (syncState.lastSync ? '(' + syncState.lastSync + ')' : '');
-  }
+(function(){var t=localStorage.getItem('bayt_theme');if(t)document.documentElement.setAttribute('data-theme',t);})();
+function updateSync(){
+  var el=document.getElementById('sync-pill');if(!el)return;
+  if(!sheetUrl){el.className='sync-pill';el.innerHTML='<span class="sync-dot"></span>غير مربوط';return;}
+  if(syncSt.status==='syncing'){el.className='sync-pill going';el.innerHTML='<span class="sync-dot pulse"></span>مزامنة...';}
+  else if(syncSt.status==='error'){el.className='sync-pill err';el.innerHTML='<span class="sync-dot"></span>خطأ';}
+  else{el.className='sync-pill ok';el.innerHTML='<span class="sync-dot"></span>'+(syncSt.last||'متصل');}
 }
-
-/* ========================================================
-   عناصر الإدخال والقوائم المشتركة
-   ======================================================== */
-
-function form(list, hasDate, btn) {
-  var pl = list === 'expected' ? 'مثلاً: المرتب أو شغل إضافي' :
-           (list === 'expectedExp' ? 'مثلاً: أكل وشرب أو مواصلات' :
-           (list === 'badrI' ? 'مثلاً: إيجار شهر ...' : 'مثلاً: كهرباء أو تموين'));
-  return '<div class="f">' +
-    '<div class="w"><label>اسم البند</label><input id="n_' + list + '" placeholder="' + pl + '"></div>' +
-    '<div><label>المبلغ (جنيه)</label><input id="a_' + list + '" type="number" inputmode="decimal" placeholder="0"></div>' +
-    (hasDate ? '<div><label>التاريخ</label><input id="d_' + list + '" type="date" value="' + today() + '"></div>' : '') +
-    '<div class="w"><button class="btn" onclick="add(\'' + list + '\',' + hasDate + ')">' + btn + '</button></div>' +
-  '</div>';
+function deleteLog(id){
+  if(!confirm('حذف؟'))return;
+  S.logs=(S.logs||[]).filter(function(x){return String(x.id)!==String(id);});
+  save();render();toast('تم');
+  if(sheetUrl)postSheet({action:'deleteLog',id:id},function(r){if(r.success)toast('✅ تم');});
 }
-
-function rows(list, cls, hasDate) {
-  var a = S[list].slice();
-  if (hasDate) {
-    a.sort(function(x, y) { return (y.d || '') < (x.d || '') ? -1 : 1; });
-  }
-  if (!a.length) return '<p class="hint">لا توجد بنود مسجلة بعد. أضف أول بند بالأسفل.</p>';
-  return a.map(function(x) {
-    var meta = [];
-    if (x.d) meta.push(x.d);
-    if (x.updatedAt) meta.push('🕒 ' + x.updatedAt);
-    return '<div class="row">' +
-      '<div class="n"><b>' + esc(x.n) + '</b>' + (meta.length ? '<span>' + meta.join(' · ') + '</span>' : '') + '</div>' +
-      '<span class="amt ' + cls + '">' + m(x.a) + '<small>ج</small></span>' +
-      '<div class="row-actions">' +
-        '<button class="action-btn" title="تعديل" aria-label="تعديل" onclick="openEditModal(\'' + list + '\',' + x.id + ',' + hasDate + ')">✏️</button>' +
-        '<button class="action-btn del-btn" title="مسح" aria-label="مسح" onclick="del(\'' + list + '\',' + x.id + ')">🗑️</button>' +
-      '</div>' +
+function clearLogs(){
+  if(!confirm('مسح كل السجل؟'))return;
+  S.logs=[];save();render();toast('تم');
+  if(sheetUrl)postSheet({action:'clearLogs'},function(r){if(r.success)toast('✅ تم');});
+}
+function rowsList(list,cls,hasDate){
+  var a=S[list].slice();
+  if(hasDate)a.sort(function(x,y){return (y.d||'')<(x.d||'')?-1:1;});
+  if(!a.length)return '<div class="empty-state"><div class="ei">📭</div><p>لا توجد بنود بعد.<br>اضغط ＋ لإضافة بند.</p></div>';
+  return a.map(function(x){
+    return '<div class="list-row">'+
+      '<div class="lr-info"><div class="lr-name">'+esc(x.n)+'</div>'+(x.d?'<div class="lr-meta">'+x.d+'</div>':'')+
+      '</div>'+
+      '<span class="lr-amt '+cls+'">'+m(x.a)+'<small>ج</small></span>'+
+      '<div class="lr-actions">'+
+        '<button class="lr-btn edit" onclick="openEdit(''+list+'','+x.id+','+hasDate+')">✏️</button>'+
+        '<button class="lr-btn del" onclick="delItem(''+list+'','+x.id+')">🗑️</button>'+
+      '</div></div>';
+  }).join('');
+}
+var openSections={};
+function toggleSection(id){
+  openSections[id]=!openSections[id];
+  var body=document.getElementById('sec-body-'+id);
+  var tog=document.getElementById('sec-tog-'+id);
+  if(body)body.style.maxHeight=openSections[id]?body.scrollHeight+'px':'0';
+  if(tog)tog.className='collapse-toggle'+(openSections[id]?' open':'');
+}
+function view(){
+  var c=C();
+  var isZero=(S.bank===0&&S.fund===0&&(!S.exp||S.exp.length===0));
+  var titles={home:'الرئيسية',forecast:'التوقعات',exp:'المصاريف',badr:'شقة بدر',gold:'الدهب',logs:'السجل'};
+  var icons={home:'🏠',forecast:'🔮',exp:'💸',badr:'🏢',gold:'🪙',logs:'📋'};
+  document.getElementById('hdr').innerHTML=
+    '<div><div class="hdr-title">'+icons[tab]+' '+titles[tab]+'</div>'+
+    (tab==='home'?'<div class="hdr-sub">حساب البيت</div>':'')+
+    '</div>'+
+    '<div class="hdr-actions">'+
+      '<span id="sync-pill" class="sync-pill" onclick="openSettings()" style="cursor:pointer"><span class="sync-dot"></span>'+(sheetUrl?'متصل':'ربط')+'</span>'+
+      '<button class="hdr-btn" onclick="openSettings()">⚙️</button>'+
     '</div>';
-  }).join('');
-}
-
-/* ========================================================
-   عرض الصفحات (View Engine)
-   ======================================================== */
-
-function view() {
-  var c = C(), h = '';
-  var isZeroed = (S.bank === 0 && S.fund === 0 && (!S.exp || S.exp.length === 0));
-
-  /* ─── Header (Sticky Top Bar) ─── */
-  var pageInfo = {
-    home:     { title: 'الرئيسية', icon: '🏠' },
-    forecast: { title: 'توقعات الشهر القادم', icon: '🔮' },
-    exp:      { title: 'المصاريف', icon: '💸' },
-    badr:     { title: 'شقة بدر', icon: '🏢' },
-    gold:     { title: 'الدهب', icon: '🪙' },
-    logs:     { title: 'سجل التعديلات', icon: '📋' }
-  }[tab] || { title: 'حساب البيت', icon: '🏠' };
-
-  var header = '<div class="header-bar">' +
-    '<div class="header-title-wrap">' +
-      '<span class="header-icon">' + pageInfo.icon + '</span>' +
-      '<span class="header-title">' + pageInfo.title + '</span>' +
-    '</div>' +
-    '<div class="header-actions">' +
-      '<span id="sync-badge-btn" class="sync-badge" onclick="openSettingsModal()">' +
-        '<span class="sync-dot"></span> ' + (sheetUrl ? 'متصل' : 'ربط شيت') +
-      '</span>' +
-      (sheetUrl ? '<button class="icon-btn" title="تحديث" onclick="fetchFromSheet(true)">🔄</button>' : '') +
-      '<button class="icon-btn" title="إعدادات" onclick="openSettingsModal()">⚙️</button>' +
-    '</div>' +
-  '</div>';
-
-  /* ─── 1. HOME TAB (الرئيسية) ─── */
-  if (tab == 'home') {
-    var zeroBanner = isZeroed ?
-      '<div class="zero-alert">' +
-        '<b>⚠️ الأرقام ظاهرة صفر؟</b>' +
-        '<p>لأن جدول Google Sheet المربوط لسه جديد وفارغ. اضغط ده عشان يرجعلك كل بياناتك الأصلية ويرفعها فوراً للشيت:</p>' +
-        '<button class="btn" onclick="restoreSeedAndUpload()">🚀 استرجاع بياناتي الأصلية</button>' +
-      '</div>' : '';
-
-    /* Hero: فلوسك الحالية الصافية */
-    var heroColor = c.mine < 0 ? 'style="background:linear-gradient(135deg,#b52a1c,#d9534f)"' : '';
-    var heroHtml =
-      '<div class="hero" ' + heroColor + '>' +
-        '<div class="hero-label">فلوسك إنت بالظبط (الرصيد الصافي لك)</div>' +
-        '<div class="hero-amount' + (c.mine < 0 ? ' neg' : '') + '">' + m(c.mine) + '<small>جنيه</small></div>' +
-        '<div class="hero-sub">💡 بعد خصم إيجار بدر وسيولة البيت وأمانة أختك من حسابك البنكي</div>' +
+  updateSync();
+  var fabEl=document.getElementById('fab');
+  var showFab=['home','exp','badr','forecast'].indexOf(tab)!==-1;
+  if(fabEl)fabEl.className=showFab?'':'hidden';
+  if(tab==='home'){
+    var zeroBanner=isZero?
+      '<div style="background:#fef3c7;border:1.5px dashed #f59e0b;border-radius:16px;padding:14px 16px;margin-bottom:14px">'+
+        '<b style="color:#d97706;display:block;margin-bottom:6px">⚠️ البيانات صفر؟</b>'+
+        '<p class="hint" style="margin-bottom:10px">لأن الشيت فارغ. اضغط للاسترجاع:</p>'+
+        '<button class="btn btn-primary" onclick="restoreSeed()">🚀 استرجاع بياناتي</button>'+
+      '</div>':'';
+    var heroColor=c.mine<0?'style="background:linear-gradient(135deg,#ef4444,#dc2626 60%,#b91c1c)"':'';
+    var hero=
+      '<div class="balance-card" '+heroColor+'>'+
+        '<button class="bal-edit-btn" onclick="openBalanceModal()">✏️ تعديل</button>'+
+        '<div class="bal-label">فلوسك الصافية الحالية</div>'+
+        '<div class="bal-amount">'+m(c.mine)+'<small> ج</small></div>'+
+        '<div class="bal-meta">💡 بعد خصم الإيجار والسيولة والأمانة</div>'+
       '</div>';
-
-    /* Forecast Quick Widget */
-    var forecastWidgetHtml =
-      '<div class="forecast-banner-widget" onclick="go(\'forecast\')">' +
-        '<div class="fbw-right">' +
-          '<span class="fbw-icon">🔮</span>' +
-          '<div class="fbw-text">' +
-            '<span class="fbw-title">توقع رصيدك الشهر القادم</span>' +
-            '<span class="fbw-amt">' + m(c.projectedNextMonth) + ' <small>جنيه</small></span>' +
-          '</div>' +
-        '</div>' +
-        '<span class="fbw-btn">التفاصيل ←</span>' +
+    var stats=
+      '<div class="stats-row">'+
+        '<div class="stat-box"><div class="sb-label">🏦 البنك</div><div class="sb-val">'+m(S.bank)+'<small> ج</small></div></div>'+
+        '<div class="stat-box"><div class="sb-label">💵 سيولة البيت</div><div class="sb-val '+(c.cash<0?'neg':'')+'">'+m(c.cash)+'<small> ج</small></div></div>'+
+        '<div class="stat-box"><div class="sb-label">🪙 قيمة الدهب</div><div class="sb-val">'+m(c.gold)+'<small> ج</small></div></div>'+
+        '<div class="stat-box"><div class="sb-label">🏠 فلوس البيت</div><div class="sb-val">'+m(S.fund)+'<small> ج</small></div></div>'+
       '</div>';
-
-    /* Quick Stat Grid */
-    var statHtml =
-      '<div class="stat-grid">' +
-        '<div class="stat-item">' +
-          '<div class="stat-label">🏦 الحساب البنكي</div>' +
-          '<div class="stat-value">' + m(S.bank) + '<small style="font-size:11px;font-weight:600"> ج</small></div>' +
-        '</div>' +
-        '<div class="stat-item">' +
-          '<div class="stat-label">💵 سيولة البيت المتاحة</div>' +
-          '<div class="stat-value ' + (c.cash < 0 ? 'neg' : '') + '">' + m(c.cash) + '<small style="font-size:11px;font-weight:600"> ج</small></div>' +
-        '</div>' +
-        '<div class="stat-item">' +
-          '<div class="stat-label">🏡 فلوس البيت (إجمالي)</div>' +
-          '<div class="stat-value">' + m(S.fund) + '<small style="font-size:11px;font-weight:600"> ج</small></div>' +
-        '</div>' +
-        '<div class="stat-item">' +
-          '<div class="stat-label">🪙 الدهب (21 + 24)</div>' +
-          '<div class="stat-value">' + m(c.gold) + '<small style="font-size:11px;font-weight:600"> ج</small></div>' +
-        '</div>' +
+    var fcBanner=
+      '<div class="fc-banner" onclick="go('forecast')">'+
+        '<div class="fc-left"><span class="fc-icon">🔮</span><div>'+
+          '<div class="fc-label">توقع الشهر القادم</div>'+
+          '<div class="fc-amt">'+m(c.proj)+'<small> ج</small></div>'+
+        '</div></div>'+
+        '<span class="fc-arrow">التفاصيل ←</span>'+
       '</div>';
-
-    /* Breakdown Card: كيف تم حساب فلوسك */
-    var breakdownHtml =
-      '<div class="card">' +
-        '<div class="card-title">تفصيل حساب فلوسك الصافية</div>' +
-        '<div class="row"><span>الحساب البنكي الحالي</span><span class="amt">' + m(S.bank) + ' ج</span></div>' +
-        '<div class="row"><span class="neg">− إيجار بدر (مخصوم لصالح البيت)</span><span class="amt neg">−' + m(c.bI) + ' ج</span></div>' +
-        '<div class="row"><span class="neg">− سيولة البيت المتبقية</span><span class="amt neg">−' + m(c.cash) + ' ج</span></div>' +
-        (S.sister ? '<div class="row"><span class="neg">− فلوس أختي (أمانة)</span><span class="amt neg">−' + m(S.sister) + ' ج</span></div>' : '') +
-        '<div class="tot"><span>صافي فلوسك إنت الحالية</span><span class="' + (c.mine < 0 ? 'neg' : 'pos') + '">' + m(c.mine) + ' ج</span></div>' +
+    var secId='breakdown';
+    if(openSections[secId]===undefined)openSections[secId]=false;
+    var bkHtml=
+      '<div class="card">'+
+        '<button id="sec-tog-'+secId+'" class="collapse-toggle'+(openSections[secId]?' open':'')+'" onclick="toggleSection(''+secId+'')">'+
+          '<span>📊 تفصيل حساب الرصيد</span><span class="ct-arrow">▼</span>'+
+        '</button>'+
+        '<div id="sec-body-'+secId+'" class="collapse-body'+(openSections[secId]?'':' closed')+'" style="max-height:'+(openSections[secId]?'500px':'0')+'">'+
+          '<div style="margin-top:10px">'+
+            '<div class="bk-row"><span>الحساب البنكي</span><b>'+m(S.bank)+' ج</b></div>'+
+            '<div class="bk-row"><span class="neg">− إيجار بدر</span><span class="neg">−'+m(c.bI)+' ج</span></div>'+
+            '<div class="bk-row"><span class="neg">− سيولة البيت المتبقية</span><span class="neg">−'+m(c.cash)+' ج</span></div>'+
+            (S.sister?'<div class="bk-row"><span class="neg">− فلوس أختي</span><span class="neg">−'+m(S.sister)+' ج</span></div>':'')+
+            '<div class="bk-row total"><span>صافي فلوسك</span><span class="'+(c.mine<0?'neg':'pos')+'">'+m(c.mine)+' ج</span></div>'+
+          '</div>'+
+        '</div>'+
       '</div>';
-
-    /* Balance Edit Trigger Card */
-    var editTriggerHtml =
-      '<div class="card" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="openBalanceModal()">' +
-        '<div>' +
-          '<div style="font-weight:800;font-size:13.5px">✏️ تعديل الأرصدة الأساسية</div>' +
-          '<div style="font-size:11px;color:var(--sub);margin-top:2px">تحديث رصيد البنك · فلوس البيت · فلوس أختك</div>' +
-        '</div>' +
-        '<button class="btn btn-sm btn-sec" onclick="event.stopPropagation();openBalanceModal()">تعديل</button>' +
+    var secId2='house';
+    if(openSections[secId2]===undefined)openSections[secId2]=false;
+    var houseCard=
+      '<div class="card">'+
+        '<button id="sec-tog-'+secId2+'" class="collapse-toggle'+(openSections[secId2]?' open':'')+'" onclick="toggleSection(''+secId2+'')">'+
+          '<span>🏡 ملخص البيت والسيولة</span><span class="ct-arrow">▼</span>'+
+        '</button>'+
+        '<div id="sec-body-'+secId2+'" class="collapse-body'+(openSections[secId2]?'':' closed')+'" style="max-height:'+(openSections[secId2]?'500px':'0')+'">'+
+          '<div style="margin-top:10px">'+
+            '<div class="bk-row"><span>فلوس البيت المخصصة</span><b>'+m(S.fund)+' ج</b></div>'+
+            '<div class="bk-row"><span class="neg">− مصاريف البيت ('+S.exp.length+' بند)</span><span class="neg">−'+m(c.hE)+' ج</span></div>'+
+            '<div class="bk-row"><span class="neg">− مصاريف شقة بدر</span><span class="neg">−'+m(c.bE)+' ج</span></div>'+
+            '<div class="bk-row total"><span>سيولة البيت المتاحة</span><span class="'+(c.cash<0?'neg':'')+'">'+m(c.cash)+' ج</span></div>'+
+            '<div class="bk-row"><span>🪙 الدهب</span><b>'+m(c.gold)+' ج</b></div>'+
+            '<div class="bk-row total"><span>إجمالي ثروة البيت</span><b>'+m(c.gold+c.cash)+' ج</b></div>'+
+          '</div>'+
+        '</div>'+
       '</div>';
-
-    /* House Summary Mini Card */
-    var houseHtml =
-      '<div class="card">' +
-        '<div class="card-title">ملخص البيت والسيولة</div>' +
-        '<div class="row"><span>فلوس البيت المخصصة</span><span class="amt">' + m(S.fund) + ' ج</span></div>' +
-        '<div class="row"><span class="neg">− مصاريف البيت (15 بند)</span><span class="amt neg">−' + m(c.houseExp) + ' ج</span></div>' +
-        '<div class="row"><span class="neg">− مصاريف شقة بدر</span><span class="amt neg">−' + m(c.bE) + ' ج</span></div>' +
-        '<div class="tot"><span>سيولة البيت المتاحة الآن</span><span class="' + (c.cash < 0 ? 'neg' : '') + '">' + m(c.cash) + ' ج</span></div>' +
-        '<div class="row" style="padding-top:8px"><span>🪙 إجمالي قيمة الدهب</span><span class="amt">' + m(c.gold) + ' ج</span></div>' +
-        '<div class="tot"><span>إجمالي ثروة البيت (دهب + سيولة)</span><span>' + m(c.gold + c.cash) + ' ج</span></div>' +
-      '</div>';
-
-    var sheetNote = sheetUrl ?
-      '<p class="hint" style="text-align:center">☁️ متصل بـ Google Sheet · كافة العمليات مسجلة تلقائياً بالتاريخ والساعة</p>' :
-      '<div class="card" style="cursor:pointer;background:var(--accl);border-color:rgba(11,122,110,.2)" onclick="openSettingsModal()">' +
-        '<div class="row" style="border:0;padding:0">' +
-          '<div class="n"><b style="color:var(--acc)">🔗 اربط بـ Google Sheets الآن</b><span>لحفظ بياناتك سحابياً وتفعيل المزامنة التلقائية</span></div>' +
-          '<span class="amt" style="color:var(--acc)">←</span>' +
-        '</div>' +
-      '</div>';
-
-    h = header + zeroBanner + heroHtml + forecastWidgetHtml + statHtml + breakdownHtml + editTriggerHtml + houseHtml + sheetNote;
+    var sheetBanner=!sheetUrl?
+      '<div class="connect-banner" onclick="openSettings()">'+
+        '<div class="cb-title">🔗 ربط بـ Google Sheets</div>'+
+        '<div class="cb-sub">احفظ بياناتك سحابياً وفعّل المزامنة التلقائية</div>'+
+      '</div>':
+      '<p class="hint" style="text-align:center;padding:6px 0">☁️ متصل بـ Google Sheet · كل العمليات محفوظة تلقائياً</p>';
+    return zeroBanner+hero+stats+fcBanner+bkHtml+houseCard+sheetBanner;
   }
-
-  /* ─── 2. FORECAST TAB (🔮 توقعات الشهر القادم) ─── */
-  if (tab == 'forecast') {
-    var diff = c.projectedNextMonth - c.mine;
-    var chipText = diff > 0 ? ('🟢 زيادة متوقعة: +' + m(diff) + ' ج عن رصيدك الحالي') :
-                   (diff < 0 ? ('🔴 نقص متوقع: −' + m(Math.abs(diff)) + ' ج عن رصيدك الحالي') : '⚪️ مساوٍ لرصيدك الحالي تماماً');
-
-    var fHeroHtml =
-      '<div class="forecast-hero">' +
-        '<div class="hero-label">احتمال الشهر القادم يكون معاك:</div>' +
-        '<div class="hero-amount">' + m(c.projectedNextMonth) + '<small>جنيه</small></div>' +
-        '<div class="forecast-chip">' + chipText + '</div>' +
+  if(tab==='forecast'){
+    var diff=c.proj-c.mine;
+    var chip=diff>0?'🟢 زيادة +'+m(diff)+' ج':(diff<0?'🔴 نقص −'+m(Math.abs(diff))+' ج':'⚪️ نفس رصيدك الحالي');
+    var fHero=
+      '<div class="fc-hero">'+
+        '<div class="bal-label">الشهر القادم احتمالاً معاك</div>'+
+        '<div class="bal-amount">'+m(c.proj)+'<small> ج</small></div>'+
+        '<div class="fc-chip">'+chip+'</div>'+
       '</div>';
-
-    /* Forecast Equation Breakdown */
-    var eqHtml =
-      '<div class="card">' +
-        '<div class="card-title">معادلة حساب الشهر القادم</div>' +
-        '<div class="row">' +
-          '<span>💰 فلوسك الحالية الصافية</span>' +
-          '<b class="amt">' + m(c.mine) + ' ج</b>' +
-        '</div>' +
-        '<div class="row">' +
-          '<span class="pos">➕ إجمالي الإيرادات المتوقعة</span>' +
-          '<b class="amt pos">+' + m(c.expctTotal) + ' ج</b>' +
-        '</div>' +
-        '<div class="row">' +
-          '<span class="neg">➖ إجمالي المصاريف المتوقعة</span>' +
-          '<b class="amt neg">−' + m(c.expctExpTotal) + ' ج</b>' +
-        '</div>' +
-        '<div class="tot">' +
-          '<span>🔮 صافي المتوقع يكون معاك</span>' +
-          '<span class="' + (c.projectedNextMonth < 0 ? 'neg' : 'pos') + '">' + m(c.projectedNextMonth) + ' ج</span>' +
-        '</div>' +
+    var eqCard=
+      '<div class="card">'+
+        '<div class="card-hd"><span class="card-hd-title">معادلة الحساب</span></div>'+
+        '<div class="bk-row"><span>💰 فلوسك الحالية</span><b>'+m(c.mine)+' ج</b></div>'+
+        '<div class="bk-row"><span class="pos">➕ إيرادات متوقعة</span><b class="pos">+'+m(c.expI)+' ج</b></div>'+
+        '<div class="bk-row"><span class="neg">➖ مصاريف متوقعة</span><b class="neg">−'+m(c.expE)+' ج</b></div>'+
+        '<div class="bk-row total"><span>🔮 المتوقع الشهر القادم</span><span class="'+(c.proj<0?'neg':'pos')+'">'+m(c.proj)+' ج</span></div>'+
       '</div>';
-
-    /* Expected Revenues Card */
-    var incCardHtml =
-      '<div class="fsect-card" style="border-right: 4px solid var(--pos)">' +
-        '<div class="fsect-head">' +
-          '<div class="fsect-head-title"><span class="pos">📥</span> إيرادات متوقعة للشهر القادم</div>' +
-          '<div class="fsect-head-total pos">+' + m(c.expctTotal) + ' ج</div>' +
-        '</div>' +
-        rows('expected', 'pos', false) +
-        '<div class="add-form">' +
-          '<div class="add-form-title">➕ إضافة إيراد متوقع (مرتب، شغل إضافي، جمعية...)</div>' +
-          form('expected', false, 'إضافة الإيراد المتوقع 📥') +
-        '</div>' +
+    var incCard=
+      '<div class="card accent-bar-pos">'+
+        '<div class="card-hd"><span class="card-hd-title">📥 إيرادات متوقعة</span><span class="card-hd-val pos">+'+m(c.expI)+' ج</span></div>'+
+        rowsList('expected','pos',false)+
       '</div>';
-
-    /* Expected Expenses Card */
-    var expCardHtml =
-      '<div class="fsect-card" style="border-right: 4px solid var(--neg)">' +
-        '<div class="fsect-head">' +
-          '<div class="fsect-head-title"><span class="neg">📤</span> مصاريف متوقعة للشهر القادم</div>' +
-          '<div class="fsect-head-total neg">−' + m(c.expctExpTotal) + ' ج</div>' +
-        '</div>' +
-        rows('expectedExp', 'neg', false) +
-        '<div class="add-form">' +
-          '<div class="add-form-title">➕ إضافة مصروف متوقع (أكل، مواصلات، فواتير...)</div>' +
-          form('expectedExp', false, 'إضافة المصروف المتوقع 📤') +
-        '</div>' +
+    var expCard=
+      '<div class="card accent-bar-neg">'+
+        '<div class="card-hd"><span class="card-hd-title">📤 مصاريف متوقعة</span><span class="card-hd-val neg">−'+m(c.expE)+' ج</span></div>'+
+        rowsList('expectedExp','neg',false)+
       '</div>';
-
-    var fNote = '<p class="hint" style="text-align:center">📌 كل بند تضيفه أو تعدله هنا يُحفظ محلياً ويُرفع لصفحتي التوقعات في Google Sheet تلقائياً.</p>';
-
-    h = header + fHeroHtml + eqHtml + incCardHtml + expCardHtml + fNote;
+    return fHero+eqCard+incCard+expCard+
+      '<p class="hint" style="text-align:center">📌 اضغط ＋ لإضافة إيراد أو مصروف متوقع</p>';
   }
-
-  /* ─── 3. EXPENSES TAB (💸 المصاريف) ─── */
-  if (tab == 'exp') {
-    var expInfoBox =
-      '<div class="info-box">' +
-        '💡 <b>توضيح هام لحساب المصاريف:</b><br>' +
-        '• مصاريف البيت الحالية (15 بند): <b>' + m(c.houseExp) + ' ج</b><br>' +
-        '• مصاريف شقة بدر (13 بند): <b>' + m(c.bE) + ' ج</b><br>' +
-        '• <b>إجمالي كل المصاريف معاً = ' + m(c.totalExp) + ' ج</b>' +
+  if(tab==='exp'){
+    var expHero=
+      '<div class="balance-card" style="background:linear-gradient(135deg,#ef4444,#dc2626 60%,#b91c1c)">'+
+        '<div class="bal-label">إجمالي مصاريف البيت</div>'+
+        '<div class="bal-amount">'+m(c.hE)+'<small> ج</small></div>'+
+        '<div class="bal-meta">'+S.exp.length+' بند مسجل</div>'+
       '</div>';
-
-    h = header +
-      '<div class="hero" style="background:linear-gradient(135deg,#b52a1c,#d9534f)">' +
-        '<div class="hero-label">إجمالي كل المصاريف (شامل بدر)</div>' +
-        '<div class="hero-amount neg">' + m(c.totalExp) + '<small>جنيه</small></div>' +
-      '</div>' +
-      expInfoBox +
-      '<div class="stat-grid">' +
-        '<div class="stat-item"><div class="stat-label">مصاريف البيت (15 بند)</div><div class="stat-value neg">' + m(c.houseExp) + ' ج</div></div>' +
-        '<div class="stat-item"><div class="stat-label">مصاريف بدر (13 بند)</div><div class="stat-value neg">' + m(c.bE) + ' ج</div></div>' +
-      '</div>' +
-      '<div class="card">' +
-        '<div class="card-title">' +
-          '<span>بنود مصاريف البيت</span>' +
-          '<span class="badge badge-info">' + S.exp.length + ' بند</span>' +
-        '</div>' +
-        rows('exp', 'neg', true) +
-        '<div class="tot"><span>مجموع مصاريف البيت</span><span class="neg">' + m(c.houseExp) + ' ج</span></div>' +
-      '</div>' +
-      '<div class="card">' +
-        '<div class="card-title">➕ إضافة مصروف جديد للبيت</div>' +
-        form('exp', true, 'إضافة المصروف 💸') +
-      '</div>';
+    return expHero+
+      '<div class="card">'+
+        '<div class="card-hd"><span class="card-hd-title">بنود المصاريف</span><span class="card-hd-val neg">'+m(c.hE)+' ج</span></div>'+
+        rowsList('exp','neg',true)+
+        '<div class="total-row"><span>الإجمالي</span><span class="neg">'+m(c.hE)+' ج</span></div>'+
+      '</div>'+
+      '<p class="hint" style="text-align:center;margin-top:4px">اضغط ＋ لإضافة مصروف جديد</p>';
   }
-
-  /* ─── 4. BADR TAB (🏢 شقة بدر) ─── */
-  if (tab == 'badr') {
-    var netBadr = c.bI - c.bE;
-    var badrHeroColor = netBadr >= 0 ? '#157a45,#1aad60' : '#b52a1c,#d9534f';
-    var badrNote =
-      '<div class="info-box">' +
-        '🏢 <b>نظام شقة بدر:</b><br>' +
-        '• إيرادات الإيجار (<b>' + m(c.bI) + ' ج</b>) تُخصم تلقائياً من رصيد حسابك البنكي لصالح البيت ليصبح رصيدك الصافي دقيقاً 100%.<br>' +
-        '• مصاريف تجهيز الشقة (<b>' + m(c.bE) + ' ج</b>) محسوبة ضمن مصاريف البيت.' +
+  if(tab==='badr'){
+    var net=c.bI-c.bE;
+    var badrHero=
+      '<div class="balance-card" style="background:linear-gradient(135deg,'+(net>=0?'#059669,#10b981 60%,#34d399':'#ef4444,#dc2626 60%,#b91c1c')+')">'+
+        '<div class="bal-label">صافي شقة بدر</div>'+
+        '<div class="bal-amount">'+m(net)+'<small> ج</small></div>'+
+        '<div class="bal-meta">إيرادات '+m(c.bI)+' ج · مصروفات '+m(c.bE)+' ج</div>'+
       '</div>';
-
-    h = header +
-      '<div class="hero" style="background:linear-gradient(135deg,' + badrHeroColor + ')">' +
-        '<div class="hero-label">صافي شقة بدر (الإيرادات − المصروفات)</div>' +
-        '<div class="hero-amount">' + m(netBadr) + '<small>جنيه</small></div>' +
-      '</div>' +
-      badrNote +
-      '<div class="stat-grid">' +
-        '<div class="stat-item"><div class="stat-label">📥 إيرادات الإيجار</div><div class="stat-value pos">+' + m(c.bI) + ' ج</div></div>' +
-        '<div class="stat-item"><div class="stat-label">📤 مصروفات التجهيز</div><div class="stat-value neg">−' + m(c.bE) + ' ج</div></div>' +
-      '</div>' +
-      '<div class="card">' +
-        '<div class="card-title"><span class="pos">📥 إيرادات إيجار بدر (تُخصم من البنك)</span></div>' +
-        rows('badrI', 'pos', false) +
-        '<div class="tot"><span>إجمالي إيراد الإيجار</span><span class="pos">+' + m(c.bI) + ' ج</span></div>' +
-        '<div class="add-form">' +
-          '<div class="add-form-title">➕ إضافة دفعة إيجار</div>' +
-          form('badrI', false, 'إضافة الإيراد 📥') +
-        '</div>' +
-      '</div>' +
-      '<div class="card">' +
-        '<div class="card-title"><span class="neg">📤 مصاريف تجهيز شقة بدر</span></div>' +
-        rows('badrE', 'neg', false) +
-        '<div class="tot"><span>إجمالي مصاريف بدر</span><span class="neg">−' + m(c.bE) + ' ج</span></div>' +
-        '<div class="add-form">' +
-          '<div class="add-form-title">➕ إضافة مصروف لشقة بدر</div>' +
-          form('badrE', false, 'إضافة المصروف 📤') +
-        '</div>' +
+    var infoBox=
+      '<div class="info-box">'+
+        '🏢 <b>نظام بدر:</b><br>'+
+        '• إيرادات الإيجار (<b>'+m(c.bI)+' ج</b>) تُخصم من البنك.<br>'+
+        '• مصاريف التجهيز (<b>'+m(c.bE)+' ج</b>) ضمن مصاريف البيت.'+
       '</div>';
+    return badrHero+infoBox+
+      '<div class="card accent-bar-pos">'+
+        '<div class="card-hd"><span class="card-hd-title">📥 إيرادات الإيجار</span><span class="card-hd-val pos">+'+m(c.bI)+' ج</span></div>'+
+        rowsList('badrI','pos',false)+
+      '</div>'+
+      '<div class="card accent-bar-neg">'+
+        '<div class="card-hd"><span class="card-hd-title">📤 مصاريف التجهيز</span><span class="card-hd-val neg">−'+m(c.bE)+' ج</span></div>'+
+        rowsList('badrE','neg',false)+
+      '</div>'+
+      '<p class="hint" style="text-align:center">اضغط ＋ لإضافة إيجار أو مصروف بدر</p>';
   }
-
-  /* ─── 5. GOLD TAB (🪙 الدهب) ─── */
-  if (tab == 'gold') {
-    function gCard(k, name) {
-      var item = S[k];
-      var total = (item.g || 0) * (item.p || 0);
-      return '<div class="card">' +
-        '<div class="card-title"><span>' + name + '</span><b class="amt">' + m(total) + ' ج</b></div>' +
-        '<div class="f">' +
-          '<div><label>الوزن (جرام)</label><input type="number" inputmode="decimal" value="' + item.g + '" onchange="setG(\'' + k + '\',\'g\',this.value)"></div>' +
-          '<div><label>سعر الجرام (جنيه)</label><input type="number" inputmode="decimal" value="' + item.p + '" onchange="setG(\'' + k + '\',\'p\',this.value)"></div>' +
-        '</div>' +
+  if(tab==='gold'){
+    var goldHero=
+      '<div class="gold-hero">'+
+        '<div class="bal-label">إجمالي قيمة الدهب</div>'+
+        '<div class="bal-amount">'+m(c.gold)+'<small> ج</small></div>'+
+        '<div class="bal-meta">عيار 21: '+m((S.g21.g||0)*(S.g21.p||0))+' ج · عيار 24: '+m((S.g24.g||0)*(S.g24.p||0))+' ج</div>'+
       '</div>';
+    function gCard(k,name){
+      var item=S[k],tot=(item.g||0)*(item.p||0);
+      return '<div class="card accent-bar-gold">'+
+        '<div class="card-hd"><span class="card-hd-title">'+name+'</span><b class="card-hd-val">'+m(tot)+' ج</b></div>'+
+        '<div class="form-grid">'+
+          '<div class="field"><label>الوزن (جرام)</label><input type="number" inputmode="decimal" value="'+item.g+'" onchange="setG(''+k+'','g',this.value)"></div>'+
+          '<div class="field"><label>سعر الجرام</label><input type="number" inputmode="decimal" value="'+item.p+'" onchange="setG(''+k+'','p',this.value)"></div>'+
+        '</div></div>';
     }
-
-    h = header +
-      '<div class="hero" style="background:linear-gradient(135deg,#c47a0b,#f59e0b)">' +
-        '<div class="hero-label">إجمالي قيمة الدهب الحالي</div>' +
-        '<div class="hero-amount">' + m(c.gold) + '<small>جنيه</small></div>' +
-      '</div>' +
-      gCard('g21', '✨ عيار 21') +
-      gCard('g24', '✨ عيار 24') +
-      '<div class="card">' +
-        '<div class="card-title">ملخص ثروة البيت</div>' +
-        '<div class="row"><span>🪙 إجمالي قيمة الدهب</span><span class="amt">' + m(c.gold) + ' ج</span></div>' +
-        '<div class="row"><span>💵 سيولة البيت المتاحة</span><span class="amt">' + m(c.cash) + ' ج</span></div>' +
-        '<div class="tot"><span>إجمالي البيت (دهب + سيولة)</span><span>' + m(c.gold + c.cash) + ' ج</span></div>' +
-      '</div>' +
-      '<p class="hint" style="text-align:center">📌 عند تعديل سعر الجرام أو الوزن يتم الحفظ وتحديث الشيت تلقائياً.</p>';
+    return goldHero+gCard('g21','✨ عيار 21')+gCard('g24','✨ عيار 24')+
+      '<div class="card">'+
+        '<div class="card-hd"><span class="card-hd-title">ملخص ثروة البيت</span></div>'+
+        '<div class="bk-row"><span>🪙 الدهب</span><b>'+m(c.gold)+' ج</b></div>'+
+        '<div class="bk-row"><span>💵 سيولة البيت</span><b>'+m(c.cash)+' ج</b></div>'+
+        '<div class="bk-row total"><span>إجمالي البيت</span><b>'+m(c.gold+c.cash)+' ج</b></div>'+
+      '</div>'+
+      '<p class="hint" style="text-align:center">تعديل السعر أو الوزن يُزامن تلقائياً</p>';
   }
-
-  /* ─── 6. LOGS TAB (📋 سجل التعديلات) ─── */
-  if (tab == 'logs') {
-    var logsList = S.logs || [];
-    var logCards = '';
-    if (!logsList.length) {
-      logCards = '<div class="card" style="text-align:center;padding:28px 16px">' +
-        '<div style="font-size:40px;margin-bottom:8px">📋</div>' +
-        '<p class="hint">لا توجد أي تعديلات مسجلة بعد.<br>أي تعديل أو إضافة أو حذف سيتم توثيقه هنا تلقائياً.</p>' +
-      '</div>';
-    } else {
-      logCards = logsList.map(function(log) {
-        var badgeCls = (log.type && log.type.indexOf('حذف') !== -1) ? 'badge-neg' :
-                       ((log.type && log.type.indexOf('إضافة') !== -1) ? 'badge-pos' :
-                       ((log.type && log.type.indexOf('تعديل') !== -1) ? 'badge-warn' : 'badge-info'));
-        return '<div class="card log-card">' +
-          '<div class="log-top">' +
-            '<span class="log-badge ' + badgeCls + '">' + esc(log.type) + '</span>' +
-            '<span class="log-time">' + esc(log.dt) + '</span>' +
-          '</div>' +
-          '<div class="log-title">' + (log.sec ? '<span class="log-sec">' + esc(log.sec) + '</span>' : '') + '<b>' + esc(log.n || log.desc) + '</b></div>' +
-          (log.oldV !== undefined && log.oldV !== '' && log.newV !== undefined && log.newV !== '' ?
-            '<div class="log-values"><s>' + m(log.oldV) + ' ج</s> → <b class="pos">' + m(log.newV) + ' ج</b></div>' : '') +
-          (log.desc ? '<div class="log-desc">' + esc(log.desc) + '</div>' : '') +
-          '<div class="log-actions">' +
-            '<button class="btn-danger-subtle" data-id="' + esc(log.id) + '" onclick="deleteLogItem(this.getAttribute(\'data-id\'))">🗑️ حذف من الشيت</button>' +
-          '</div>' +
+  if(tab==='logs'){
+    var logs=S.logs||[];
+    var logHtml=logs.length?
+      logs.map(function(l){
+        var bc=l.type&&l.type.indexOf('حذف')!==-1?'badge-del':(l.type&&l.type.indexOf('إضافة')!==-1?'badge-add':'badge-edit');
+        return '<div class="log-item">'+
+          '<div class="log-top">'+
+            '<span class="log-badge '+bc+'">'+esc(l.type)+'</span>'+
+            '<span class="log-time">'+esc(l.dt)+'</span>'+
+          '</div>'+
+          '<div class="log-name">'+esc(l.n||l.desc)+'</div>'+
+          (l.desc?'<div class="log-desc">'+esc(l.desc)+'</div>':'')+
+          (l.oldV!==undefined&&l.oldV!==''&&l.newV!==undefined&&l.newV!==''?'<div class="log-vals"><s>'+m(l.oldV)+' ج</s> → <b class="pos">'+m(l.newV)+' ج</b></div>':'')+
+          '<div class="log-footer"><button class="del-log-btn" data-lid="'+esc(l.id)+'" onclick="deleteLog(this.getAttribute('data-lid'))">🗑️ حذف</button></div>'+
         '</div>';
-      }).join('');
-    }
-
-    h = header +
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin:4px 0 12px">' +
-        '<div>' +
-          '<div style="font-weight:900;font-size:15px">📋 سجل العمليات والمزامنة</div>' +
-          '<div style="font-size:11px;color:var(--sub)">' + logsList.length + ' حركة موثقة</div>' +
-        '</div>' +
-        (logsList.length ? '<button class="btn btn-sm btn-sec" onclick="clearAllLogsFromSheet()">🧹 تصفير السجل</button>' : '') +
-      '</div>' +
-      logCards;
+      }).join(''):
+      '<div class="empty-state"><div class="ei">📋</div><p>لا توجد تعديلات بعد.</p></div>';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'+
+        '<div><b style="font-size:16px">📋 السجل</b><div class="hint">'+logs.length+' حركة</div></div>'+
+        (logs.length?'<button class="btn btn-ghost btn-sm" style="color:var(--neg);border-color:var(--neg)" onclick="clearLogs()">🧹 مسح</button>':'')+
+      '</div>'+logHtml;
   }
-
-  return h;
+  return '';
 }
-
-function render() {
-  document.getElementById('app').innerHTML = view();
-  updateHeaderSyncBadge();
-
-  var T = [
-    ['home',     '🏠', 'الرئيسية'],
-    ['forecast', '🔮', 'التوقعات'],
-    ['exp',      '💸', 'المصاريف'],
-    ['badr',     '🏢', 'شقة بدر'],
-    ['gold',     '🪙', 'الدهب'],
-    ['logs',     '📋', 'السجل']
-  ];
-
-  document.getElementById('nav').innerHTML = T.map(function(t) {
-    return '<button class="' + (tab == t[0] ? 'on' : '') + '" onclick="go(\'' + t[0] + '\')">' +
-      '<span class="nav-icon">' + t[1] + '</span>' +
-      '<span class="nav-label">' + t[2] + '</span>' +
-    '</button>';
+function render(){
+  document.getElementById('app').innerHTML=view();
+  updateSync();
+  var tabs=[['home','🏠','الرئيسية'],['forecast','🔮','التوقعات'],['exp','💸','المصاريف'],['badr','🏢','بدر'],['gold','🪙','الدهب'],['logs','📋','السجل']];
+  document.getElementById('nav').innerHTML=tabs.map(function(t){
+    return '<button class="nav-btn'+(tab===t[0]?' on':'')+'" onclick="go(''+t[0]+'')">'+
+      '<span class="ni">'+t[1]+'</span><span class="nl">'+t[2]+'</span></button>';
   }).join('');
 }
-
 render();
-if (sheetUrl) {
-  fetchFromSheet(false);
-}
-
-// مزامنة فورية عند العودة لنافذة الموقع من الشيت
-window.addEventListener('focus', function() {
-  if (sheetUrl && syncState.status !== 'syncing') {
-    fetchFromSheet(false);
-  }
-});
-document.addEventListener('visibilitychange', function() {
-  if (!document.hidden && sheetUrl && syncState.status !== 'syncing') {
-    fetchFromSheet(false);
-  }
-});
-
-// فحص دوري كل 10 ثوانٍ
-setInterval(function() {
-  if (sheetUrl && syncState.status !== 'syncing') {
-    fetchFromSheet(false);
-  }
-}, 10000);
+if(sheetUrl)fetchSheet(false);
+window.addEventListener('focus',function(){if(sheetUrl&&syncSt.status!=='syncing')fetchSheet(false);});
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&sheetUrl&&syncSt.status!=='syncing')fetchSheet(false);});
+setInterval(function(){if(sheetUrl&&syncSt.status!=='syncing')fetchSheet(false);},30000);
 </script>
 </body>
 </html>
