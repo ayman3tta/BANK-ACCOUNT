@@ -142,7 +142,7 @@ body {
   position: fixed; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 16px);
   right: calc(50% - 215px + 16px);
   width: 54px; height: 54px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--acc), var(--acc2));
+  background: #4f46e5;
   color: #fff; font-size: 26px; display: flex; align-items: center; justify-content: center;
   box-shadow: 0 8px 25px rgba(108,99,255,.4); border: none; cursor: pointer; z-index: 90;
   transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s, opacity .2s;
@@ -158,21 +158,13 @@ body {
 .card-hd-title { font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing:.3px; }
 .card-hd-val { font-size: 15px; font-weight: 900; }
 .balance-card {
-  background: linear-gradient(135deg, #6c63ff 0%, #8b5cf6 60%, #06b6d4 100%);
+  background: #3730a3;
   border-radius: 24px; padding: 22px 20px; margin-bottom: 14px; color: #fff;
   position: relative; overflow: hidden;
   box-shadow: 0 12px 35px rgba(108,99,255,.35);
 }
-.balance-card::before {
-  content: ''; position: absolute; top: -30px; right: -30px;
-  width: 120px; height: 120px;
-  background: radial-gradient(circle, rgba(255,255,255,.15) 0%, transparent 70%); pointer-events: none;
-}
-.balance-card::after {
-  content: ''; position: absolute; bottom: -20px; left: -20px;
-  width: 90px; height: 90px;
-  background: radial-gradient(circle, rgba(255,255,255,.1) 0%, transparent 70%); pointer-events: none;
-}
+
+
 .bal-label { font-size: 12px; font-weight: 700; opacity: .85; margin-bottom: 4px; }
 .bal-amount { font-size: 40px; font-weight: 900; letter-spacing: -1px; line-height: 1; margin-bottom: 4px; }
 .bal-amount small { font-size: 17px; font-weight: 700; opacity: .8; }
@@ -193,7 +185,7 @@ body {
 .stat-box .sb-val { font-size: 18px; font-weight: 900; color: var(--ink); }
 .stat-box .sb-val small { font-size: 11px; font-weight: 600; color: var(--muted); }
 .fc-banner {
-  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  background: #1e1b4b;
   border-radius: var(--r); padding: 14px 16px; margin-bottom: 14px;
   display: flex; align-items: center; justify-content: space-between; cursor: pointer;
   box-shadow: 0 4px 16px rgba(99,91,255,.2); transition: transform .15s;
@@ -246,7 +238,7 @@ body {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   transition: all .15s; -webkit-appearance: none; width: 100%;
 }
-.btn-primary { background: linear-gradient(135deg, var(--acc), var(--acc2)); color: #fff; box-shadow: 0 4px 15px rgba(108,99,255,.3); }
+.btn-primary { background: #4f46e5; color: #fff; box-shadow: 0 2px 6px rgba(79,70,229,.25); }
 .btn-primary:active { opacity: .88; transform: scale(.97); }
 .btn-ghost { background: var(--surface2); color: var(--ink); border: 1.5px solid var(--border); }
 .btn-ghost:active { background: var(--border); }
@@ -266,45 +258,43 @@ body {
 .accent-bar-neg { border-right: 4px solid var(--neg); }
 .accent-bar-gold { border-right: 4px solid var(--gold); }
 .fc-hero {
-  background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 60%, #0284c7 100%);
+  background: #3730a3;
   border-radius: 24px; padding: 22px 20px; color: #fff; margin-bottom: 14px;
   box-shadow: 0 10px 30px rgba(67,56,202,.3); position: relative; overflow: hidden;
 }
-.fc-hero::before {
-  content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px;
-  background: radial-gradient(circle, rgba(255,255,255,.12) 0%, transparent 70%);
-}
+
 .fc-chip {
   display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 800;
   padding: 5px 12px; border-radius: 20px; background: rgba(255,255,255,.18); margin-top: 8px;
 }
 .gold-hero {
-  background: linear-gradient(135deg, #92400e 0%, #d97706 60%, #fbbf24 100%);
+  background: #b45309;
   border-radius: 24px; padding: 22px 20px; color: #fff; margin-bottom: 14px;
   box-shadow: 0 10px 30px rgba(217,119,6,.3);
 }
-.log-item {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm);
-  padding: 12px 14px; margin-bottom: 8px;
+.log-row {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 7px 10px; margin-bottom: 6px; display: flex; align-items: center;
+  justify-content: space-between; gap: 8px; transition: background .15s;
 }
-.log-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-.log-badge { font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 20px; }
+.log-row:hover { background: var(--surface2); }
+.log-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.log-line1 { display: flex; align-items: center; gap: 6px; overflow: hidden; }
+.log-line2 { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; overflow: hidden; }
+.log-badge { font-size: 9.5px; font-weight: 800; padding: 1.5px 6px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; }
 .badge-add { background: #d1fae5; color: #059669; }
 .badge-edit { background: #fef3c7; color: #d97706; }
 .badge-del { background: #fee2e2; color: var(--neg); }
-[data-theme=dark] .badge-add { background: #064e3b; color: #34d399; }
-[data-theme=dark] .badge-edit { background: #451a03; color: #fbbf24; }
-[data-theme=dark] .badge-del { background: #450a0a; color: #f87171; }
-.log-time { font-size: 10.5px; color: var(--muted); }
-.log-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
-.log-desc { font-size: 11.5px; color: var(--muted); }
-.log-vals { font-size: 12px; color: var(--muted); margin-top: 2px; }
-.log-footer { display: flex; justify-content: flex-end; margin-top: 8px; }
-.del-log-btn {
-  background: none; border: 1px solid var(--border); border-radius: 8px;
-  font: inherit; font-size: 11px; color: var(--neg); padding: 4px 10px; cursor: pointer;
+.log-name { font-size: 12.5px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.log-vals { font-size: 11px; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+.log-time { font-size: 10px; color: var(--muted); flex-shrink: 0; }
+.log-desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.log-del-btn {
+  background: none; border: 1px solid var(--border); border-radius: 6px;
+  width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+  color: var(--neg); cursor: pointer; flex-shrink: 0; transition: all .15s;
 }
-.del-log-btn:active { background: #fee2e2; }
+.log-del-btn:active { background: #fee2e2; border-color: var(--neg); transform: scale(.92); }
 #toast {
   position: fixed; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 12px);
   left: 50%; transform: translateX(-50%) translateY(10px);
@@ -356,11 +346,11 @@ body {
 .sheet-steps b { color: var(--acc); }
 .sheet-steps ol { padding-inline-start: 16px; }
 .connect-banner {
-  background: linear-gradient(135deg, #ede9fe 0%, #dbeafe 100%);
+  background: #f1f5f9;
   border: 1.5px dashed #a5b4fc; border-radius: var(--r); padding: 14px 16px;
   margin-bottom: 14px; cursor: pointer; transition: all .15s;
 }
-[data-theme=dark] .connect-banner { background: linear-gradient(135deg, #1e1b4b 0%, #1e3a5f 100%); border-color: #4338ca; }
+
 .connect-banner:active { transform: scale(.98); }
 .cb-title { font-size: 14px; font-weight: 800; color: var(--acc); margin-bottom: 2px; }
 .cb-sub { font-size: 12px; color: var(--muted); }
@@ -863,7 +853,7 @@ function view(){
         '<p class="hint" style="margin-bottom:10px">لأن الشيت فارغ. اضغط للاسترجاع:</p>'+
         '<button class="btn btn-primary" onclick="restoreSeed()">'+ic('refresh',14)+' استرجاع بياناتي</button>'+
       '</div>':'';
-    var heroColor=c.mine<0?'style="background:linear-gradient(135deg,#ef4444,#dc2626 60%,#b91c1c)"':'';
+    var heroColor=c.mine<0?'style="background:#dc2626"':'';
     var hero=
       '<div class="balance-card" '+heroColor+'>'+
         '<button class="bal-edit-btn" onclick="openBalanceModal()">'+ic('edit',13)+' تعديل</button>'+
@@ -961,7 +951,7 @@ function view(){
   }
   if(tab==='exp'){
     var expHero=
-      '<div class="balance-card" style="background:linear-gradient(135deg,#ef4444,#dc2626 60%,#b91c1c)">'+
+      '<div class="balance-card" style="background:#dc2626">'+
         '<div class="bal-label">إجمالي مصاريف البيت</div>'+
         '<div class="bal-amount">'+m(c.hE)+'<small> ج</small></div>'+
         '<div class="bal-meta">'+S.exp.length+' بند مسجل</div>'+
@@ -977,7 +967,7 @@ function view(){
   if(tab==='badr'){
     var net=c.bI-c.bE;
     var badrHero=
-      '<div class="balance-card" style="background:linear-gradient(135deg,'+(net>=0?'#059669,#10b981 60%,#34d399':'#ef4444,#dc2626 60%,#b91c1c')+')">'+
+      '<div class="balance-card" style="background:'+(net>=0?'#059669':'#dc2626')+'">'+
         '<div class="bal-label">صافي شقة بدر</div>'+
         '<div class="bal-amount">'+m(net)+'<small> ج</small></div>'+
         '<div class="bal-meta">إيرادات '+m(c.bI)+' ج · مصروفات '+m(c.bE)+' ج</div>'+
@@ -1026,18 +1016,28 @@ function view(){
   }
   if(tab==='logs'){
     var logs=S.logs||[];
+    function cleanE(t){return String(t||'').replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu,'').trim();}
     var logHtml=logs.length?
       logs.map(function(l){
-        var bc=l.type&&l.type.indexOf('حذف')!==-1?'badge-del':(l.type&&l.type.indexOf('إضافة')!==-1?'badge-add':'badge-edit');
-        return '<div class="log-item">'+
-          '<div class="log-top">'+
-            '<span class="log-badge '+bc+'">'+esc(l.type)+'</span>'+
-            '<span class="log-time">'+esc(l.dt)+'</span>'+
+        var rawType=cleanE(l.type);
+        var bc=rawType.indexOf('حذف')!==-1?'badge-del':(rawType.indexOf('إضافة')!==-1?'badge-add':'badge-edit');
+        var valTxt=(l.oldV!==undefined&&l.oldV!==''&&l.newV!==undefined&&l.newV!=='')?
+          '<s>'+m(l.oldV)+'</s> → <b class="pos">'+m(l.newV)+' ج</b>':'';
+        var nameTxt=cleanE(l.n||l.desc);
+        var descTxt=cleanE(l.desc);
+        return '<div class="log-row">'+
+          '<div class="log-info">'+
+            '<div class="log-line1">'+
+              '<span class="log-badge '+bc+'">'+esc(rawType)+'</span>'+
+              '<span class="log-name">'+esc(nameTxt)+'</span>'+
+              (valTxt?'<span class="log-vals">'+valTxt+'</span>':'')+
+            '</div>'+
+            '<div class="log-line2">'+
+              '<span class="log-time">'+esc(l.dt)+'</span>'+
+              (descTxt&&descTxt!==nameTxt?'<span class="log-desc">· '+esc(descTxt)+'</span>':'')+
+            '</div>'+
           '</div>'+
-          '<div class="log-name">'+esc(l.n||l.desc)+'</div>'+
-          (l.desc?'<div class="log-desc">'+esc(l.desc)+'</div>':'')+
-          (l.oldV!==undefined&&l.oldV!==''&&l.newV!==undefined&&l.newV!==''?'<div class="log-vals"><s>'+m(l.oldV)+' ج</s> → <b class="pos">'+m(l.newV)+' ج</b></div>':'')+
-          '<div class="log-footer"><button class="del-log-btn" data-lid="'+esc(l.id)+'" onclick="deleteLog(this.getAttribute(\'data-lid\'))">'+ic('del',13)+' حذف</button></div>'+
+          '<button class="log-del-btn" data-lid="'+esc(l.id)+'" onclick="deleteLog(this.getAttribute(\'data-lid\'))" title="حذف">'+ic('del',13)+'</button>'+
         '</div>';
       }).join(''):
       '<div class="empty-state"><div class="ei">'+ic('empty',32)+'</div><p>لا توجد تعديلات بعد.</p></div>';
