@@ -1043,7 +1043,6 @@ function view(){
       '<div class="empty-state"><div class="ei">'+ic('empty',32)+'</div><p>لا توجد تعديلات بعد.</p></div>';
     return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'+
         '<div><b style="font-size:16px">'+ic('logs',16)+' السجل</b><div class="hint">'+logs.length+' حركة</div></div>'+
-        (logs.length?'<button class="btn btn-ghost btn-sm" style="color:var(--neg);border-color:var(--neg)" onclick="clearLogs()">'+ic('broom',14)+' مسح</button>':'')+
       '</div>'+logHtml;
   }
   return '';
