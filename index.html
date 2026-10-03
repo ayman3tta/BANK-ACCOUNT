@@ -519,7 +519,7 @@ function openEdit(list,id,hasDate){
     '<div class="field"><label>المبلغ (جنيه)</label><input id="edit_a" type="number" inputmode="decimal" value="'+item.a+'"></div>'+
     (hasDate?'<div class="field"><label>التاريخ</label><input id="edit_d" type="date" value="'+(item.d||today())+'"></div>':'')+
     '<div class="btn-row">'+
-      '<button class="btn btn-primary" onclick="saveEdit(''+list+'','+id+','+hasDate+')">حفظ 💾</button>'+
+      '<button class="btn btn-primary" onclick="saveEdit(\''+list+'\','+id+','+hasDate+')">حفظ 💾</button>'+
       '<button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>'+
     '</div></div></div>';
   document.getElementById('modal-root').innerHTML=html;
@@ -686,8 +686,8 @@ function rowsList(list,cls,hasDate){
       '</div>'+
       '<span class="lr-amt '+cls+'">'+m(x.a)+'<small>ج</small></span>'+
       '<div class="lr-actions">'+
-        '<button class="lr-btn edit" onclick="openEdit(''+list+'','+x.id+','+hasDate+')">✏️</button>'+
-        '<button class="lr-btn del" onclick="delItem(''+list+'','+x.id+')">🗑️</button>'+
+        '<button class="lr-btn edit" onclick="openEdit(\''+list+'\','+x.id+','+hasDate+')">✏️</button>'+
+        '<button class="lr-btn del" onclick="delItem(\''+list+'\','+x.id+')">🗑️</button>'+
       '</div></div>';
   }).join('');
 }
@@ -739,7 +739,7 @@ function view(){
         '<div class="stat-box"><div class="sb-label">🏠 فلوس البيت</div><div class="sb-val">'+m(S.fund)+'<small> ج</small></div></div>'+
       '</div>';
     var fcBanner=
-      '<div class="fc-banner" onclick="go('forecast')">'+
+      '<div class="fc-banner" onclick="go(\'forecast\')">'+
         '<div class="fc-left"><span class="fc-icon">🔮</span><div>'+
           '<div class="fc-label">توقع الشهر القادم</div>'+
           '<div class="fc-amt">'+m(c.proj)+'<small> ج</small></div>'+
@@ -750,7 +750,7 @@ function view(){
     if(openSections[secId]===undefined)openSections[secId]=false;
     var bkHtml=
       '<div class="card">'+
-        '<button id="sec-tog-'+secId+'" class="collapse-toggle'+(openSections[secId]?' open':'')+'" onclick="toggleSection(''+secId+'')">'+
+        '<button id="sec-tog-'+secId+'" class="collapse-toggle'+(openSections[secId]?' open':'')+'" onclick="toggleSection(\''+secId+'\')">'+
           '<span>📊 تفصيل حساب الرصيد</span><span class="ct-arrow">▼</span>'+
         '</button>'+
         '<div id="sec-body-'+secId+'" class="collapse-body'+(openSections[secId]?'':' closed')+'" style="max-height:'+(openSections[secId]?'500px':'0')+'">'+
@@ -767,7 +767,7 @@ function view(){
     if(openSections[secId2]===undefined)openSections[secId2]=false;
     var houseCard=
       '<div class="card">'+
-        '<button id="sec-tog-'+secId2+'" class="collapse-toggle'+(openSections[secId2]?' open':'')+'" onclick="toggleSection(''+secId2+'')">'+
+        '<button id="sec-tog-'+secId2+'" class="collapse-toggle'+(openSections[secId2]?' open':'')+'" onclick="toggleSection(\''+secId2+'\')">'+
           '<span>🏡 ملخص البيت والسيولة</span><span class="ct-arrow">▼</span>'+
         '</button>'+
         '<div id="sec-body-'+secId2+'" class="collapse-body'+(openSections[secId2]?'':' closed')+'" style="max-height:'+(openSections[secId2]?'500px':'0')+'">'+
@@ -871,8 +871,8 @@ function view(){
       return '<div class="card accent-bar-gold">'+
         '<div class="card-hd"><span class="card-hd-title">'+name+'</span><b class="card-hd-val">'+m(tot)+' ج</b></div>'+
         '<div class="form-grid">'+
-          '<div class="field"><label>الوزن (جرام)</label><input type="number" inputmode="decimal" value="'+item.g+'" onchange="setG(''+k+'','g',this.value)"></div>'+
-          '<div class="field"><label>سعر الجرام</label><input type="number" inputmode="decimal" value="'+item.p+'" onchange="setG(''+k+'','p',this.value)"></div>'+
+          '<div class="field"><label>الوزن (جرام)</label><input type="number" inputmode="decimal" value="'+item.g+'" onchange="setG(\''+k+'\',\'g\',this.value)"></div>'+
+          '<div class="field"><label>سعر الجرام</label><input type="number" inputmode="decimal" value="'+item.p+'" onchange="setG(\''+k+'\',\'p\',this.value)"></div>'+
         '</div></div>';
     }
     return goldHero+gCard('g21','✨ عيار 21')+gCard('g24','✨ عيار 24')+
@@ -897,7 +897,7 @@ function view(){
           '<div class="log-name">'+esc(l.n||l.desc)+'</div>'+
           (l.desc?'<div class="log-desc">'+esc(l.desc)+'</div>':'')+
           (l.oldV!==undefined&&l.oldV!==''&&l.newV!==undefined&&l.newV!==''?'<div class="log-vals"><s>'+m(l.oldV)+' ج</s> → <b class="pos">'+m(l.newV)+' ج</b></div>':'')+
-          '<div class="log-footer"><button class="del-log-btn" data-lid="'+esc(l.id)+'" onclick="deleteLog(this.getAttribute('data-lid'))">🗑️ حذف</button></div>'+
+          '<div class="log-footer"><button class="del-log-btn" data-lid="'+esc(l.id)+'" onclick="deleteLog(this.getAttribute(\'data-lid\'))">🗑️ حذف</button></div>'+
         '</div>';
       }).join(''):
       '<div class="empty-state"><div class="ei">📋</div><p>لا توجد تعديلات بعد.</p></div>';
@@ -913,7 +913,7 @@ function render(){
   updateSync();
   var tabs=[['home','🏠','الرئيسية'],['forecast','🔮','التوقعات'],['exp','💸','المصاريف'],['badr','🏢','بدر'],['gold','🪙','الدهب'],['logs','📋','السجل']];
   document.getElementById('nav').innerHTML=tabs.map(function(t){
-    return '<button class="nav-btn'+(tab===t[0]?' on':'')+'" onclick="go(''+t[0]+'')">'+
+    return '<button class="nav-btn'+(tab===t[0]?' on':'')+'" onclick="go(\''+t[0]+'\')">'+
       '<span class="ni">'+t[1]+'</span><span class="nl">'+t[2]+'</span></button>';
   }).join('');
 }
