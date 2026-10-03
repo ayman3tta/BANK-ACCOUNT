@@ -650,7 +650,7 @@ function openAddSheet(){
   var lists={
     home:[{list:'exp',label:'مصروف للبيت',hasDate:true},{list:'badrE',label:'مصروف بدر',hasDate:false},{list:'badrI',label:'إيجار بدر',hasDate:false}],
     forecast:[{list:'expected',label:'إيراد متوقع',hasDate:false},{list:'expectedExp',label:'مصروف متوقع',hasDate:false}],
-    exp:[{list:'exp',label:'مصروف للبيت',hasDate:true}],
+    exp:[{list:'exp',label:'مصروف للبيت',hasDate:true},{list:'badrE',label:'مصروف لشقة بدر',hasDate:false}],
     badr:[{list:'badrE',label:'مصروف بدر',hasDate:false},{list:'badrI',label:'إيجار بدر',hasDate:false}]
   };
   _fabOpts=lists[tab]||lists.home;
@@ -952,17 +952,31 @@ function view(){
   if(tab==='exp'){
     var expHero=
       '<div class="balance-card" style="background:#dc2626">'+
-        '<div class="bal-label">إجمالي مصاريف البيت</div>'+
-        '<div class="bal-amount">'+m(c.hE)+'<small> ج</small></div>'+
-        '<div class="bal-meta">'+S.exp.length+' بند مسجل</div>'+
+        '<div class="bal-label">إجمالي كافة المصاريف (البيت + بدر)</div>'+
+        '<div class="bal-amount">'+m(c.totalExp)+'<small> ج</small></div>'+
+        '<div class="bal-meta">'+(S.exp.length+S.badrE.length)+' بند مسجل (البيت: '+m(c.hE)+' ج · بدر: '+m(c.bE)+' ج)</div>'+
       '</div>';
-    return expHero+
-      '<div class="card">'+
-        '<div class="card-hd"><span class="card-hd-title">بنود المصاريف</span><span class="card-hd-val neg">'+m(c.hE)+' ج</span></div>'+
+    var houseCard=
+      '<div class="card accent-bar-neg">'+
+        '<div class="card-hd"><span class="card-hd-title">'+ic('home',15)+' مصاريف البيت ('+S.exp.length+' بند)</span><span class="card-hd-val neg">−'+m(c.hE)+' ج</span></div>'+
         rowsList('exp','neg',true)+
-        '<div class="total-row"><span>الإجمالي</span><span class="neg">'+m(c.hE)+' ج</span></div>'+
-      '</div>'+
-      '<p class="hint" style="text-align:center;margin-top:4px">اضغط ＋ لإضافة مصروف جديد</p>';
+        '<div class="total-row"><span>مجموع مصاريف البيت</span><span class="neg">−'+m(c.hE)+' ج</span></div>'+
+      '</div>';
+    var badrCard=
+      '<div class="card accent-bar-neg">'+
+        '<div class="card-hd"><span class="card-hd-title">'+ic('badr',15)+' مصاريف تجهيز بدر ('+S.badrE.length+' بند)</span><span class="card-hd-val neg">−'+m(c.bE)+' ج</span></div>'+
+        rowsList('badrE','neg',false)+
+        '<div class="total-row"><span>مجموع مصاريف بدر</span><span class="neg">−'+m(c.bE)+' ج</span></div>'+
+      '</div>';
+    var summaryCard=
+      '<div class="card">'+
+        '<div class="card-hd"><span class="card-hd-title">ملخص إجمالي المصاريف</span></div>'+
+        '<div class="bk-row"><span>'+ic('home',14)+' مصاريف البيت</span><b class="neg">−'+m(c.hE)+' ج</b></div>'+
+        '<div class="bk-row"><span>'+ic('badr',14)+' مصاريف شقة بدر</span><b class="neg">−'+m(c.bE)+' ج</b></div>'+
+        '<div class="bk-row total"><span>الإجمالي العام للمصاريف</span><b class="neg">−'+m(c.totalExp)+' ج</b></div>'+
+      '</div>';
+    return expHero+houseCard+badrCard+summaryCard+
+      '<p class="hint" style="text-align:center;margin-top:4px">اضغط ＋ لإضافة مصروف جديد للبيت أو لبدر</p>';
   }
   if(tab==='badr'){
     var net=c.bI-c.bE;
