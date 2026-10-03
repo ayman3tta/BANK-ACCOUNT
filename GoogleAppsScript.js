@@ -82,7 +82,7 @@ function doPost(e) {
     } else if (action === 'delete') {
       deleteRecord(req.list, req.id, req.oldItem);
       result = { success: true, message: 'تم الحذف وتسجيله بنجاح' };
-    } else if (action === 'setSettings') {
+    } else if (action === 'setSettings' || action === 'updateSettings') {
       saveSettings(req.settings, req.oldSettings);
       result = { success: true, message: 'تم تحديث الأرصدة وتسجيلها بنجاح' };
     } else if (action === 'deleteLog') {

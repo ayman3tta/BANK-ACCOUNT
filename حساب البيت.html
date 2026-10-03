@@ -551,7 +551,20 @@ function restoreSeed(){
 }
 function syncSettings(old){
   if(!sheetUrl)return;
-  postSheet({action:'updateSettings',settings:{bank:S.bank,fund:S.fund,sister:S.sister,g21_g:S.g21.g,g21_p:S.g21.p,g24_g:S.g24.g,g24_p:S.g24.p},oldSettings:old},function(r){if(r.success)toast('تم الحفظ');});
+  var payload = {
+    bank: S.bank,
+    fund: S.fund,
+    sister: S.sister,
+    g21: S.g21,
+    g24: S.g24,
+    g21_g: (S.g21 && S.g21.g !== undefined) ? S.g21.g : 0,
+    g21_p: (S.g21 && S.g21.p !== undefined) ? S.g21.p : 0,
+    g24_g: (S.g24 && S.g24.g !== undefined) ? S.g24.g : 0,
+    g24_p: (S.g24 && S.g24.p !== undefined) ? S.g24.p : 0
+  };
+  postSheet({action:'setSettings',settings:payload,oldSettings:old},function(r){
+    if(r && r.success){toast('تم حفظ الأرصدة في الشيت');}
+  });
 }
 function setN(k,v){
   var ov=S[k],nv=parseFloat(v)||0;if(ov===nv)return;
@@ -682,14 +695,22 @@ function openBalanceModal(){
   document.getElementById('modal-root').innerHTML=html;
 }
 function saveBalanceMod(){
-  var b=parseFloat(document.getElementById('mb').value)||0;
-  var f=parseFloat(document.getElementById('mf').value)||0;
-  var s=parseFloat(document.getElementById('ms').value)||0;
-  var old={bank:S.bank,fund:S.fund,sister:S.sister,g21:Object.assign({},S.g21),g24:Object.assign({},S.g24)};
-  if(S.bank!==b){logEntry('تعديل رصيد','الأرصدة','الحساب البنكي',S.bank,b,'',Date.now());S.bank=b;}
-  if(S.fund!==f){logEntry('تعديل رصيد','الأرصدة','فلوس البيت',S.fund,f,'',Date.now()+1);S.fund=f;}
-  if(S.sister!==s){logEntry('تعديل رصيد','الأرصدة','فلوس أختي',S.sister,s,'',Date.now()+2);S.sister=s;}
-  save();closeModal();render();toast('تم الحفظ');syncSettings(old);
+  var rawB = (document.getElementById('mb').value || '').replace(/,/g, '').trim();
+  var rawF = (document.getElementById('mf').value || '').replace(/,/g, '').trim();
+  var rawS = (document.getElementById('ms').value || '').replace(/,/g, '').trim();
+  var b = parseFloat(rawB);
+  var f = parseFloat(rawF);
+  var s = parseFloat(rawS);
+  if(isNaN(b)) b = 0;
+  if(isNaN(f)) f = 0;
+  if(isNaN(s)) s = 0;
+  var old = {bank:S.bank, fund:S.fund, sister:S.sister, g21:Object.assign({},S.g21||{}), g24:Object.assign({},S.g24||{})};
+  var changed = false;
+  if(S.bank !== b){logEntry('تعديل رصيد','الأرصدة','الحساب البنكي',S.bank,b,'تعديل رصيد البنك من '+m(S.bank)+' إلى '+m(b)+' ج',Date.now());S.bank = b;changed = true;}
+  if(S.fund !== f){logEntry('تعديل رصيد','الأرصدة','فلوس البيت',S.fund,f,'تعديل فلوس البيت من '+m(S.fund)+' إلى '+m(f)+' ج',Date.now()+1);S.fund = f;changed = true;}
+  if(S.sister !== s){logEntry('تعديل رصيد','الأرصدة','فلوس أختي',S.sister,s,'تعديل أمانة أختي من '+m(S.sister)+' إلى '+m(s)+' ج',Date.now()+2);S.sister = s;changed = true;}
+  save();closeModal();render();toast('تم حفظ الأرصدة');
+  if(changed){syncSettings(old);}
 }
 function getShareUrl(){
   var base=window.location.origin+window.location.pathname;
