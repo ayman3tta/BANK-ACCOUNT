@@ -351,9 +351,26 @@ body {
 <div id="modal-root"></div>
 <script>
 var K='bayt2',SHEET_KEY='bayt_sheet_url',SYNC_KEY='bayt_last_sync';
+var DEFAULT_SHEET_URL=''; // ضع رابط الـ Web App هنا ليعمل تلقائياً على كل الأجهزة
+(function(){
+  try{
+    var p=new URLSearchParams(window.location.search);
+    var s=p.get('sheet');
+    if(!s&&window.location.hash.indexOf('sheet=')!==-1){
+      var h=window.location.hash.split('sheet=')[1];
+      if(h)s=decodeURIComponent(h.split('&')[0]);
+    }
+    if(s&&s.indexOf('script.google.com')!==-1){
+      localStorage.setItem(SHEET_KEY,s);
+      if(window.history&&window.history.replaceState){
+        window.history.replaceState({},document.title,window.location.pathname);
+      }
+    }
+  }catch(e){}
+})();
 var tab='home';
 var syncSt={status:'idle',last:localStorage.getItem(SYNC_KEY)||''};
-var sheetUrl=localStorage.getItem(SHEET_KEY)||'';
+var sheetUrl=localStorage.getItem(SHEET_KEY)||DEFAULT_SHEET_URL||'';
 function m(n){return Math.round(n||0).toLocaleString('en-US');}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function today(){return new Date().toISOString().split('T')[0];}
@@ -611,6 +628,18 @@ function saveBalanceMod(){
   if(S.sister!==s){logEntry('تعديل رصيد','الأرصدة','فلوس أختي',S.sister,s,'',Date.now()+2);S.sister=s;}
   save();closeModal();render();toast('✅ تم!');syncSettings(old);
 }
+function getShareUrl(){
+  var base=window.location.origin+window.location.pathname;
+  return base+'?sheet='+encodeURIComponent(sheetUrl);
+}
+function copyShareUrl(){
+  var u=getShareUrl();
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(u).then(function(){toast('📋 تم نسخ الرابط! أرسله للموبايل');});
+  }else{
+    prompt('انسخ الرابط التالي وافتحه على جهازك الآخر:',u);
+  }
+}
 function openSettings(){
   var linked=!!sheetUrl;
   var html='<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="sheet">'+
@@ -633,7 +662,15 @@ function openSettings(){
       '<button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>'+
     '</div>'+
     (linked?
-      '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px">'+
+      '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:10px">'+
+        '<div style="background:var(--card-sub);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center">'+
+          '<b style="font-size:13px;display:block;margin-bottom:4px">📲 ربط الموبايل أو أي جهاز آخر فوراً:</b>'+
+          '<p class="hint" style="margin-bottom:8px">امسح الكود بكاميرا الموبايل أو اضغط زر النسخ لإرساله على واتساب وفتحه متصلاً مباشرة:</p>'+
+          '<div style="display:flex;justify-content:center;margin:8px 0">'+
+            '<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data='+encodeURIComponent(getShareUrl())+'" alt="QR" style="border-radius:8px;border:1px solid var(--border);background:#fff;padding:6px;width:150px;height:150px">'+
+          '</div>'+
+          '<button class="btn btn-primary btn-sm" style="width:100%" onclick="copyShareUrl()">📋 نسخ رابط الموبايل (مربوط جاهز)</button>'+
+        '</div>'+
         '<button class="btn btn-ghost" onclick="uploadAll();closeModal()">⬆️ رفع بياناتي للشيت</button>'+
         '<button class="btn btn-ghost" onclick="restoreSeed()">🚀 استرجاع البيانات الأصلية</button>'+
         '<button class="btn btn-ghost" style="color:var(--neg);border-color:var(--neg)" onclick="disconnectSheet()">قطع الربط بالشيت</button>'+
