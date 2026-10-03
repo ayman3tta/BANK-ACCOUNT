@@ -106,9 +106,7 @@ body {
 .sync-pill.ok { background: #d1fae5; border-color: #6ee7b7; color: #059669; }
 .sync-pill.going { background: #ede9fe; border-color: #c4b5fd; color: var(--acc); }
 .sync-pill.err { background: #fee2e2; border-color: #fca5a5; color: var(--neg); }
-[data-theme=dark] .sync-pill.ok { background: #064e3b; border-color: #065f46; color: #34d399; }
-[data-theme=dark] .sync-pill.going { background: #2d1b69; border-color: #4c1d95; color: var(--acc2); }
-[data-theme=dark] .sync-pill.err { background: #450a0a; border-color: #7f1d1d; color: var(--neg); }
+
 .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .sync-dot.pulse { animation: blink 1s ease infinite alternate; }
 @keyframes blink { from { opacity:.3; transform: scale(.7); } to { opacity:1; transform: scale(1.2); } }
@@ -432,7 +430,7 @@ var DEFAULT_SHEET_URL='https://script.google.com/macros/s/AKfycbzjFSR2xRalP4rFn9
   }catch(e){}
 })();
 var tab='home';
-var syncSt={status:'idle',last:localStorage.getItem(SYNC_KEY)||''};
+var syncSt={status:sheetUrl?'synced':'idle',last:'متصل'};
 var sheetUrl=localStorage.getItem(SHEET_KEY)||DEFAULT_SHEET_URL||'';
 function m(n){return Math.round(n||0).toLocaleString('en-US');}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -504,18 +502,29 @@ function C(){
 function go(t){tab=t;render();window.scrollTo(0,0);}
 function postSheet(payload,cb){
   if(!sheetUrl){if(cb)cb({success:false});return;}
-  syncSt.status='syncing';updateSync();
   fetch(sheetUrl,{method:'POST',mode:'cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
     .then(function(r){return r.json();})
     .then(function(d){
-      if(d.success){syncSt.status='synced';syncSt.last=timeNow();localStorage.setItem(SYNC_KEY,syncSt.last);updateSync();if(cb)cb(d);}
-      else{throw new Error(d.error||'خطأ');}
+      if(d.success){
+        syncSt.status='synced';
+        syncSt.last='متصل';
+        updateSync();
+        if(cb)cb(d);
+      } else {
+        if(cb)cb({success:false,error:d.error});
+      }
     })
-    .catch(function(e){syncSt.status='error';updateSync();toast('محفوظ محلياً — '+e.message);if(cb)cb({success:false});});
+    .catch(function(e){
+      console.warn('Sync background notice:',e);
+      if(cb)cb({success:false,error:e.message});
+    });
 }
 function fetchSheet(manual){
   if(!sheetUrl)return;
-  syncSt.status='syncing';updateSync();
+  if(manual){
+    syncSt.status='syncing';
+    updateSync();
+  }
   var url=sheetUrl+(sheetUrl.indexOf('?')===-1?'?action=get':'&action=get')+'&_t='+Date.now();
   fetch(url)
     .then(function(r){return r.json();})
@@ -527,16 +536,31 @@ function fetchSheet(manual){
           syncSt.status='synced';updateSync();
           if(confirm('الشيت فارغ — هل ترفع بياناتك الحالية؟'))uploadAll();return;
         }
-        if(typeof d.bank==='number')S.bank=d.bank;
-        if(typeof d.fund==='number')S.fund=d.fund;
-        if(typeof d.sister==='number')S.sister=d.sister;
-        if(d.g21)S.g21=d.g21;if(d.g24)S.g24=d.g24;
-        ['exp','inc','badrE','badrI','expected','expectedExp','logs'].forEach(function(k){if(Array.isArray(d[k]))S[k]=d[k];});
-        save();syncSt.status='synced';syncSt.last=timeNow();localStorage.setItem(SYNC_KEY,syncSt.last);
-        render();if(manual)toast('تم التحديث');
-      }else{throw new Error(resp.error||'خطأ');}
+        var changed=false;
+        if(typeof d.bank==='number'&&S.bank!==d.bank){S.bank=d.bank;changed=true;}
+        if(typeof d.fund==='number'&&S.fund!==d.fund){S.fund=d.fund;changed=true;}
+        if(typeof d.sister==='number'&&S.sister!==d.sister){S.sister=d.sister;changed=true;}
+        if(d.g21&&((S.g21&&S.g21.g)!==d.g21.g||(S.g21&&S.g21.p)!==d.g21.p)){S.g21=d.g21;changed=true;}
+        if(d.g24&&((S.g24&&S.g24.g)!==d.g24.g||(S.g24&&S.g24.p)!==d.g24.p)){S.g24=d.g24;changed=true;}
+        ['exp','inc','badrE','badrI','expected','expectedExp','logs'].forEach(function(k){
+          if(Array.isArray(d[k])){
+            if(JSON.stringify(S[k]||[])!==JSON.stringify(d[k])){
+              S[k]=d[k];changed=true;
+            }
+          }
+        });
+        syncSt.status='synced';
+        syncSt.last='متصل';
+        updateSync();
+        if(changed){save();render();}
+        if(manual)toast('تم التحديث بنجاح');
+      }
     })
-    .catch(function(e){syncSt.status='error';updateSync();if(manual)toast('تعذر الاتصال: '+e.message);});
+    .catch(function(e){
+      if(manual){
+        syncSt.status='error';updateSync();toast('تعذر الاتصال: '+e.message);
+      }
+    });
 }
 function uploadAll(){
   if(!sheetUrl){alert('ربط الشيت أولاً');return;}
@@ -778,8 +802,8 @@ function updateSync(){
   var el=document.getElementById('sync-pill');if(!el)return;
   if(!sheetUrl){el.className='sync-pill';el.innerHTML='<span class="sync-dot"></span>غير مربوط';return;}
   if(syncSt.status==='syncing'){el.className='sync-pill going';el.innerHTML='<span class="sync-dot pulse"></span>مزامنة...';}
-  else if(syncSt.status==='error'){el.className='sync-pill err';el.innerHTML='<span class="sync-dot"></span>خطأ';}
-  else{el.className='sync-pill ok';el.innerHTML='<span class="sync-dot"></span>'+(syncSt.last||'متصل');}
+  else if(syncSt.status==='error'){el.className='sync-pill err';el.innerHTML='<span class="sync-dot"></span>غير متصل';}
+  else{el.className='sync-pill ok';el.innerHTML='<span class="sync-dot"></span>متصل';}
 }
 function deleteLog(id){
   if(!confirm('حذف؟'))return;
@@ -1037,7 +1061,7 @@ render();
 if(sheetUrl)fetchSheet(false);
 window.addEventListener('focus',function(){if(sheetUrl&&syncSt.status!=='syncing')fetchSheet(false);});
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&sheetUrl&&syncSt.status!=='syncing')fetchSheet(false);});
-setInterval(function(){if(sheetUrl&&syncSt.status!=='syncing')fetchSheet(false);},30000);
+setInterval(function(){if(sheetUrl&&syncSt.status!=='syncing')fetchSheet(false);},120000);
 </script>
 </body>
 </html>
