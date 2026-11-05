@@ -248,12 +248,11 @@ body {
 .collapse-toggle {
   background: none; border: none; width: 100%; display: flex; align-items: center;
   justify-content: space-between; padding: 6px 0; cursor: pointer; color: var(--muted);
-  font: inherit; font-size: 12px; font-weight: 700;
+  font: inherit; font-size: 12.5px; font-weight: 700; user-select: none;
 }
-.collapse-toggle .ct-arrow { transition: transform .2s; }
+.collapse-toggle .ct-arrow { transition: transform .25s ease; display: inline-block; }
 .collapse-toggle.open .ct-arrow { transform: rotate(180deg); }
-.collapse-body { overflow: hidden; transition: max-height .3s ease; }
-.collapse-body.closed { max-height: 0 !important; }
+.collapse-body { overflow: hidden; transition: max-height .25s ease, opacity .2s ease; }
 .accent-bar-pos { border-right: 4px solid var(--pos); }
 .accent-bar-neg { border-right: 4px solid var(--neg); }
 .accent-bar-gold { border-right: 4px solid var(--gold); }
@@ -272,29 +271,6 @@ body {
   border-radius: 24px; padding: 22px 20px; color: #fff; margin-bottom: 14px;
   box-shadow: 0 10px 30px rgba(217,119,6,.3);
 }
-.log-row {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-  padding: 7px 10px; margin-bottom: 6px; display: flex; align-items: center;
-  justify-content: space-between; gap: 8px; transition: background .15s;
-}
-.log-row:hover { background: var(--surface2); }
-.log-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-.log-line1 { display: flex; align-items: center; gap: 6px; overflow: hidden; }
-.log-line2 { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; overflow: hidden; }
-.log-badge { font-size: 9.5px; font-weight: 800; padding: 1.5px 6px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; }
-.badge-add { background: #d1fae5; color: #059669; }
-.badge-edit { background: #fef3c7; color: #d97706; }
-.badge-del { background: #fee2e2; color: var(--neg); }
-.log-name { font-size: 12.5px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.log-vals { font-size: 11px; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
-.log-time { font-size: 10px; color: var(--muted); flex-shrink: 0; }
-.log-desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.log-del-btn {
-  background: none; border: 1px solid var(--border); border-radius: 6px;
-  width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-  color: var(--neg); cursor: pointer; flex-shrink: 0; transition: all .15s;
-}
-.log-del-btn:active { background: #fee2e2; border-color: var(--neg); transform: scale(.92); }
 #toast {
   position: fixed; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 12px);
   left: 50%; transform: translateX(-50%) translateY(10px);
@@ -376,7 +352,7 @@ function ic(name, size, cls) {
     exp: '<rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>',
     badr: '<rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/>',
     gold: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="2"/>',
-    logs: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 12h6"/><path d="M9 16h6"/>',
+    pdf: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/>',
     settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
     edit: '<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>',
     del: '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>',
@@ -462,32 +438,43 @@ function seed(){
       ['ايجار شهر 8',2000],['تأمين',1000],['ايجار شهر 8',2000]
     ].map(function(x,i){return {id:200+i,n:x[0],a:x[1]};}),
     g21:{g:280,p:6100},g24:{g:72.5,p:7100},
-    expected:[],expectedExp:[],logs:[]
+    expected:[],expectedExp:[]
   };
 }
 var S;
 try{S=JSON.parse(localStorage.getItem(K));}catch(e){}
 if(!S)S=seed();
-['logs','expected','expectedExp','inc'].forEach(function(k){if(!S[k])S[k]=[];});
+if(S.logs){delete S.logs;save();}
+['expected','expectedExp','inc'].forEach(function(k){if(!S[k])S[k]=[];});
 function save(){try{localStorage.setItem(K,JSON.stringify(S));}catch(e){}}
 function toast(msg){
   var t=document.getElementById('toast');if(!t)return;
   t.innerText=msg;t.className='show';
   clearTimeout(t._t);t._t=setTimeout(function(){t.className='';},3000);
 }
-function logEntry(type,sec,name,oldV,newV,desc,id){
-  if(!S.logs)S.logs=[];
-  S.logs.unshift({id:id||Date.now(),dt:fmtDT(),type:type,sec:sec,n:name,
-    oldV:oldV!==undefined?oldV:'',newV:newV!==undefined?newV:'',desc:desc||''});
-  if(S.logs.length>200)S.logs.pop();save();
+function logEntry(){}
+function isOsamaExp(x){
+  if(!x)return false;
+  if(x.sub==='osama')return true;
+  var name=String(x.n||'').trim();
+  return /اسامة|أسامة/.test(name);
 }
 function C(){
-  var bE=sum(S.badrE),bI=sum(S.badrI),hE=sum(S.exp);
-  var totalExp=hE+bE,cash=S.fund-totalExp;
+  var osamaList=(S.exp||[]).filter(isOsamaExp);
+  var houseList=(S.exp||[]).filter(function(x){return !isOsamaExp(x);});
+  var oE=sum(osamaList);
+  var hE=sum(houseList);
+  var bE=sum(S.badrE),bI=sum(S.badrI);
+  var totalExp=hE+oE+bE; // خصم كافة المصاريف بالكامل: البيت + أسامة + بدر
+  var cash=S.fund-totalExp; // سيولة البيت المتبقية بعد خصم كافة المصاريف بالكامل
   var gold=(S.g21.g||0)*(S.g21.p||0)+(S.g24.g||0)*(S.g24.p||0);
   var mine=S.bank-bI-cash-S.sister;
   var expI=sum(S.expected),expE=sum(S.expectedExp);
-  return {bE:bE,bI:bI,hE:hE,totalExp:totalExp,cash:cash,gold:gold,mine:mine,expI:expI,expE:expE,proj:mine+expI-expE};
+  return {
+    bE:bE,bI:bI,hE:hE,oE:oE,
+    houseCount:houseList.length,osamaCount:osamaList.length,badrCount:S.badrE.length,
+    totalExp:totalExp,cash:cash,gold:gold,mine:mine,expI:expI,expE:expE,proj:mine+expI-expE
+  };
 }
 function go(t){tab=t;render();window.scrollTo(0,0);}
 function postSheet(payload,cb){
@@ -532,7 +519,7 @@ function fetchSheet(manual){
         if(typeof d.sister==='number'&&S.sister!==d.sister){S.sister=d.sister;changed=true;}
         if(d.g21&&((S.g21&&S.g21.g)!==d.g21.g||(S.g21&&S.g21.p)!==d.g21.p)){S.g21=d.g21;changed=true;}
         if(d.g24&&((S.g24&&S.g24.g)!==d.g24.g||(S.g24&&S.g24.p)!==d.g24.p)){S.g24=d.g24;changed=true;}
-        ['exp','inc','badrE','badrI','expected','expectedExp','logs'].forEach(function(k){
+        ['exp','inc','badrE','badrI','expected','expectedExp'].forEach(function(k){
           if(Array.isArray(d[k])){
             if(JSON.stringify(S[k]||[])!==JSON.stringify(d[k])){
               S[k]=d[k];changed=true;
@@ -648,10 +635,25 @@ function closeModal(){document.getElementById('modal-root').innerHTML='';}
 var _fabOpts=[];
 function openAddSheet(){
   var lists={
-    home:[{list:'exp',label:'مصروف للبيت',hasDate:true},{list:'badrE',label:'مصروف بدر',hasDate:false},{list:'badrI',label:'إيجار بدر',hasDate:false}],
-    forecast:[{list:'expected',label:'إيراد متوقع',hasDate:false},{list:'expectedExp',label:'مصروف متوقع',hasDate:false}],
-    exp:[{list:'exp',label:'مصروف للبيت',hasDate:true},{list:'badrE',label:'مصروف لشقة بدر',hasDate:false}],
-    badr:[{list:'badrE',label:'مصروف بدر',hasDate:false},{list:'badrI',label:'إيجار بدر',hasDate:false}]
+    home:[
+      {list:'exp',sub:'house',label:'مصروف للبيت',hasDate:true},
+      {list:'exp',sub:'osama',label:'تحويل لأسامة',hasDate:true},
+      {list:'badrE',label:'مصروف بدر',hasDate:false},
+      {list:'badrI',label:'إيجار بدر',hasDate:false}
+    ],
+    forecast:[
+      {list:'expected',label:'إيراد متوقع',hasDate:false},
+      {list:'expectedExp',label:'مصروف متوقع',hasDate:false}
+    ],
+    exp:[
+      {list:'exp',sub:'house',label:'مصروف للبيت',hasDate:true},
+      {list:'exp',sub:'osama',label:'تحويل لأسامة',hasDate:true},
+      {list:'badrE',label:'مصروف لشقة بدر',hasDate:false}
+    ],
+    badr:[
+      {list:'badrE',label:'مصروف بدر',hasDate:false},
+      {list:'badrI',label:'إيجار بدر',hasDate:false}
+    ]
   };
   _fabOpts=lists[tab]||lists.home;
   var optHtml=_fabOpts.length>1?_fabOpts.map(function(o,i){
@@ -662,7 +664,7 @@ function openAddSheet(){
   var html='<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="sheet">'+
     '<div class="sheet-head"><h2>'+ic('plus',18)+' بند جديد</h2><button class="sheet-close" onclick="closeModal()">'+ic('close',18)+'</button></div>'+
     (optHtml?'<div style="margin-bottom:12px">'+optHtml+'</div>':'')+
-    '<div class="field"><label>الاسم</label><input id="fab_n" placeholder="مثلاً: كهرباء"></div>'+
+    '<div class="field"><label>الاسم أو البيان</label><input id="fab_n" placeholder="مثلاً: كهرباء"></div>'+
     '<div class="field"><label>المبلغ (جنيه)</label><input id="fab_a" type="number" inputmode="decimal" placeholder="0"></div>'+
     '<div id="fab_date_wrap"></div>'+
     '<div class="btn-row">'+
@@ -676,6 +678,16 @@ function openAddSheet(){
     var o=_fabOpts[idx];
     document.getElementById('fab_date_wrap').innerHTML=o.hasDate?
       '<div class="field"><label>التاريخ</label><input id="fab_d" type="date" value="'+today()+'"></div>':'';
+    var nInput=document.getElementById('fab_n');
+    if(nInput){
+      if(o.sub==='osama'){
+        nInput.placeholder='مثلاً: تحويل بنكي، قسط، كاش (أو اتركه فارغاً)';
+      }else if(o.list==='badrE'||o.list==='badrI'){
+        nInput.placeholder='مثلاً: سباكة، إيجار، عداد مياه';
+      }else{
+        nInput.placeholder='مثلاً: كهرباء، طلبات، بنزين';
+      }
+    }
   }
   document.querySelectorAll('[name=add_type]').forEach(function(r){r.addEventListener('change',updateDate);});
   updateDate();
@@ -684,11 +696,19 @@ function openAddSheet(){
 function doFabAdd(){
   var n=(document.getElementById('fab_n').value||'').trim();
   var a=parseFloat(document.getElementById('fab_a').value);
-  if(!n||!(a>=0)){alert('اكتب الاسم والمبلغ');return;}
   var sel=document.querySelector('[name=add_type]:checked');
   var idx=sel?parseInt(sel.value):0;
   var opt=_fabOpts[idx];
+  if(opt.sub==='osama'){
+    if(!n){
+      n='تحويل لأسامة';
+    }else if(!/اسامة|أسامة/.test(n)){
+      n='تحويل لأسامة - '+n;
+    }
+  }
+  if(!n||!(a>=0)){alert('اكتب الاسم والمبلغ');return;}
   var o={id:Date.now(),n:n,a:a,updatedAt:fmtDT()};
+  if(opt.sub==='osama')o.sub='osama';
   var dEl=document.getElementById('fab_d');
   if(opt.hasDate)o.d=dEl&&dEl.value?dEl.value:today();
   S[opt.list].push(o);
@@ -769,6 +789,7 @@ function openSettings(){
           '</div>'+
           '<button class="btn btn-primary btn-sm" style="width:100%" onclick="copyShareUrl()">'+ic('copy',15)+' نسخ رابط الموبايل (مربوط جاهز)</button>'+
         '</div>'+
+        '<button class="btn btn-ghost" onclick="printSummaryPDF();closeModal()">'+ic('pdf',15)+' تحميل ملخص PDF للحساب بالكامل</button>'+
         '<button class="btn btn-ghost" onclick="uploadAll();closeModal()">'+ic('out',15)+' رفع بياناتي للشيت</button>'+
         '<button class="btn btn-ghost" onclick="restoreSeed()">'+ic('refresh',15)+' استرجاع البيانات الأصلية</button>'+
         '<button class="btn btn-ghost" style="color:var(--neg);border-color:var(--neg)" onclick="disconnectSheet()">'+ic('del',15)+' قطع الربط بالشيت</button>'+
@@ -795,52 +816,177 @@ function updateSync(){
   else if(syncSt.status==='error'){el.className='sync-pill err';el.innerHTML='<span class="sync-dot"></span>غير متصل';}
   else{el.className='sync-pill ok';el.innerHTML='<span class="sync-dot"></span>متصل';}
 }
-function deleteLog(id){
-  if(!confirm('حذف؟'))return;
-  S.logs=(S.logs||[]).filter(function(x){return String(x.id)!==String(id);});
-  save();render();toast('تم');
-  if(sheetUrl)postSheet({action:'deleteLog',id:id},function(r){if(r.success)toast('تم');});
-}
-function clearLogs(){
-  if(!confirm('مسح كل السجل؟'))return;
-  S.logs=[];save();render();toast('تم');
-  if(sheetUrl)postSheet({action:'clearLogs'},function(r){if(r.success)toast('تم');});
-}
-function rowsList(list,cls,hasDate){
-  var a=S[list].slice();
+function rowsList(list,cls,hasDate,filterFn,emptyMsg){
+  var a=Array.isArray(list)?list.slice():(S[list]||[]).slice();
+  if(filterFn)a=a.filter(filterFn);
   if(hasDate)a.sort(function(x,y){return (y.d||'')<(x.d||'')?-1:1;});
-  if(!a.length)return '<div class="empty-state"><div class="ei">'+ic('empty',32)+'</div><p>لا توجد بنود بعد.<br>اضغط ＋ لإضافة بند.</p></div>';
+  var listName=Array.isArray(list)?'exp':list;
+  if(!a.length){
+    return emptyMsg?
+      '<div style="text-align:center;padding:16px 10px;color:var(--muted);font-size:12.5px">'+emptyMsg+'</div>':
+      '<div class="empty-state"><div class="ei">'+ic('empty',32)+'</div><p>لا توجد بنود بعد.<br>اضغط ＋ لإضافة بند.</p></div>';
+  }
   return a.map(function(x){
     return '<div class="list-row">'+
       '<div class="lr-info"><div class="lr-name">'+esc(x.n)+'</div>'+(x.d?'<div class="lr-meta">'+x.d+'</div>':'')+
       '</div>'+
       '<span class="lr-amt '+cls+'">'+m(x.a)+'<small>ج</small></span>'+
       '<div class="lr-actions">'+
-        '<button class="lr-btn edit" onclick="openEdit(\''+list+'\','+x.id+','+hasDate+')">'+ic('edit',13)+'</button>'+
-        '<button class="lr-btn del" onclick="delItem(\''+list+'\','+x.id+')">'+ic('del',13)+'</button>'+
+        '<button class="lr-btn edit" onclick="openEdit(\''+listName+'\','+x.id+','+hasDate+')">'+ic('edit',13)+'</button>'+
+        '<button class="lr-btn del" onclick="delItem(\''+listName+'\','+x.id+')">'+ic('del',13)+'</button>'+
       '</div></div>';
   }).join('');
 }
 var openSections={};
 function toggleSection(id){
   openSections[id]=!openSections[id];
+  var isOpen=openSections[id];
   var body=document.getElementById('sec-body-'+id);
   var tog=document.getElementById('sec-tog-'+id);
-  if(body)body.style.maxHeight=openSections[id]?body.scrollHeight+'px':'0';
-  if(tog)tog.className='collapse-toggle'+(openSections[id]?' open':'');
+  if(tog)tog.className='collapse-toggle'+(isOpen?' open':'');
+  if(body){
+    body.className='collapse-body'+(isOpen?' open':'');
+    body.style.maxHeight=isOpen?(body.scrollHeight+30)+'px':'0';
+    body.style.opacity=isOpen?'1':'0';
+  }
+}
+function printSummaryPDF(){
+  var c = C();
+  var dtStr = fmtDT();
+
+  var html = '<!DOCTYPE html>'+
+    '<html dir="rtl" lang="ar"><head><meta charset="utf-8">'+
+    '<title>ملخص الحساب المالي - '+dtStr+'</title>'+
+    '<style>'+
+    '@page { size: A4 portrait; margin: 12mm 14mm; }'+
+    '* { box-sizing: border-box; }'+
+    'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; direction: rtl; background: #fff; color: #0f172a; margin: 0; padding: 16px 20px; font-size: 11.5px; line-height: 1.45; -webkit-print-color-adjust: exact; print-color-adjust: exact; }'+
+    '.no-print { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 10px 16px; border-radius: 8px; margin-bottom: 16px; }'+
+    '@media print { .no-print { display: none !important; } body { padding: 0 !important; } }'+
+    'table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 11px; }'+
+    'th { background: #f8fafc; color: #334155; font-weight: 700; border: 1px solid #cbd5e1; padding: 6px 10px; text-align: right; }'+
+    'td { border: 1px solid #e2e8f0; padding: 5.5px 10px; text-align: right; }'+
+    '.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }'+
+    '.kpi { border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; background: #fff; }'+
+    '.kpi-title { font-size: 10.5px; color: #64748b; font-weight: 600; margin-bottom: 2px; }'+
+    '.kpi-val { font-size: 15.5px; font-weight: 800; color: #0f172a; }'+
+    '.kpi-highlight { border: 2px solid #0f172a; background: #f8fafc; }'+
+    '.kpi-highlight .kpi-val { font-size: 17.5px; color: #0f172a; }'+
+    '.sec-title { font-size: 12.5px; font-weight: 800; color: #0f172a; margin: 12px 0 5px; border-bottom: 1.5px solid #cbd5e1; padding-bottom: 3px; }'+
+    '.total-foot { font-weight: 800; background: #f8fafc; font-size: 11.5px; }'+
+    '</style></head><body>'+
+    '<div class="no-print">'+
+      '<div><b style="font-size:13px">📄 ملخص الحساب المالي (صفحة واحدة)</b><div style="font-size:11px;color:#64748b">اضغط على زر الطباعة للحفظ كملف PDF</div></div>'+
+      '<div>'+
+        '<button onclick="window.print()" style="background:#2563eb;color:#fff;border:none;padding:7px 18px;border-radius:6px;font-weight:bold;font-size:12.5px;cursor:pointer">🖨️ حفظ كـ PDF / طباعة</button>'+
+        '<button onclick="window.close()" style="background:#fff;border:1px solid #cbd5e1;padding:7px 14px;border-radius:6px;margin-right:6px;cursor:pointer;font-size:12.5px">إغلاق</button>'+
+      '</div>'+
+    '</div>'+
+    '<div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #0f172a;padding-bottom:8px;margin-bottom:12px">'+
+      '<div>'+
+        '<h1 style="margin:0;font-size:18px;font-weight:900;color:#0f172a">ملخص الحساب المالي (حساب البيت)</h1>'+
+        '<div style="font-size:10.5px;color:#64748b;margin-top:2px">تقرير ملخص شامل وموجز للأرصدة والمصاريف والسيولة والدهب</div>'+
+      '</div>'+
+      '<div style="text-align:left;font-size:10.5px;color:#475569">'+
+        '<div><b>التاريخ:</b> '+dtStr+'</div>'+
+        '<div><b>الحالة:</b> '+(sheetUrl?'متصل بـ Google Sheet':'محلي')+'</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="kpi-grid">'+
+      '<div class="kpi kpi-highlight">'+
+        '<div class="kpi-title">صافي فلوسك الحالية</div>'+
+        '<div class="kpi-val" style="color:'+(c.mine<0?'#dc2626':'#0f172a')+'">'+m(c.mine)+' ج</div>'+
+        '<div style="font-size:9px;color:#64748b">بعد خصم الإيجار والسيولة والأمانة</div>'+
+      '</div>'+
+      '<div class="kpi">'+
+        '<div class="kpi-title">رصيد الحساب البنكي</div>'+
+        '<div class="kpi-val">'+m(S.bank)+' ج</div>'+
+        '<div style="font-size:9px;color:#64748b">الرصيد في البنك</div>'+
+      '</div>'+
+      '<div class="kpi">'+
+        '<div class="kpi-title">سيولة البيت المتبقية</div>'+
+        '<div class="kpi-val" style="color:'+(c.cash<0?'#dc2626':'#15803d')+'">'+m(c.cash)+' ج</div>'+
+        '<div style="font-size:9px;color:#64748b">من أصل '+m(S.fund)+' ج بعد خصم كافة المصاريف</div>'+
+      '</div>'+
+      '<div class="kpi">'+
+        '<div class="kpi-title">قيمة الدهب الإجمالية</div>'+
+        '<div class="kpi-val" style="color:#b45309">'+m(c.gold)+' ج</div>'+
+        '<div style="font-size:9px;color:#64748b">عيار 21 ('+S.g21.g+'جم) · عيار 24 ('+S.g24.g+'جم)</div>'+
+      '</div>'+
+      '<div class="kpi">'+
+        '<div class="kpi-title">إجمالي ثروة البيت</div>'+
+        '<div class="kpi-val">'+m(c.gold+c.cash)+' ج</div>'+
+        '<div style="font-size:9px;color:#64748b">الدهب ('+m(c.gold)+') + السيولة ('+m(c.cash)+')</div>'+
+      '</div>'+
+      '<div class="kpi">'+
+        '<div class="kpi-title">الإجمالي العام لكافة المصاريف</div>'+
+        '<div class="kpi-val" style="color:#dc2626">−'+m(c.totalExp)+' ج</div>'+
+        '<div style="font-size:9px;color:#64748b">البيت ('+m(c.hE)+') + أسامة ('+m(c.oE)+') + بدر ('+m(c.bE)+')</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="sec-title"><span>📊 تفصيل حساب الرصيد والسيولة</span></div>'+
+    '<table>'+
+      '<thead><tr><th>المفردة</th><th>البيان والتفصيل</th><th style="width:120px">المبلغ</th></tr></thead>'+
+      '<tbody>'+
+        '<tr><td><b>الحساب البنكي</b></td><td>الرصيد الإجمالي المودع في الحساب البنكي</td><td style="font-weight:bold">'+m(S.bank)+' ج</td></tr>'+
+        '<tr><td><b>− إيجار بدر</b></td><td>إيرادات إيجار شقة بدر تُخصم من البنك لحساب صافي فلوسك</td><td style="font-weight:bold;color:#dc2626">−'+m(c.bI)+' ج</td></tr>'+
+        '<tr><td><b>− سيولة البيت المتبقية</b></td><td>فلوس البيت ('+m(S.fund)+' ج) مخصوماً منها كافة المصاريف بالكامل ('+m(c.totalExp)+' ج)</td><td style="font-weight:bold;color:'+(c.cash<0?'#dc2626':'#15803d')+'">−'+m(c.cash)+' ج</td></tr>'+
+        (S.sister ? '<tr><td><b>− فلوس أختي</b></td><td>أمانة أختي المودعة في الحساب</td><td style="font-weight:bold;color:#dc2626">−'+m(S.sister)+' ج</td></tr>' : '')+
+        '<tr class="total-foot"><td colspan="2"><b>صافي فلوسك الحالية</b></td><td style="color:'+(c.mine<0?'#dc2626':'#0f172a')+';font-size:12.5px">'+m(c.mine)+' ج</td></tr>'+
+      '</tbody>'+
+    '</table>'+
+    '<div class="sec-title"><span>💳 ملخص كافة المصاريف الإجمالية</span></div>'+
+    '<table>'+
+      '<thead><tr><th>القسم</th><th>البيان</th><th style="width:80px;text-align:center">عدد البنود</th><th style="width:120px">المجموع</th></tr></thead>'+
+      '<tbody>'+
+        '<tr><td><b>مصاريف البيت</b></td><td>المصروفات العامة والتشغيلية للبيت</td><td style="text-align:center">'+c.houseCount+' بند</td><td style="font-weight:bold;color:#dc2626">−'+m(c.hE)+' ج</td></tr>'+
+        '<tr><td><b>تحويلات أسامة</b></td><td>المبالغ المحولة لأسامة</td><td style="text-align:center">'+c.osamaCount+' بند</td><td style="font-weight:bold;color:#6d28d9">−'+m(c.oE)+' ج</td></tr>'+
+        '<tr><td><b>مصاريف شقة بدر</b></td><td>مصاريف وتجهيزات شقة بدر</td><td style="text-align:center">'+c.badrCount+' بند</td><td style="font-weight:bold;color:#dc2626">−'+m(c.bE)+' ج</td></tr>'+
+        '<tr class="total-foot"><td colspan="3"><b>الإجمالي العام لكافة المصاريف</b></td><td style="color:#dc2626;font-size:12.5px">−'+m(c.totalExp)+' ج</td></tr>'+
+      '</tbody>'+
+    '</table>'+
+    '<div class="sec-title"><span>🏢 ملخص شقة بدر والدهب</span></div>'+
+    '<table>'+
+      '<thead><tr><th>البند</th><th>التفاصيل</th><th style="width:120px">القيمة</th></tr></thead>'+
+      '<tbody>'+
+        '<tr><td><b>إيرادات إيجار بدر</b></td><td>إجمالي مبالغ الإيجار المستلمة لشقة بدر</td><td style="font-weight:bold;color:#15803d">+'+m(c.bI)+' ج</td></tr>'+
+        '<tr><td><b>مصاريف تجهيز بدر</b></td><td>إجمالي تكاليف تجهيز شقة بدر ('+c.badrCount+' بند)</td><td style="font-weight:bold;color:#dc2626">−'+m(c.bE)+' ج</td></tr>'+
+        '<tr><td><b>صافي شقة بدر</b></td><td>إجمالي الإيرادات مخصوماً منها مصاريف التجهيز</td><td style="font-weight:bold;color:'+((c.bI-c.bE)>=0?'#15803d':'#dc2626')+'">'+m(c.bI-c.bE)+' ج</td></tr>'+
+        '<tr><td><b>قيمة الدهب الإجمالية</b></td><td>عيار 21 ('+S.g21.g+'جم بسعر '+m(S.g21.p)+') · عيار 24 ('+S.g24.g+'جم بسعر '+m(S.g24.p)+')</td><td style="font-weight:bold;color:#b45309">'+m(c.gold)+' ج</td></tr>'+
+      '</tbody>'+
+    '</table>'+
+    '<div style="margin-top:14px;border-top:1px dashed #cbd5e1;padding-top:6px;display:flex;justify-content:space-between;font-size:9.5px;color:#64748b">'+
+      '<div>سيستم حساب البيت · ملخص الحساب المالي</div>'+
+      '<div>'+dtStr+'</div>'+
+    '</div>'+
+    '</body></html>';
+
+  var win = window.open('', '_blank');
+  if(!win){
+    alert('يرجى السماح بالنوافذ المنبثقة (Pop-ups) من إعدادات المتصفح لفتح تقرير الـ PDF');
+    return;
+  }
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
+  setTimeout(function(){
+    try { win.print(); } catch(e){}
+  }, 400);
 }
 function view(){
   var c=C();
   var isZero=(S.bank===0&&S.fund===0&&(!S.exp||S.exp.length===0));
-  var titles={home:'الرئيسية',forecast:'التوقعات',exp:'المصاريف',badr:'شقة بدر',gold:'الدهب',logs:'السجل'};
-  var icons={home:'home',forecast:'forecast',exp:'exp',badr:'badr',gold:'gold',logs:'logs'};
+  if(tab==='logs')tab='home';
+  var titles={home:'الرئيسية',forecast:'التوقعات',exp:'المصاريف',badr:'شقة بدر',gold:'الدهب'};
+  var icons={home:'home',forecast:'forecast',exp:'exp',badr:'badr',gold:'gold'};
   document.getElementById('hdr').innerHTML=
     '<div><div class="hdr-title">'+icons[tab]+' '+titles[tab]+'</div>'+
     (tab==='home'?'<div class="hdr-sub">حساب البيت</div>':'')+
     '</div>'+
     '<div class="hdr-actions">'+
       '<span id="sync-pill" class="sync-pill" onclick="openSettings()" style="cursor:pointer"><span class="sync-dot"></span>'+(sheetUrl?'متصل':'ربط')+'</span>'+
-      '<button class="hdr-btn" onclick="openSettings()">'+ic('settings',18)+'</button>'+
+      '<button class="hdr-btn" onclick="printSummaryPDF()" title="تحميل ملخص PDF">'+ic('pdf',18)+'</button>'+
+      '<button class="hdr-btn" onclick="openSettings()" title="الإعدادات">'+ic('settings',18)+'</button>'+
     '</div>';
   updateSync();
   var fabEl=document.getElementById('fab');
@@ -883,7 +1029,7 @@ function view(){
         '<button id="sec-tog-'+secId+'" class="collapse-toggle'+(openSections[secId]?' open':'')+'" onclick="toggleSection(\''+secId+'\')">'+
           '<span>'+ic('chart',16)+' تفصيل حساب الرصيد</span><span class="ct-arrow">▼</span>'+
         '</button>'+
-        '<div id="sec-body-'+secId+'" class="collapse-body'+(openSections[secId]?'':' closed')+'" style="max-height:'+(openSections[secId]?'500px':'0')+'">'+
+        '<div id="sec-body-'+secId+'" class="collapse-body'+(openSections[secId]?' open':'')+'" style="max-height:'+(openSections[secId]?'600px':'0')+';opacity:'+(openSections[secId]?'1':'0')+'">'+
           '<div style="margin-top:10px">'+
             '<div class="bk-row"><span>الحساب البنكي</span><b>'+m(S.bank)+' ج</b></div>'+
             '<div class="bk-row"><span class="neg">− إيجار بدر</span><span class="neg">−'+m(c.bI)+' ج</span></div>'+
@@ -900,12 +1046,13 @@ function view(){
         '<button id="sec-tog-'+secId2+'" class="collapse-toggle'+(openSections[secId2]?' open':'')+'" onclick="toggleSection(\''+secId2+'\')">'+
           '<span>'+ic('cash',16)+' ملخص البيت والسيولة</span><span class="ct-arrow">▼</span>'+
         '</button>'+
-        '<div id="sec-body-'+secId2+'" class="collapse-body'+(openSections[secId2]?'':' closed')+'" style="max-height:'+(openSections[secId2]?'500px':'0')+'">'+
+        '<div id="sec-body-'+secId2+'" class="collapse-body'+(openSections[secId2]?' open':'')+'" style="max-height:'+(openSections[secId2]?'600px':'0')+';opacity:'+(openSections[secId2]?'1':'0')+'">'+
           '<div style="margin-top:10px">'+
             '<div class="bk-row"><span>فلوس البيت المخصصة</span><b>'+m(S.fund)+' ج</b></div>'+
-            '<div class="bk-row"><span class="neg">− مصاريف البيت ('+S.exp.length+' بند)</span><span class="neg">−'+m(c.hE)+' ج</span></div>'+
-            '<div class="bk-row"><span class="neg">− مصاريف شقة بدر</span><span class="neg">−'+m(c.bE)+' ج</span></div>'+
-            '<div class="bk-row total"><span>سيولة البيت المتاحة</span><span class="'+(c.cash<0?'neg':'')+'">'+m(c.cash)+' ج</span></div>'+
+            '<div class="bk-row"><span class="neg">− مصاريف البيت ('+c.houseCount+' بند)</span><span class="neg">−'+m(c.hE)+' ج</span></div>'+
+            '<div class="bk-row"><span class="neg">− تحويلات أسامة ('+c.osamaCount+' بند)</span><span class="neg">−'+m(c.oE)+' ج</span></div>'+
+            '<div class="bk-row"><span class="neg">− مصاريف شقة بدر ('+c.badrCount+' بند)</span><span class="neg">−'+m(c.bE)+' ج</span></div>'+
+            '<div class="bk-row total"><span>سيولة البيت المتبقية</span><span class="'+(c.cash<0?'neg':'pos')+'">'+m(c.cash)+' ج</span></div>'+
             '<div class="bk-row"><span>'+ic('gold',15)+' الدهب</span><b>'+m(c.gold)+' ج</b></div>'+
             '<div class="bk-row total"><span>إجمالي ثروة البيت</span><b>'+m(c.gold+c.cash)+' ج</b></div>'+
           '</div>'+
@@ -952,31 +1099,45 @@ function view(){
   if(tab==='exp'){
     var expHero=
       '<div class="balance-card" style="background:#dc2626">'+
-        '<div class="bal-label">إجمالي كافة المصاريف (البيت + بدر)</div>'+
+        '<div class="bal-label">إجمالي كافة المصاريف</div>'+
         '<div class="bal-amount">'+m(c.totalExp)+'<small> ج</small></div>'+
-        '<div class="bal-meta">'+(S.exp.length+S.badrE.length)+' بند مسجل (البيت: '+m(c.hE)+' ج · بدر: '+m(c.bE)+' ج)</div>'+
+        '<div class="bal-meta">البيت: '+m(c.hE)+' ج · أسامة: '+m(c.oE)+' ج · بدر: '+m(c.bE)+' ج</div>'+
       '</div>';
     var houseCard=
       '<div class="card accent-bar-neg">'+
-        '<div class="card-hd"><span class="card-hd-title">'+ic('home',15)+' مصاريف البيت ('+S.exp.length+' بند)</span><span class="card-hd-val neg">−'+m(c.hE)+' ج</span></div>'+
-        rowsList('exp','neg',true)+
+        '<div class="card-hd"><span class="card-hd-title">'+ic('home',15)+' مصاريف البيت ('+c.houseCount+' بند)</span><span class="card-hd-val neg">−'+m(c.hE)+' ج</span></div>'+
+        rowsList('exp','neg',true,function(x){return !isOsamaExp(x);},'لا توجد مصاريف للبيت بعد.')+
         '<div class="total-row"><span>مجموع مصاريف البيت</span><span class="neg">−'+m(c.hE)+' ج</span></div>'+
+      '</div>';
+    var osamaCard=
+      '<div class="card" style="border-right:4px solid #8b5cf6">'+
+        '<div class="card-hd"><span class="card-hd-title" style="color:#6d28d9;display:flex;align-items:center;gap:6px">'+ic('out',15)+' تحويلات أسامة ('+c.osamaCount+' بند)</span><span class="card-hd-val neg">−'+m(c.oE)+' ج</span></div>'+
+        rowsList('exp','neg',true,isOsamaExp,'لا توجد تحويلات مسجلة لأسامة حتى الآن.<br>اضغط ＋ واختر "تحويل لأسامة" للإضافة.')+
+        '<div class="total-row"><span>مجموع تحويلات أسامة</span><span class="neg">−'+m(c.oE)+' ج</span></div>'+
       '</div>';
     var badrCard=
       '<div class="card accent-bar-neg">'+
-        '<div class="card-hd"><span class="card-hd-title">'+ic('badr',15)+' مصاريف تجهيز بدر ('+S.badrE.length+' بند)</span><span class="card-hd-val neg">−'+m(c.bE)+' ج</span></div>'+
-        rowsList('badrE','neg',false)+
-        '<div class="total-row"><span>مجموع مصاريف بدر</span><span class="neg">−'+m(c.bE)+' ج</span></div>'+
+        '<div style="display:flex;justify-content:space-between;align-items:center">'+
+          '<div>'+
+            '<div style="font-weight:700;display:flex;align-items:center;gap:6px">'+ic('badr',16)+' إجمالي مصاريف شقة بدر</div>'+
+            '<div class="hint" style="margin-top:3px">'+c.badrCount+' بند مسجل في صفحة بدر</div>'+
+          '</div>'+
+          '<div style="text-align:left">'+
+            '<div class="neg" style="font-size:16px;font-weight:800">−'+m(c.bE)+' ج</div>'+
+            '<button class="btn btn-ghost btn-sm" onclick="go(\'badr\')" style="padding:4px 10px;font-size:11.5px;margin-top:5px">'+ic('badr',13)+' عرض التفاصيل ←</button>'+
+          '</div>'+
+        '</div>'+
       '</div>';
     var summaryCard=
       '<div class="card">'+
         '<div class="card-hd"><span class="card-hd-title">ملخص إجمالي المصاريف</span></div>'+
         '<div class="bk-row"><span>'+ic('home',14)+' مصاريف البيت</span><b class="neg">−'+m(c.hE)+' ج</b></div>'+
-        '<div class="bk-row"><span>'+ic('badr',14)+' مصاريف شقة بدر</span><b class="neg">−'+m(c.bE)+' ج</b></div>'+
+        '<div class="bk-row"><span>'+ic('out',14)+' تحويلات أسامة</span><b class="neg">−'+m(c.oE)+' ج</b></div>'+
+        '<div class="bk-row"><span>'+ic('badr',14)+' إجمالي مصاريف شقة بدر</span><b class="neg">−'+m(c.bE)+' ج</b></div>'+
         '<div class="bk-row total"><span>الإجمالي العام للمصاريف</span><b class="neg">−'+m(c.totalExp)+' ج</b></div>'+
       '</div>';
-    return expHero+houseCard+badrCard+summaryCard+
-      '<p class="hint" style="text-align:center;margin-top:4px">اضغط ＋ لإضافة مصروف جديد للبيت أو لبدر</p>';
+    return expHero+houseCard+osamaCard+badrCard+summaryCard+
+      '<p class="hint" style="text-align:center;margin-top:4px">اضغط ＋ لإضافة مصروف أو تحويل جديد</p>';
   }
   if(tab==='badr'){
     var net=c.bI-c.bE;
@@ -1028,43 +1189,12 @@ function view(){
       '</div>'+
       '<p class="hint" style="text-align:center">تعديل السعر أو الوزن يُزامن تلقائياً</p>';
   }
-  if(tab==='logs'){
-    var logs=S.logs||[];
-    function cleanE(t){return String(t||'').replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu,'').trim();}
-    var logHtml=logs.length?
-      logs.map(function(l){
-        var rawType=cleanE(l.type);
-        var bc=rawType.indexOf('حذف')!==-1?'badge-del':(rawType.indexOf('إضافة')!==-1?'badge-add':'badge-edit');
-        var valTxt=(l.oldV!==undefined&&l.oldV!==''&&l.newV!==undefined&&l.newV!=='')?
-          '<s>'+m(l.oldV)+'</s> → <b class="pos">'+m(l.newV)+' ج</b>':'';
-        var nameTxt=cleanE(l.n||l.desc);
-        var descTxt=cleanE(l.desc);
-        return '<div class="log-row">'+
-          '<div class="log-info">'+
-            '<div class="log-line1">'+
-              '<span class="log-badge '+bc+'">'+esc(rawType)+'</span>'+
-              '<span class="log-name">'+esc(nameTxt)+'</span>'+
-              (valTxt?'<span class="log-vals">'+valTxt+'</span>':'')+
-            '</div>'+
-            '<div class="log-line2">'+
-              '<span class="log-time">'+esc(l.dt)+'</span>'+
-              (descTxt&&descTxt!==nameTxt?'<span class="log-desc">· '+esc(descTxt)+'</span>':'')+
-            '</div>'+
-          '</div>'+
-          '<button class="log-del-btn" data-lid="'+esc(l.id)+'" onclick="deleteLog(this.getAttribute(\'data-lid\'))" title="حذف">'+ic('del',13)+'</button>'+
-        '</div>';
-      }).join(''):
-      '<div class="empty-state"><div class="ei">'+ic('empty',32)+'</div><p>لا توجد تعديلات بعد.</p></div>';
-    return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'+
-        '<div><b style="font-size:16px">'+ic('logs',16)+' السجل</b><div class="hint">'+logs.length+' حركة</div></div>'+
-      '</div>'+logHtml;
-  }
   return '';
 }
 function render(){
   document.getElementById('app').innerHTML=view();
   updateSync();
-  var tabs=[['home','الرئيسية'],['forecast','التوقعات'],['exp','المصاريف'],['badr','بدر'],['gold','الدهب'],['logs','السجل']];
+  var tabs=[['home','الرئيسية'],['forecast','التوقعات'],['exp','المصاريف'],['badr','بدر'],['gold','الدهب']];
   document.getElementById('nav').innerHTML=tabs.map(function(t){
     return '<button class="nav-btn'+(tab===t[0]?' on':'')+'" onclick="go(\''+t[0]+'\')">'+
       '<span class="ni">'+ic(t[0],22)+'</span><span class="nl">'+t[1]+'</span></button>';
