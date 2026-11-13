@@ -8,6 +8,7 @@
 
 var SHEETS = {
   exp: 'المصاريف',
+  osamaI: 'إيرادات أسامة',
   badrE: 'مصاريف بدر',
   badrI: 'إيرادات بدر',
   expected: 'إيرادات متوقعة للشهر القادم',
@@ -237,6 +238,7 @@ function undoAndDeleteLogAtRow(sheet, row) {
 
   var targetSheetName = '';
   if (section.indexOf('مصاريف البيت') !== -1 || section.indexOf('المصاريف') !== -1) targetSheetName = SHEETS.exp;
+  else if (section.indexOf('إيرادات أسامة') !== -1) targetSheetName = SHEETS.osamaI;
   else if (section.indexOf('مصاريف بدر') !== -1) targetSheetName = SHEETS.badrE;
   else if (section.indexOf('إيرادات بدر') !== -1) targetSheetName = SHEETS.badrI;
   else if (section.indexOf('مصاريف متوقعة') !== -1) targetSheetName = SHEETS.expectedExp;
@@ -269,14 +271,14 @@ function undoAndDeleteLogAtRow(sheet, row) {
       if (foundRow !== -1) {
         tSheet.getRange(foundRow, 2).setValue(itemName);
         tSheet.getRange(foundRow, 3).setValue(parseFloat(oldVal) || 0);
-        var isDated = (targetSheetName === SHEETS.exp);
+        var isDated = (targetSheetName === SHEETS.exp || targetSheetName === SHEETS.osamaI);
         if (isDated) tSheet.getRange(foundRow, 5).setValue(timeStr + ' (مسترجع)');
         else tSheet.getRange(foundRow, 4).setValue(timeStr + ' (مسترجع)');
         success = true;
         msg = 'تم حذف التعديل واسترجاع قيمة "' + itemName + '" الأصلية (' + oldVal + ' ج) بنجاح!';
       } else {
         if (actionType.indexOf('حذف') !== -1 && itemName) {
-          var isDated2 = (targetSheetName === SHEETS.exp);
+          var isDated2 = (targetSheetName === SHEETS.exp || targetSheetName === SHEETS.osamaI);
           var newRow = isDated2 
             ? [itemId || Date.now(), itemName, parseFloat(oldVal) || 0, new Date().toISOString().slice(0, 10), timeStr + ' (مسترجع)']
             : [itemId || Date.now(), itemName, parseFloat(oldVal) || 0, timeStr + ' (مسترجع)'];
@@ -340,6 +342,7 @@ function getAllData() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
   getOrCreateSheet(SHEETS.exp, ['ID', 'البند', 'المبلغ', 'التاريخ', 'تاريخ ووقت آخر تعديل']);
+  getOrCreateSheet(SHEETS.osamaI, ['ID', 'البند', 'المبلغ', 'التاريخ', 'تاريخ ووقت آخر تعديل'], '#8b5cf6');
   getOrCreateSheet(SHEETS.badrE, ['ID', 'البند', 'المبلغ', 'تاريخ ووقت آخر تعديل']);
   getOrCreateSheet(SHEETS.badrI, ['ID', 'البند', 'المبلغ', 'تاريخ ووقت آخر تعديل']);
   getOrCreateSheet(SHEETS.expected, ['ID', 'البند المتوقع', 'المبلغ المتوقع', 'تاريخ ووقت التعديل'], '#0284c7');
@@ -350,6 +353,7 @@ function getAllData() {
     fund: 0,
     sister: 0,
     exp: [],
+    osamaI: [],
     badrE: [],
     badrI: [],
     expected: [],
@@ -376,6 +380,7 @@ function getAllData() {
   }
   
   data.exp = readListWithDate(ss.getSheetByName(SHEETS.exp));
+  data.osamaI = readListWithDate(ss.getSheetByName(SHEETS.osamaI));
   data.badrE = readListSimple(ss.getSheetByName(SHEETS.badrE));
   data.badrI = readListSimple(ss.getSheetByName(SHEETS.badrI));
   data.expected = readListSimple(ss.getSheetByName(SHEETS.expected) || ss.getSheetByName('توقعات الشهر القادم'));
@@ -493,6 +498,15 @@ function uploadAllData(data) {
     });
     expSheet.getRange(2, 1, expRows.length, 5).setValues(expRows);
   }
+
+  var osamaISheet = getOrCreateSheet(SHEETS.osamaI, ['ID', 'البند', 'المبلغ', 'التاريخ', 'تاريخ ووقت آخر تعديل'], '#8b5cf6');
+  clearSheetData(osamaISheet);
+  if (data.osamaI && data.osamaI.length > 0) {
+    var osamaIRows = data.osamaI.map(function(x) {
+      return [x.id, x.n, x.a, x.d || '', x.updatedAt || timeStr];
+    });
+    osamaISheet.getRange(2, 1, osamaIRows.length, 5).setValues(osamaIRows);
+  }
   
   var badrESheet = getOrCreateSheet(SHEETS.badrE, ['ID', 'البند', 'المبلغ', 'تاريخ ووقت آخر تعديل']);
   clearSheetData(badrESheet);
@@ -577,11 +591,11 @@ function addRecord(listName, item) {
   var sheetName = SHEETS[listName];
   if (!sheetName) throw new Error('قائمة غير صالحة');
   
-  var isDated = (listName === 'exp');
+  var isDated = (listName === 'exp' || listName === 'osamaI');
   var headers = isDated 
     ? ['ID', 'البند', 'المبلغ', 'التاريخ', 'تاريخ ووقت آخر تعديل'] 
     : ['ID', 'البند', 'المبلغ', 'تاريخ ووقت آخر تعديل'];
-  var sheet = getOrCreateSheet(sheetName, headers);
+  var sheet = getOrCreateSheet(sheetName, headers, listName === 'osamaI' ? '#8b5cf6' : undefined);
   var timeStr = formatDateTime(new Date());
   
   var row = isDated
@@ -591,6 +605,7 @@ function addRecord(listName, item) {
   sheet.appendRow(row);
   
   var secName = listName === 'exp' ? 'مصاريف البيت' : 
+                listName === 'osamaI' ? 'إيرادات أسامة' : 
                 listName === 'badrE' ? 'مصاريف بدر' : 
                 listName === 'badrI' ? 'إيرادات بدر' : 
                 listName === 'expected' ? 'إيرادات متوقعة للشهر القادم' : 
@@ -627,7 +642,7 @@ function updateRecord(listName, item, oldItem) {
     return;
   }
   
-  var isDated = (listName === 'exp');
+  var isDated = (listName === 'exp' || listName === 'osamaI');
   sheet.getRange(rowIndex, 2).setValue(item.n);
   sheet.getRange(rowIndex, 3).setValue(item.a);
   if (isDated) {
@@ -638,6 +653,7 @@ function updateRecord(listName, item, oldItem) {
   }
   
   var secName = listName === 'exp' ? 'مصاريف البيت' : 
+                listName === 'osamaI' ? 'إيرادات أسامة' : 
                 listName === 'badrE' ? 'مصاريف بدر' : 
                 listName === 'badrI' ? 'إيرادات بدر' : 
                 listName === 'expected' ? 'إيرادات متوقعة للشهر القادم' : 
@@ -668,6 +684,7 @@ function deleteRecord(listName, id, oldItem) {
   }
   
   var secName = listName === 'exp' ? 'مصاريف البيت' : 
+                listName === 'osamaI' ? 'إيرادات أسامة' : 
                 listName === 'badrE' ? 'مصاريف بدر' : 
                 listName === 'badrI' ? 'إيرادات بدر' : 
                 listName === 'expected' ? 'إيرادات متوقعة للشهر القادم' : 

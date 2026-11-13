@@ -427,6 +427,7 @@ function seed(){
       ['تحويل لمحامي تبع اسلام',46290,40245],['تحويل لمحامي تبع اسلام',46295,1000]
     ].map(function(x,i){return {id:i+1,n:x[0],d:ser(x[1]),a:x[2]};}),
     inc:[],
+    osamaI:[],
     badrE:[
       ['باب مصفح',10500],['حديد منشر',6500],['طلبات السباكة',12000],
       ['مصنعية السباك',6000],['سيراميك + نقل + تنزيل ردش',5400],['رمل + اسمنت',1150],
@@ -445,7 +446,7 @@ var S;
 try{S=JSON.parse(localStorage.getItem(K));}catch(e){}
 if(!S)S=seed();
 if(S.logs){delete S.logs;save();}
-['expected','expectedExp','inc'].forEach(function(k){if(!S[k])S[k]=[];});
+['expected','expectedExp','inc','osamaI'].forEach(function(k){if(!S[k])S[k]=[];});
 function save(){try{localStorage.setItem(K,JSON.stringify(S));}catch(e){}}
 function toast(msg){
   var t=document.getElementById('toast');if(!t)return;
@@ -455,24 +456,38 @@ function toast(msg){
 function logEntry(){}
 function isOsamaExp(x){
   if(!x)return false;
+  if(x.sub==='osama_in')return false;
   if(x.sub==='osama')return true;
   var name=String(x.n||'').trim();
+  if(/إيراد|سداد|دفعة من/.test(name))return false;
   return /اسامة|أسامة/.test(name);
 }
+function isOsamaIncInExp(x){
+  if(!x)return false;
+  if(x.sub==='osama_in')return true;
+  var name=String(x.n||'').trim();
+  return (/اسامة|أسامة/.test(name)) && (/إيراد|سداد|دفعة/.test(name));
+}
 function C(){
-  var osamaList=(S.exp||[]).filter(isOsamaExp);
-  var houseList=(S.exp||[]).filter(function(x){return !isOsamaExp(x);});
-  var oE=sum(osamaList);
+  var osamaExpList=(S.exp||[]).filter(isOsamaExp);
+  var osamaIncList=(S.osamaI||[]).concat((S.exp||[]).filter(isOsamaIncInExp));
+  var houseList=(S.exp||[]).filter(function(x){return !isOsamaExp(x) && !isOsamaIncInExp(x);});
+  var oE=sum(osamaExpList);
+  var oI=sum(osamaIncList);
+  var netOsama=oE-oI; // صافي أسامة: مصروفاته مطروح منها إيراداته
   var hE=sum(houseList);
   var bE=sum(S.badrE),bI=sum(S.badrI);
-  var totalExp=hE+oE+bE; // خصم كافة المصاريف بالكامل: البيت + أسامة + بدر
+  var totalExp=hE+netOsama+bE; // خصم كافة المصاريف بالكامل: البيت + صافي أسامة + بدر
   var cash=S.fund-totalExp; // سيولة البيت المتبقية بعد خصم كافة المصاريف بالكامل
   var gold=(S.g21.g||0)*(S.g21.p||0)+(S.g24.g||0)*(S.g24.p||0);
   var mine=S.bank-bI-cash-S.sister;
   var expI=sum(S.expected),expE=sum(S.expectedExp);
   return {
-    bE:bE,bI:bI,hE:hE,oE:oE,
-    houseCount:houseList.length,osamaCount:osamaList.length,badrCount:S.badrE.length,
+    bE:bE,bI:bI,hE:hE,oE:oE,oI:oI,netOsama:netOsama,
+    houseCount:houseList.length,
+    osamaCount:osamaExpList.length,
+    osamaInCount:osamaIncList.length,
+    badrCount:S.badrE.length,
     totalExp:totalExp,cash:cash,gold:gold,mine:mine,expI:expI,expE:expE,proj:mine+expI-expE
   };
 }
@@ -519,7 +534,7 @@ function fetchSheet(manual){
         if(typeof d.sister==='number'&&S.sister!==d.sister){S.sister=d.sister;changed=true;}
         if(d.g21&&((S.g21&&S.g21.g)!==d.g21.g||(S.g21&&S.g21.p)!==d.g21.p)){S.g21=d.g21;changed=true;}
         if(d.g24&&((S.g24&&S.g24.g)!==d.g24.g||(S.g24&&S.g24.p)!==d.g24.p)){S.g24=d.g24;changed=true;}
-        ['exp','inc','badrE','badrI','expected','expectedExp'].forEach(function(k){
+        ['exp','inc','badrE','badrI','osamaI','expected','expectedExp'].forEach(function(k){
           if(Array.isArray(d[k])){
             if(JSON.stringify(S[k]||[])!==JSON.stringify(d[k])){
               S[k]=d[k];changed=true;
@@ -582,7 +597,7 @@ function setG(k,f,v){
   save();render();syncSettings(old);
 }
 function getSecName(list){
-  var mp={exp:'مصاريف البيت',badrE:'مصاريف بدر',badrI:'إيرادات بدر',expected:'إيرادات متوقعة',expectedExp:'مصاريف متوقعة'};
+  var mp={exp:'مصاريف البيت',osamaI:'إيرادات أسامة',badrE:'مصاريف بدر',badrI:'إيرادات بدر',expected:'إيرادات متوقعة',expectedExp:'مصاريف متوقعة'};
   return mp[list]||list;
 }
 function addItem(list,hasDate){
@@ -637,7 +652,8 @@ function openAddSheet(){
   var lists={
     home:[
       {list:'exp',sub:'house',label:'مصروف للبيت',hasDate:true},
-      {list:'exp',sub:'osama',label:'تحويل لأسامة',hasDate:true},
+      {list:'exp',sub:'osama',label:'تحويل لأسامة (مصروف)',hasDate:true},
+      {list:'osamaI',sub:'osama_in',label:'إيراد / سداد من أسامة',hasDate:true},
       {list:'badrE',label:'مصروف بدر',hasDate:false},
       {list:'badrI',label:'إيجار بدر',hasDate:false}
     ],
@@ -647,7 +663,8 @@ function openAddSheet(){
     ],
     exp:[
       {list:'exp',sub:'house',label:'مصروف للبيت',hasDate:true},
-      {list:'exp',sub:'osama',label:'تحويل لأسامة',hasDate:true},
+      {list:'exp',sub:'osama',label:'تحويل لأسامة (مصروف)',hasDate:true},
+      {list:'osamaI',sub:'osama_in',label:'إيراد / سداد من أسامة',hasDate:true},
       {list:'badrE',label:'مصروف لشقة بدر',hasDate:false}
     ],
     badr:[
@@ -682,6 +699,8 @@ function openAddSheet(){
     if(nInput){
       if(o.sub==='osama'){
         nInput.placeholder='مثلاً: تحويل بنكي، قسط، كاش (أو اتركه فارغاً)';
+      }else if(o.sub==='osama_in'||o.list==='osamaI'){
+        nInput.placeholder='مثلاً: سداد قسط، دفعة كاش، إيراد (أو اتركه فارغاً)';
       }else if(o.list==='badrE'||o.list==='badrI'){
         nInput.placeholder='مثلاً: سباكة، إيجار، عداد مياه';
       }else{
@@ -705,10 +724,17 @@ function doFabAdd(){
     }else if(!/اسامة|أسامة/.test(n)){
       n='تحويل لأسامة - '+n;
     }
+  }else if(opt.sub==='osama_in'||opt.list==='osamaI'){
+    if(!n){
+      n='سداد من أسامة';
+    }else if(!/اسامة|أسامة/.test(n)){
+      n='سداد من أسامة - '+n;
+    }
   }
   if(!n||!(a>=0)){alert('اكتب الاسم والمبلغ');return;}
   var o={id:Date.now(),n:n,a:a,updatedAt:fmtDT()};
   if(opt.sub==='osama')o.sub='osama';
+  if(opt.sub==='osama_in')o.sub='osama_in';
   var dEl=document.getElementById('fab_d');
   if(opt.hasDate)o.d=dEl&&dEl.value?dEl.value:today();
   S[opt.list].push(o);
@@ -921,7 +947,7 @@ function printSummaryPDF(){
       '<div class="kpi">'+
         '<div class="kpi-title">الإجمالي العام لكافة المصاريف</div>'+
         '<div class="kpi-val" style="color:#dc2626">−'+m(c.totalExp)+' ج</div>'+
-        '<div style="font-size:9px;color:#64748b">البيت ('+m(c.hE)+') + أسامة ('+m(c.oE)+') + بدر ('+m(c.bE)+')</div>'+
+        '<div style="font-size:9px;color:#64748b">البيت ('+m(c.hE)+') + صافي أسامة ('+m(c.netOsama)+') + بدر ('+m(c.bE)+')</div>'+
       '</div>'+
     '</div>'+
     '<div class="sec-title"><span>📊 تفصيل حساب الرصيد والسيولة</span></div>'+
@@ -940,7 +966,9 @@ function printSummaryPDF(){
       '<thead><tr><th>القسم</th><th>البيان</th><th style="width:80px;text-align:center">عدد البنود</th><th style="width:120px">المجموع</th></tr></thead>'+
       '<tbody>'+
         '<tr><td><b>مصاريف البيت</b></td><td>المصروفات العامة والتشغيلية للبيت</td><td style="text-align:center">'+c.houseCount+' بند</td><td style="font-weight:bold;color:#dc2626">−'+m(c.hE)+' ج</td></tr>'+
-        '<tr><td><b>تحويلات أسامة</b></td><td>المبالغ المحولة لأسامة</td><td style="text-align:center">'+c.osamaCount+' بند</td><td style="font-weight:bold;color:#6d28d9">−'+m(c.oE)+' ج</td></tr>'+
+        '<tr><td><b>تحويلات أسامة (المصروفات)</b></td><td>المبالغ المحولة لأسامة</td><td style="text-align:center">'+c.osamaCount+' بند</td><td style="font-weight:bold;color:#6d28d9">−'+m(c.oE)+' ج</td></tr>'+
+        (c.oI>0?'<tr><td><b>إيرادات وسدادات أسامة</b></td><td>المبالغ المستلمة من أسامة وتخصم من مصروفاته</td><td style="text-align:center">'+c.osamaInCount+' بند</td><td style="font-weight:bold;color:#15803d">+'+m(c.oI)+' ج</td></tr>':'')+
+        '<tr><td><b>صافي حساب أسامة</b></td><td>صافي ما يخصم من سيولة البيت لأسامة</td><td style="text-align:center">-</td><td style="font-weight:bold;color:'+(c.netOsama<=0?'#15803d':'#6d28d9')+'">'+(c.netOsama<=0?'+':'−')+m(Math.abs(c.netOsama))+' ج</td></tr>'+
         '<tr><td><b>مصاريف شقة بدر</b></td><td>مصاريف وتجهيزات شقة بدر</td><td style="text-align:center">'+c.badrCount+' بند</td><td style="font-weight:bold;color:#dc2626">−'+m(c.bE)+' ج</td></tr>'+
         '<tr class="total-foot"><td colspan="3"><b>الإجمالي العام لكافة المصاريف</b></td><td style="color:#dc2626;font-size:12.5px">−'+m(c.totalExp)+' ج</td></tr>'+
       '</tbody>'+
@@ -1051,6 +1079,7 @@ function view(){
             '<div class="bk-row"><span>فلوس البيت المخصصة</span><b>'+m(S.fund)+' ج</b></div>'+
             '<div class="bk-row"><span class="neg">− مصاريف البيت ('+c.houseCount+' بند)</span><span class="neg">−'+m(c.hE)+' ج</span></div>'+
             '<div class="bk-row"><span class="neg">− تحويلات أسامة ('+c.osamaCount+' بند)</span><span class="neg">−'+m(c.oE)+' ج</span></div>'+
+            (c.oI>0?'<div class="bk-row"><span class="pos">+ إيرادات وسدادات أسامة ('+c.osamaInCount+' بند)</span><span class="pos">+'+m(c.oI)+' ج</span></div>':'')+
             '<div class="bk-row"><span class="neg">− مصاريف شقة بدر ('+c.badrCount+' بند)</span><span class="neg">−'+m(c.bE)+' ج</span></div>'+
             '<div class="bk-row total"><span>سيولة البيت المتبقية</span><span class="'+(c.cash<0?'neg':'pos')+'">'+m(c.cash)+' ج</span></div>'+
             '<div class="bk-row"><span>'+ic('gold',15)+' الدهب</span><b>'+m(c.gold)+' ج</b></div>'+
@@ -1101,7 +1130,7 @@ function view(){
       '<div class="balance-card" style="background:#dc2626">'+
         '<div class="bal-label">إجمالي كافة المصاريف</div>'+
         '<div class="bal-amount">'+m(c.totalExp)+'<small> ج</small></div>'+
-        '<div class="bal-meta">البيت: '+m(c.hE)+' ج · أسامة: '+m(c.oE)+' ج · بدر: '+m(c.bE)+' ج</div>'+
+        '<div class="bal-meta">البيت: '+m(c.hE)+' ج · صافي أسامة: '+m(c.netOsama)+' ج · بدر: '+m(c.bE)+' ج</div>'+
       '</div>';
     var houseCard=
       '<div class="card accent-bar-neg">'+
@@ -1111,9 +1140,17 @@ function view(){
       '</div>';
     var osamaCard=
       '<div class="card" style="border-right:4px solid #8b5cf6">'+
-        '<div class="card-hd"><span class="card-hd-title" style="color:#6d28d9;display:flex;align-items:center;gap:6px">'+ic('out',15)+' تحويلات أسامة ('+c.osamaCount+' بند)</span><span class="card-hd-val neg">−'+m(c.oE)+' ج</span></div>'+
-        rowsList('exp','neg',true,isOsamaExp,'لا توجد تحويلات مسجلة لأسامة حتى الآن.<br>اضغط ＋ واختر "تحويل لأسامة" للإضافة.')+
-        '<div class="total-row"><span>مجموع تحويلات أسامة</span><span class="neg">−'+m(c.oE)+' ج</span></div>'+
+        '<div class="card-hd"><span class="card-hd-title" style="color:#6d28d9;display:flex;align-items:center;gap:6px">'+ic('out',15)+' حساب أسامة</span><span class="card-hd-val '+(c.netOsama<=0?'pos':'neg')+'">الصافي: '+(c.netOsama>0?'−':'+')+m(Math.abs(c.netOsama))+' ج</span></div>'+
+        '<div style="background:#f5f3ff;border-radius:10px;padding:9px 12px;margin:6px 0 10px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px">'+
+          '<div><span style="color:#64748b">مصروفات:</span> <b class="neg">−'+m(c.oE)+' ج</b> <small>('+c.osamaCount+')</small></div>'+
+          '<div><span style="color:#64748b">إيرادات:</span> <b class="pos">+'+m(c.oI)+' ج</b> <small>('+c.osamaInCount+')</small></div>'+
+          '<div><span style="color:#64748b">المخصوم:</span> <b style="color:'+(c.netOsama<=0?'#15803d':'#6d28d9')+'">'+(c.netOsama>0?'−':'+')+m(Math.abs(c.netOsama))+' ج</b></div>'+
+        '</div>'+
+        '<div style="font-weight:700;font-size:12px;color:#6d28d9;margin:8px 0 4px;display:flex;align-items:center;gap:4px">'+ic('out',13)+' تحويلات ومصروفات أسامة ('+c.osamaCount+' بند)</div>'+
+        rowsList('exp','neg',true,isOsamaExp,'لا توجد تحويلات مسجلة لأسامة حتى الآن.')+
+        '<div style="font-weight:700;font-size:12px;color:#15803d;margin:12px 0 4px;display:flex;align-items:center;gap:4px">'+ic('in',13)+' إيرادات وسدادات أسامة ('+c.osamaInCount+' بند)</div>'+
+        rowsList('osamaI','pos',true,null,'لا توجد إيرادات مسجلة من أسامة حتى الآن.<br>اضغط ＋ واختر "إيراد / سداد من أسامة" للإضافة.')+
+        '<div class="total-row" style="margin-top:10px"><span>صافي حساب أسامة المخصوم من المصاريف</span><span style="font-weight:800;color:'+(c.netOsama<=0?'#15803d':'#6d28d9')+'">'+(c.netOsama>0?'−':'+')+m(Math.abs(c.netOsama))+' ج</span></div>'+
       '</div>';
     var badrCard=
       '<div class="card accent-bar-neg">'+
@@ -1132,7 +1169,9 @@ function view(){
       '<div class="card">'+
         '<div class="card-hd"><span class="card-hd-title">ملخص إجمالي المصاريف</span></div>'+
         '<div class="bk-row"><span>'+ic('home',14)+' مصاريف البيت</span><b class="neg">−'+m(c.hE)+' ج</b></div>'+
-        '<div class="bk-row"><span>'+ic('out',14)+' تحويلات أسامة</span><b class="neg">−'+m(c.oE)+' ج</b></div>'+
+        '<div class="bk-row"><span>'+ic('out',14)+' تحويلات أسامة (المصروفات)</span><b class="neg">−'+m(c.oE)+' ج</b></div>'+
+        (c.oI>0?'<div class="bk-row"><span class="pos">'+ic('in',14)+' إيرادات وسدادات أسامة</span><b class="pos">+'+m(c.oI)+' ج</b></div>':'')+
+        '<div class="bk-row" style="background:#f8fafc;padding:5px 8px;border-radius:6px"><span>← صافي أسامة المحسوب في المصاريف</span><b style="color:'+(c.netOsama<=0?'#15803d':'#6d28d9')+'">'+(c.netOsama>0?'−':'+')+m(Math.abs(c.netOsama))+' ج</b></div>'+
         '<div class="bk-row"><span>'+ic('badr',14)+' إجمالي مصاريف شقة بدر</span><b class="neg">−'+m(c.bE)+' ج</b></div>'+
         '<div class="bk-row total"><span>الإجمالي العام للمصاريف</span><b class="neg">−'+m(c.totalExp)+' ج</b></div>'+
       '</div>';
