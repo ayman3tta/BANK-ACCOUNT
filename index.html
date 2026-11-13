@@ -892,7 +892,7 @@ function printSummaryPDF(){
     'table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 11px; }'+
     'th { background: #f8fafc; color: #334155; font-weight: 700; border: 1px solid #cbd5e1; padding: 6px 10px; text-align: right; }'+
     'td { border: 1px solid #e2e8f0; padding: 5.5px 10px; text-align: right; }'+
-    '.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }'+
+    '.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }'+
     '.kpi { border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; background: #fff; }'+
     '.kpi-title { font-size: 10.5px; color: #64748b; font-weight: 600; margin-bottom: 2px; }'+
     '.kpi-val { font-size: 15.5px; font-weight: 800; color: #0f172a; }'+
@@ -911,7 +911,7 @@ function printSummaryPDF(){
     '<div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #0f172a;padding-bottom:8px;margin-bottom:12px">'+
       '<div>'+
         '<h1 style="margin:0;font-size:18px;font-weight:900;color:#0f172a">ملخص الحساب المالي (حساب البيت)</h1>'+
-        '<div style="font-size:10.5px;color:#64748b;margin-top:2px">تقرير ملخص شامل وموجز للأرصدة والمصاريف والسيولة والدهب</div>'+
+        '<div style="font-size:10.5px;color:#64748b;margin-top:2px">تقرير ملخص شامل وموجز للمصاريف والسيولة والدهب وشقة بدر</div>'+
       '</div>'+
       '<div style="text-align:left;font-size:10.5px;color:#475569">'+
         '<div><b>التاريخ:</b> '+dtStr+'</div>'+
@@ -920,24 +920,9 @@ function printSummaryPDF(){
     '</div>'+
     '<div class="kpi-grid">'+
       '<div class="kpi kpi-highlight">'+
-        '<div class="kpi-title">صافي فلوسك الحالية</div>'+
-        '<div class="kpi-val" style="color:'+(c.mine<0?'#dc2626':'#0f172a')+'">'+m(c.mine)+' ج</div>'+
-        '<div style="font-size:9px;color:#64748b">بعد خصم الإيجار والسيولة والأمانة</div>'+
-      '</div>'+
-      '<div class="kpi">'+
-        '<div class="kpi-title">رصيد الحساب البنكي</div>'+
-        '<div class="kpi-val">'+m(S.bank)+' ج</div>'+
-        '<div style="font-size:9px;color:#64748b">الرصيد في البنك</div>'+
-      '</div>'+
-      '<div class="kpi">'+
         '<div class="kpi-title">سيولة البيت المتبقية</div>'+
         '<div class="kpi-val" style="color:'+(c.cash<0?'#dc2626':'#15803d')+'">'+m(c.cash)+' ج</div>'+
         '<div style="font-size:9px;color:#64748b">من أصل '+m(S.fund)+' ج بعد خصم كافة المصاريف</div>'+
-      '</div>'+
-      '<div class="kpi">'+
-        '<div class="kpi-title">قيمة الدهب الإجمالية</div>'+
-        '<div class="kpi-val" style="color:#b45309">'+m(c.gold)+' ج</div>'+
-        '<div style="font-size:9px;color:#64748b">عيار 21 ('+S.g21.g+'جم) · عيار 24 ('+S.g24.g+'جم)</div>'+
       '</div>'+
       '<div class="kpi">'+
         '<div class="kpi-title">إجمالي ثروة البيت</div>'+
@@ -945,20 +930,25 @@ function printSummaryPDF(){
         '<div style="font-size:9px;color:#64748b">الدهب ('+m(c.gold)+') + السيولة ('+m(c.cash)+')</div>'+
       '</div>'+
       '<div class="kpi">'+
+        '<div class="kpi-title">قيمة الدهب الإجمالية</div>'+
+        '<div class="kpi-val" style="color:#b45309">'+m(c.gold)+' ج</div>'+
+        '<div style="font-size:9px;color:#64748b">عيار 21 ('+S.g21.g+'جم) · عيار 24 ('+S.g24.g+'جم)</div>'+
+      '</div>'+
+      '<div class="kpi">'+
         '<div class="kpi-title">الإجمالي العام لكافة المصاريف</div>'+
         '<div class="kpi-val" style="color:#dc2626">−'+m(c.totalExp)+' ج</div>'+
         '<div style="font-size:9px;color:#64748b">البيت ('+m(c.hE)+') + صافي أسامة ('+m(c.netOsama)+') + بدر ('+m(c.bE)+')</div>'+
       '</div>'+
     '</div>'+
-    '<div class="sec-title"><span>📊 تفصيل حساب الرصيد والسيولة</span></div>'+
+    '<div class="sec-title"><span>💵 تفصيل سيولة وميزانية البيت</span></div>'+
     '<table>'+
       '<thead><tr><th>المفردة</th><th>البيان والتفصيل</th><th style="width:120px">المبلغ</th></tr></thead>'+
       '<tbody>'+
-        '<tr><td><b>الحساب البنكي</b></td><td>الرصيد الإجمالي المودع في الحساب البنكي</td><td style="font-weight:bold">'+m(S.bank)+' ج</td></tr>'+
-        '<tr><td><b>− إيجار بدر</b></td><td>إيرادات إيجار شقة بدر تُخصم من البنك لحساب صافي فلوسك</td><td style="font-weight:bold;color:#dc2626">−'+m(c.bI)+' ج</td></tr>'+
-        '<tr><td><b>− سيولة البيت المتبقية</b></td><td>فلوس البيت ('+m(S.fund)+' ج) مخصوماً منها كافة المصاريف بالكامل ('+m(c.totalExp)+' ج)</td><td style="font-weight:bold;color:'+(c.cash<0?'#dc2626':'#15803d')+'">−'+m(c.cash)+' ج</td></tr>'+
-        (S.sister ? '<tr><td><b>− فلوس أختي</b></td><td>أمانة أختي المودعة في الحساب</td><td style="font-weight:bold;color:#dc2626">−'+m(S.sister)+' ج</td></tr>' : '')+
-        '<tr class="total-foot"><td colspan="2"><b>صافي فلوسك الحالية</b></td><td style="color:'+(c.mine<0?'#dc2626':'#0f172a')+';font-size:12.5px">'+m(c.mine)+' ج</td></tr>'+
+        '<tr><td><b>ميزانية البيت المخصصة</b></td><td>إجمالي المبلغ المرصود لسيولة ومصاريف البيت</td><td style="font-weight:bold">'+m(S.fund)+' ج</td></tr>'+
+        '<tr><td><b>− مصاريف البيت العامة</b></td><td>المصروفات التشغيلية للبيت ('+c.houseCount+' بند)</td><td style="font-weight:bold;color:#dc2626">−'+m(c.hE)+' ج</td></tr>'+
+        '<tr><td><b>− صافي حساب أسامة</b></td><td>تحويلات أسامة ('+m(c.oE)+') مطروحاً منها إيراداته ('+m(c.oI)+')</td><td style="font-weight:bold;color:'+(c.netOsama<=0?'#15803d':'#6d28d9')+'">'+(c.netOsama<=0?'+':'−')+m(Math.abs(c.netOsama))+' ج</td></tr>'+
+        '<tr><td><b>− مصاريف شقة بدر</b></td><td>تكاليف تجهيز شقة بدر ('+c.badrCount+' بند) المخصومة من السيولة</td><td style="font-weight:bold;color:#dc2626">−'+m(c.bE)+' ج</td></tr>'+
+        '<tr class="total-foot"><td colspan="2"><b>المتبقي الفعلي من سيولة البيت</b></td><td style="color:'+(c.cash<0?'#dc2626':'#15803d')+';font-size:12.5px">'+m(c.cash)+' ج</td></tr>'+
       '</tbody>'+
     '</table>'+
     '<div class="sec-title"><span>💳 ملخص كافة المصاريف الإجمالية</span></div>'+
