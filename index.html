@@ -947,7 +947,7 @@ function printSummaryPDF(){
         '<tr><td><b>ميزانية البيت المخصصة</b></td><td>إجمالي المبلغ المرصود لسيولة ومصاريف البيت</td><td style="font-weight:bold">'+m(S.fund)+' ج</td></tr>'+
         '<tr><td><b>− مصاريف البيت العامة</b></td><td>المصروفات التشغيلية للبيت ('+c.houseCount+' بند)</td><td style="font-weight:bold;color:#dc2626">−'+m(c.hE)+' ج</td></tr>'+
         '<tr><td><b>− صافي حساب أسامة</b></td><td>تحويلات أسامة ('+m(c.oE)+') مطروحاً منها إيراداته ('+m(c.oI)+')</td><td style="font-weight:bold;color:'+(c.netOsama<=0?'#15803d':'#6d28d9')+'">'+(c.netOsama<=0?'+':'−')+m(Math.abs(c.netOsama))+' ج</td></tr>'+
-        '<tr><td><b>− مصاريف شقة بدر</b></td><td>تكاليف تجهيز شقة بدر ('+c.badrCount+' بند) المخصومة من السيولة</td><td style="font-weight:bold;color:#dc2626">−'+m(c.bE)+' ج</td></tr>'+
+        '<tr><td><b>− مصروفات شقة بدر</b></td><td>مصروفات شقة بدر ('+c.badrCount+' بند) المخصومة من السيولة</td><td style="font-weight:bold;color:#dc2626">−'+m(c.bE)+' ج</td></tr>'+
         '<tr class="total-foot"><td colspan="2"><b>المتبقي الفعلي من سيولة البيت</b></td><td style="color:'+(c.cash<0?'#dc2626':'#15803d')+';font-size:12.5px">'+m(c.cash)+' ج</td></tr>'+
       '</tbody>'+
     '</table>'+
@@ -959,7 +959,7 @@ function printSummaryPDF(){
         '<tr><td><b>تحويلات أسامة (المصروفات)</b></td><td>المبالغ المحولة لأسامة</td><td style="text-align:center">'+c.osamaCount+' بند</td><td style="font-weight:bold;color:#6d28d9">−'+m(c.oE)+' ج</td></tr>'+
         (c.oI>0?'<tr><td><b>إيرادات وسدادات أسامة</b></td><td>المبالغ المستلمة من أسامة وتخصم من مصروفاته</td><td style="text-align:center">'+c.osamaInCount+' بند</td><td style="font-weight:bold;color:#15803d">+'+m(c.oI)+' ج</td></tr>':'')+
         '<tr><td><b>صافي حساب أسامة</b></td><td>صافي ما يخصم من سيولة البيت لأسامة</td><td style="text-align:center">-</td><td style="font-weight:bold;color:'+(c.netOsama<=0?'#15803d':'#6d28d9')+'">'+(c.netOsama<=0?'+':'−')+m(Math.abs(c.netOsama))+' ج</td></tr>'+
-        '<tr><td><b>مصاريف شقة بدر</b></td><td>مصاريف وتجهيزات شقة بدر</td><td style="text-align:center">'+c.badrCount+' بند</td><td style="font-weight:bold;color:#dc2626">−'+m(c.bE)+' ج</td></tr>'+
+        '<tr><td><b>مصروفات شقة بدر</b></td><td>مصروفات شقة بدر</td><td style="text-align:center">'+c.badrCount+' بند</td><td style="font-weight:bold;color:#dc2626">−'+m(c.bE)+' ج</td></tr>'+
         '<tr class="total-foot"><td colspan="3"><b>الإجمالي العام لكافة المصاريف</b></td><td style="color:#dc2626;font-size:12.5px">−'+m(c.totalExp)+' ج</td></tr>'+
       '</tbody>'+
     '</table>'+
@@ -968,8 +968,8 @@ function printSummaryPDF(){
       '<thead><tr><th>البند</th><th>التفاصيل</th><th style="width:120px">القيمة</th></tr></thead>'+
       '<tbody>'+
         '<tr><td><b>إيرادات إيجار بدر</b></td><td>إجمالي مبالغ الإيجار المستلمة لشقة بدر</td><td style="font-weight:bold;color:#15803d">+'+m(c.bI)+' ج</td></tr>'+
-        '<tr><td><b>مصاريف تجهيز بدر</b></td><td>إجمالي تكاليف تجهيز شقة بدر ('+c.badrCount+' بند)</td><td style="font-weight:bold;color:#dc2626">−'+m(c.bE)+' ج</td></tr>'+
-        '<tr><td><b>صافي شقة بدر</b></td><td>إجمالي الإيرادات مخصوماً منها مصاريف التجهيز</td><td style="font-weight:bold;color:'+((c.bI-c.bE)>=0?'#15803d':'#dc2626')+'">'+m(c.bI-c.bE)+' ج</td></tr>'+
+        '<tr><td><b>مصروفات شقة بدر</b></td><td>إجمالي مصروفات شقة بدر ('+c.badrCount+' بند)</td><td style="font-weight:bold;color:#dc2626">−'+m(c.bE)+' ج</td></tr>'+
+        '<tr><td><b>صافي شقة بدر</b></td><td>إجمالي الإيرادات مخصوماً منها المصروفات</td><td style="font-weight:bold;color:'+((c.bI-c.bE)>=0?'#15803d':'#dc2626')+'">'+m(c.bI-c.bE)+' ج</td></tr>'+
         '<tr><td><b>قيمة الدهب الإجمالية</b></td><td>عيار 21 ('+S.g21.g+'جم بسعر '+m(S.g21.p)+') · عيار 24 ('+S.g24.g+'جم بسعر '+m(S.g24.p)+')</td><td style="font-weight:bold;color:#b45309">'+m(c.gold)+' ج</td></tr>'+
       '</tbody>'+
     '</table>'+
@@ -1180,7 +1180,7 @@ function view(){
       '<div class="info-box">'+
         '<b>'+ic('badr',16)+' نظام بدر:</b><br>'+
         '• إيرادات الإيجار (<b>'+m(c.bI)+' ج</b>) تُخصم من البنك.<br>'+
-        '• مصاريف التجهيز (<b>'+m(c.bE)+' ج</b>) ضمن مصاريف البيت.'+
+        '• مصروفات بدر (<b>'+m(c.bE)+' ج</b>) ضمن مصاريف البيت.'+
       '</div>';
     return badrHero+infoBox+
       '<div class="card accent-bar-pos">'+
@@ -1188,7 +1188,7 @@ function view(){
         rowsList('badrI','pos',false)+
       '</div>'+
       '<div class="card accent-bar-neg">'+
-        '<div class="card-hd"><span class="card-hd-title">'+ic('out',16)+' مصاريف التجهيز</span><span class="card-hd-val neg">−'+m(c.bE)+' ج</span></div>'+
+        '<div class="card-hd"><span class="card-hd-title">'+ic('out',16)+' مصروفات شقة بدر</span><span class="card-hd-val neg">−'+m(c.bE)+' ج</span></div>'+
         rowsList('badrE','neg',false)+
       '</div>'+
       '<p class="hint" style="text-align:center">اضغط ＋ لإضافة إيجار أو مصروف بدر</p>';
